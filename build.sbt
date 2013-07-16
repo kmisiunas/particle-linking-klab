@@ -22,8 +22,8 @@ libraryDependencies += "com.github.nscala-time" %% "nscala-time" % "0.4.2"
 
 // Database interaction: http://slick.typesafe.com/
 
-// Json
-libraryDependencies += "net.liftweb" %% "lift-json" % "XXX"
+// Json: https://github.com/lift/lift/tree/master/framework/lift-base/lift-json
+libraryDependencies += "net.liftweb" %% "lift-json" % "2.5.1"
 
 // ------------------ GUI -----------------
 
