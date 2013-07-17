@@ -5,6 +5,8 @@ import com.misiunas.kanalysis.track.ParticleTrack
 import net.liftweb.json.JsonDSL._
 import net.liftweb.json._
 import net.liftweb.json.Serialization.{read, write}
+import com.misiunas.kanalysis.track.position.Pos
+
 //import main.scala.LoadFiles
 
 
@@ -17,21 +19,44 @@ class ParticleTrackTest extends FunSuite {
 
   def approx(d1 :Double, d2:Double, acc: Double = 0.0001) : Boolean = (Math.abs(d1-d2)<acc)
 
+  val pt1 = ParticleTrack(1, List( Pos(10,1,1), Pos(11,1.3,1), Pos(12,1.2,1), Pos(13,1.1,1), Pos(14,2,2) ))
+  val pt2 = ParticleTrack(2, List( Pos(10,2,3), Pos(11,1.3,1), Pos(20,1.2,1), Pos(13,1.1,1), Pos(14,2,2) )) //special
+  val pt3 = ParticleTrack(2, List( Pos(10,2,3), Pos(11,1.3,1), Pos(13,1.1,1), Pos(14,2,2),   Pos(20,1.2,1) ))
+  val pt4 = ParticleTrack(2, List( Pos(10,2,3), Pos(11,1.3,1), Pos(13,1.1,1), Pos(14,2,2),   Pos(20,1.2,1), Pos(24,1.2,1), Pos(25,1.2,1), Pos(28,1.2,1) ))
+  val pt5 = ParticleTrack(3, List( Pos(1,2,3) ))
+
 
   test("ParticleTrack to JSON and back again") {
-    val pt = new ParticleTrack(5)
-    pt.positions = List( List(0,1.1,0.1,0),
-      List(1,1.5,0.3,0),
-      List(2,0.9,-0.3,0),
-      List(3,2,-0.3,0),
-      List(4,1.7,0.1,0),
-      List(5,2.2,-0.1,0))
-    val enc = pt.toJSON
+    val enc = pt1.toJSON
     //println(enc)
-    //decript
-    val pt2 = ParticleTrack.constructJSON(enc)
+    val pt_dec = ParticleTrack.fromJSON(enc)
     //println(pt2.toJSON)
-    assert(pt == pt2)
+    assert(pt1 == pt_dec)
+  }
+
+  test("ParticleTrack basic functionality") {
+    assert(pt1(0) == Pos(10,1,1))
+    assert(pt1.size == 5)
+  }
+
+  test("ParticleTrack qualityCheck() and timeOrder()") {
+    assert(pt1.qualityCheck)
+    assert(!pt2.qualityCheck)
+    assert(pt2.timeOrder == pt3)
+  }
+
+  test("ParticleTrack timeRange() and range()") {
+    assert(pt4.timeRange == (10.0, 28.0))
+    assert(pt1.range == (Pos(10, 1,1,0), Pos(14,2,2,0)))
+  }
+
+  test("ParticleTrack findAtTimeIdx() and findAtTime()") {
+    assert(pt4.findAtTimeIdx(10) == 0)
+    assert(pt4.findAtTimeIdx(28) == pt4.size-1)
+    assert(pt4.findAtTimeIdx(23) == 5)
+    assert(pt4.findAtTimeIdx(12) == 2)
+    //println("pos:"+pt4.findAtTimeIdx(13.5))
+    assert(pt4.findAtTime(13.501) == Pos(14,2,2))
   }
 
 }

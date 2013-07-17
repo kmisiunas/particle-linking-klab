@@ -31,7 +31,7 @@ class TrackAssembly (val list: Buffer[ParticleTrack] = Buffer()) {
         ("ParticleTrack" ->
           list.map { pt =>
             (("id" -> pt.id) ~
-              ("positions" -> pt.positions))
+              ("positions" -> pt.positions.map(_.list)))
           }))
 
   def toJSON : String = pretty(render(json))
@@ -48,31 +48,5 @@ object TrackAssembly {
   /** the version of the particle track */
   val version = 1
 
-  /**
-   * Method for constructing a ParticleTrack from a JSON text string
-   * @param st
-   * @return
-   */
-  def constructJSON(st: String) : ParticleTrack = {
-    implicit val formats = net.liftweb.json.DefaultFormats
-    val code = parse(st)
-    if((code \\ "version").extract[Int] != ParticleTrack.version) throw new Exception("Warning: the ParticleTrack file is version "+(code \\ "version").extract[Int] + ", while the current version is"+version)
-    val pt = new ParticleTrack(id = (code \\ "id").extract[Int],
-      time = (code \\ "time").extract[Long],
-      experiment = (code \\ "experiment").extract[String])
-    // Extract mutable values and add to "pt"
-    // extract the positions
-    val pos = (code \\ "positions").extract[List[JObject]] // the position list
-    pt.positions = for { obj <- pos
-                         JField("t", JDouble(t)) <- obj
-                         JField("x", JDouble(x)) <- obj
-                         JField("y", JDouble(y)) <- obj
-                         JField("z", JDouble(z)) <- obj
-    } yield List(t,x,y,z)
-    // extract units
-    pt.units = (code \\ "units").extract[List[String]]
-    // Extract extra comment
-    pt.comment = (code \\ "comment").extract[String]
-    return pt
-  }
+
 }

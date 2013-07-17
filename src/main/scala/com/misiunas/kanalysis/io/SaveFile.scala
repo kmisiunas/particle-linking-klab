@@ -27,7 +27,7 @@ object SaveFile {
   /** Saves the Particle track in JSON format to a "file". If dir is provided, it will use default file name: Track_id.json */
   def save(pt: ParticleTrack, file: String):Unit = {
     val filePath = if(file.trim.endsWith(".json")) file else formatDir(file)+"Track_"+pt.id+".json"
-    save(pt.mkString, filePath)
+    save(pt.toJSON, filePath)
   }
 
   /** Saves the TrackAssembly object in JSON format. If dir is provided, it will use default file name: Track_Assembly.json */
