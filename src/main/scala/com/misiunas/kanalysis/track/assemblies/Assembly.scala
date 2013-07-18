@@ -16,7 +16,8 @@ import com.misiunas.kanalysis.track.position.Pos
  * Date: 17/07/2013
  * Time: 20:36
  */
-abstract class Assembly (experiment:String, comment: String, time: Long) extends CompatibleWithJSON[Assembly]{
+abstract class Assembly (val experiment:String, val comment: String, val time: Long)
+  extends Iterable[ParticleTrack] with CompatibleWithJSON[Assembly]{
 
   // ---------------- Some abstract methods --------------
 
@@ -25,7 +26,7 @@ abstract class Assembly (experiment:String, comment: String, time: Long) extends
   /** the version of the class */
   def version = 2
   /** ordered list of tracks */
-  def list : List[ParticleTrack]
+  //def list : List[ParticleTrack] // toList
   /** convert to mutable */
   def toMutable : TrackAssemblyM
   /** convert to immutable */
@@ -34,18 +35,18 @@ abstract class Assembly (experiment:String, comment: String, time: Long) extends
   def listMap : collection.Map[Int, ParticleTrack]
 
 
-
-
-
   // ---------------- General implemented methods --------
+
+  /** insanely important for Assembly to perform as collection */
+  def iterator: Iterator[ParticleTrack] = listMap.valuesIterator
 
   /** access the ParticleTrack with specific ID */
   def apply(id : Int) : ParticleTrack = listMap(id)
 
   /** Check is assembly conforms to desired specs */
   def qualityCheck : Boolean = {
+    val l = toList // safe for mutable and parallel sets
     // check for common units
-    val l = list
     l.forall(_.units == l.head.units)
   }
 
@@ -58,17 +59,29 @@ abstract class Assembly (experiment:String, comment: String, time: Long) extends
         ("comment" -> comment) ~
         ("version" -> version) ~
         ("array_format" -> List("time_stamp","x","y","z")) ~
-        ("units" -> list.head.units) ~
+        ("units" -> this.head.units) ~
         ("ParticleTrack" ->
-          list.map { pt =>
+          this.map { pt =>
             (("id" -> pt.id) ~
               ("positions" -> pt.positions.map(_.list)))
           }))
 
   def toJSON : String = pretty(render(json))
 
+  // ---------------- Manipulate methods --------------
+
+  /** forall a function on all ParticleTracks - expensive, try to minimise calls to it */
+  def changeEach(f : (ParticleTrack => ParticleTrack)) : Assembly
+
+  /** Make a copy of this Assembly */
+  def copy : Assembly
+
+}
+
+object Assembly {
+
   /** general method for turning the JSON file into data - preparation as there is no constructors yet */
-  protected def fromJSONprep(st: String) : List[ParticleTrack] = {
+  package def fromJSONprep(st: String) : List[ParticleTrack] = {
     implicit val formats = net.liftweb.json.DefaultFormats
     val code = parse(st)
     if((code \\ "version").extract[Int] > ParticleTrack.version) throw new Exception("Warning: the ParticleTrack file is version "+(code \\ "version").extract[Int] + ", while the current version is"+version)
@@ -81,7 +94,5 @@ abstract class Assembly (experiment:String, comment: String, time: Long) extends
       list = (sub \\ "positions").extract[List[List[Double]]].map(Pos(_)),
       units, experiment, comment, time ) )
   }
-
-  // ---------------- Manipulate methods --------------
 
 }

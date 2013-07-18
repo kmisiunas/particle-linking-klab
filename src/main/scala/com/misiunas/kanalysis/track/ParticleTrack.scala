@@ -16,12 +16,13 @@ import com.misiunas.kanalysis.track.position.Pos
  * A special object for storing particle track.
  * It should contain: id, {time,x,y,z} positions
  * also any additional information about the track.
- * Object should be backward compatible or indicate which
- * version it is using. Also functional manipulations should be implemented.
+ *
  *
  * Versions:
  *  - v1 - initial release (scala 2.10)
  *  - v2 - the Track was made into immutable object, added structure, JSON update
+ *
+ *  TODO: unique objects just like String
  *
  *  @author karolis@misiunas.com,
  *  Date: 11/07/2013,
