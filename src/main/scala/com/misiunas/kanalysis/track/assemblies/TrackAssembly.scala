@@ -26,7 +26,7 @@ class TrackAssembly private (val listMap : Map[Int, ParticleTrack],
 
   def fromJSON(st: String): TrackAssembly = TrackAssembly.fromJSON(st)
 
-
+  override lazy val size : Int = listMap.size
   def toImmutable: TrackAssembly = this
   def copy : TrackAssembly = this // immutable implementation - no need for a copy
   def toMutable: TrackAssemblyM = TrackAssemblyM(collection.mutable.Map(listMap.toSeq: _*), experiment, comment, time)
@@ -46,11 +46,11 @@ object TrackAssembly {
   def apply(listMap : Map[Int, ParticleTrack],
             experiment: String = "Experiment_on_"+ DateTime.now().toLocalDate.toString,
             comment: String = "",
-            time: Long = System.currentTimeMillis()) =
+            time: Long = System.currentTimeMillis()) : TrackAssembly=
     new TrackAssembly(listMap, experiment,comment,time)
-  def apply(list: Seq[ParticleTrack], experiment: String, comment:String, time:Long) =
+  def apply(list: Seq[ParticleTrack], experiment: String, comment:String, time:Long) : TrackAssembly=
     TrackAssembly(list.sortWith(_.id < _.id).map(pt => (pt.id, pt)).toMap, experiment, comment, time)
-  def apply(json: String) = fromJSON(json)
+  def apply(json: String) : TrackAssembly= fromJSON(json)
 
   def fromJSON(st : String) : TrackAssembly = {
     val list = Assembly.fromJSONprep(st)

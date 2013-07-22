@@ -42,7 +42,7 @@ class ParticleTrackTest extends FunSuite {
   test("ParticleTrack qualityCheck() and timeOrder()") {
     assert(pt1.qualityCheck)
     assert(!pt2.qualityCheck)
-    assert(pt2.timeOrder == pt3)
+    assert(pt2.timeOrder == pt3) //TODO: this test sometimes fails!!!!?
   }
 
   test("ParticleTrack timeRange() and range()") {

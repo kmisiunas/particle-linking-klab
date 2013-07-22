@@ -24,9 +24,7 @@ abstract class Assembly (val experiment:String, val comment: String, val time: L
   /** number of tracks in this assembly */
   def size : Int
   /** the version of the class */
-  def version = 2
-  /** ordered list of tracks */
-  //def list : List[ParticleTrack] // toList
+  def version = Assembly.version
   /** convert to mutable */
   def toMutable : TrackAssemblyM
   /** convert to immutable */
@@ -80,11 +78,13 @@ abstract class Assembly (val experiment:String, val comment: String, val time: L
 
 object Assembly {
 
+  val version = 2
+
   /** general method for turning the JSON file into data - preparation as there is no constructors yet */
-  package def fromJSONprep(st: String) : List[ParticleTrack] = {
+  def fromJSONprep(st: String) : List[ParticleTrack] = {
     implicit val formats = net.liftweb.json.DefaultFormats
     val code = parse(st)
-    if((code \\ "version").extract[Int] > ParticleTrack.version) throw new Exception("Warning: the ParticleTrack file is version "+(code \\ "version").extract[Int] + ", while the current version is"+version)
+    if((code \\ "version").extract[Int] > Assembly.version) throw new Exception("Warning: the ParticleTrack file is version "+(code \\ "version").extract[Int] + ", while the current version is"+version)
     val experiment = (code \\ "experiment").extract[String]
     val comment = (code \\ "comment").extract[String]
     val time = (code \\ "time").extract[Long]

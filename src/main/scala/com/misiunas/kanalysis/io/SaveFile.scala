@@ -1,43 +1,89 @@
 package com.misiunas.kanalysis.io
 
-import com.misiunas.kanalysis.track.{TrackAssembly, ParticleTrack}
-import net.liftweb.json.JsonDSL._
 import java.io.File
+import com.misiunas.kanalysis.track.assemblies.{Assembly, TrackAssembly}
+import com.misiunas.kanalysis.track.ParticleTrack
+import com.misiunas.kanalysis.track.formating.CompatibleWithJSON
+import scala.collection.GenTraversableOnce
 
 /**
+ * == Saving to Files object ==
+ *
+ * TODO: contains object cast - should be redesigned in log term. Using maps would help.
+ *
  * User: karolis@misiunas.com
  * Date: 12/07/2013
  * Time: 15:53
  */
 object SaveFile {
 
-  def save(list : Seq[String], file: String):Unit = {
+  /** Saves any type of object to a specified file. If file name could not be determined will
+      * save to a default /"output/" dir.
+      */
+  def save(data: Any, file: String = "output/", kind:String = "auto") : Unit = {
+      // if kind -> try saving with that kind
+      // else try to determine kind and save with that kind
+      // else save as text file
+      val fp = formatFilePath(data, file, kind)
+      kind.toLowerCase match{
+        case "auto" | "automatic" => save(data, fp, determineKind(data, fp))
+        case "json" => write(data.asInstanceOf[CompatibleWithJSON[Any]].toJSON, fp)
+        case "csv" => write(data.asInstanceOf[GenTraversableOnce[Any]].mkString(","), fp)
+        case _ => write(data.toString, fp)
+      }
+    }
+
+  /** A function for optimising file paths for the user automatically */
+  def formatFilePath(data: Any, file: String, kind:String ) : String = {
+    // check if the path is already correctly formatted
+    val f = file.trim
+    if(! """\.[a-zA-Z]{2,6}$""".r.findFirstIn(f).isEmpty) return f
+    // if not determine file ending
+    val fileEnd = data match {
+      case d:CompatibleWithJSON[Object] => ".json"
+      case d:GenTraversableOnce[Any] => ".csv"
+      case _ => kind match {
+        case "csv" => "csv"
+        case _ => ".txt"
+      }
+    }
+    // check if the file name was provided. if not create one
+    val fileName = if(f.endsWith("/") || f.endsWith("\\")) {
+      data match {
+        case d:Assembly => "TrackAssembly_" + d.experiment
+        case d:ParticleTrack => "ParticleTrack_"+d.id
+        case d:Seq[Any] => "tmp_data"
+        case _ => "tmp_output"
+      }
+    } else ""
+    return f + fileName + fileEnd
+  }
+
+  private def determineKind(data: Any, ft: String): String = {
+    data match {
+      case d:CompatibleWithJSON[Object] => "json"
+      case d:Seq[Any] => "csv"
+      case _ => { // try to get from the file ending
+        """\.[a-zA-Z]{2,6}$""".r.findFirstIn(ft).get.trim.toLowerCase match {
+          case ".json" =>  "json"
+          case ".csv" => "csv"
+          case _ => "text"
+        }
+      }
+    }
+  }
+
+  private def write(st :String, file: String) : Unit = {
     val f = new File(file)
     if (!f.getParentFile().exists()) f.getParentFile().mkdirs()
     if (!f.exists()) f.createNewFile()
     val p = new java.io.PrintWriter(f)
     try {
-      list.foreach(p.println)
+      p.print(st)
+    }
+    catch {
+      case e:Exception => println("Error: could not write to file \""+file+"\" because: "+e)
     }
     finally { p.close() }
   }
-
-  def save(string: String, file: String):Unit = save(List(string), file)
-
-  /** Saves the Particle track in JSON format to a "file". If dir is provided, it will use default file name: Track_id.json */
-  def save(pt: ParticleTrack, file: String):Unit = {
-    val filePath = if(file.trim.endsWith(".json")) file else formatDir(file)+"Track_"+pt.id+".json"
-    save(pt.toJSON, filePath)
-  }
-
-  /** Saves the TrackAssembly object in JSON format. If dir is provided, it will use default file name: Track_Assembly.json */
-  def save(ta: TrackAssembly, file: String):Unit = {
-    val filePath = if(file.trim.endsWith(".json")) file else formatDir(file)+"Track_Assembly.json"
-    save(ta.mkString, filePath)
-  }
-
-  /** make sure the dir path is correctly passed */
-  private def formatDir(dir:String) = if(dir.endsWith("/")) dir.trim else dir.trim + "/"
-
-
 }

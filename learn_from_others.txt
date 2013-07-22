@@ -1,0 +1,16 @@
+
+
+INTRESTING SOFTWARE:
+
+--- short term ---
+
+- ScalaSwingContrib (https://github.com/benhutchison/ScalaSwingContrib) for Swing Layout
+- RSyntaxTextArea (http://fifesoft.com/rsyntaxtextarea/) for Syntax Highlighting and Code Completion within the Script Editor
+- Scalariform (https://github.com/mdr/scalariform/) for Code Formatting within the Script Editor
+
+--- long term ---
+
+- JLaTeXMath (http://forge.scilab.org/index.php/p/jlatexmath/) to display LaTeX commands
+- The H2 Database Engine (http://www.h2database.com) for storing history
+- JTS Topology Suite (http://tsusiatsoftware.net/jts/main.html) for geometry and Collision Detection
+- Docking Frames (http://dock.javaforge.com/) for providing multiple, dockable windows
