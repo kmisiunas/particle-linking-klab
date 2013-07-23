@@ -1,11 +1,11 @@
 package test.scala
 
 import org.scalatest.FunSuite
-import com.misiunas.kanalysis.track.ParticleTrack
+import com.misiunas.klab.track.ParticleTrack
 import net.liftweb.json.JsonDSL._
 import net.liftweb.json._
 import net.liftweb.json.Serialization.{read, write}
-import com.misiunas.kanalysis.track.position.Pos
+import com.misiunas.klab.track.position.Pos
 
 //import main.scala.LoadFiles
 

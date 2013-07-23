@@ -2,13 +2,26 @@ import AssemblyKeys._ // put this at the top of the file
 
 assemblySettings
 
-name := "KAnalysis"
+name := "KLab"
 
-version := "0.1.1"
+version := "0.1.2"
 
 scalaVersion := "2.10.2"
 
-resourceDirectory <<= baseDirectory { _ / "res" }
+packageOptions in assembly += Package.ManifestAttributes("SplashScreen-Image" -> "/res/splash.jpg")
+
+// BREEZE - https://github.com/scalanlp/breeze/
+libraryDependencies  += "org.scalanlp" % "breeze-math_2.10" % "0.4-SNAPSHOT"
+
+//libraryDependencies  += "org.scalanlp" % "breeze-viz_2.10" % "0.4-SNAPSHOT" // will not be supported soon
+
+resolvers ++= Seq(
+            // other resolvers here
+            // if you want to use snapshot builds (currently 0.4-SNAPSHOT), use this.
+            "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/",
+            "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/releases/"
+)
+
 
 libraryDependencies += "org.scalatest" % "scalatest_2.10" % "1.9.1" % "test"
 
@@ -30,6 +43,10 @@ libraryDependencies += "net.liftweb" %% "lift-json" % "2.5.1"
 // Automatic serialization to JSON: https://github.com/scala/pickling
 
 // ------------------ GUI -----------------
+
+libraryDependencies += "jgoodies" % "forms" % "1.0.5"
+
+//libraryDependencies += "com.jgoodies" % "jgoodies-common" % "1.4.0"
 
 libraryDependencies <+= scalaVersion { "org.scala-lang" % "scala-swing" % _ }
 

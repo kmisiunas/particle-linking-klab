@@ -1,4 +1,4 @@
-import com.misiunas.kanalysis.track.assemblies.{TrackAssembly}
+import com.misiunas.klab.track.assemblies.{TrackAssembly}
 import org.scalatest.FunSuite
 
 /**

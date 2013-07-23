@@ -1,4 +1,4 @@
-import com.misiunas.kanalysis.io.SaveFile._
+import com.misiunas.klab.io.SaveFile._
 import org.scalatest.FunSuite
 
 /**
