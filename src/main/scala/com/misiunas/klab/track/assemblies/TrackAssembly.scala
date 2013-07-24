@@ -26,6 +26,8 @@ class TrackAssembly private (val listMap : Map[Int, ParticleTrack],
 
   def fromJSON(st: String): TrackAssembly = TrackAssembly.fromJSON(st)
 
+  override def toString : String = "TrackAssembly("+size+ " tracks, "+ comment + ")"
+
   override lazy val size : Int = listMap.size
   def toImmutable: TrackAssembly = this
   def copy : TrackAssembly = this // immutable implementation - no need for a copy

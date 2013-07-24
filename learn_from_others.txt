@@ -14,3 +14,11 @@ INTRESTING SOFTWARE:
 - The H2 Database Engine (http://www.h2database.com) for storing history
 - JTS Topology Suite (http://tsusiatsoftware.net/jts/main.html) for geometry and Collision Detection
 - Docking Frames (http://dock.javaforge.com/) for providing multiple, dockable windows
+
+--- Terminal alternatives ---
+http://software.jessies.org/terminator/
+https://github.com/traff/jediterm#jediterm
+http://www.jcraft.com/jcterm/
+https://github.com/kmisiunas/DragonConsole
+http://wiki.netbeans.org/TerminalEmulator
+http://help.eclipse.org/indigo/index.jsp?topic=/org.eclipse.platform.doc.isv/reference/api/org/eclipse/jface/text/source/SourceViewer.html

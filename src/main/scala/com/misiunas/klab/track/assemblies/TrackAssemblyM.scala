@@ -20,6 +20,8 @@ class TrackAssemblyM private (val listMap : Map[Int, ParticleTrack],
 
   def fromJSON(st: String): TrackAssembly = TrackAssembly.fromJSON(st)
 
+  override def toString : String = "TrackAssemblyM("+size+ " tracks, "+ comment + ")"
+
   override def size : Int = listMap.size
   def toImmutable: TrackAssembly = TrackAssembly( collection.immutable.Map(listMap.toSeq: _*), experiment, comment, time)
   /** Makes a copy of mutable list - be careful with memory usage */

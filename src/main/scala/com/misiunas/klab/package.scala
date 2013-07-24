@@ -14,9 +14,9 @@ import com.misiunas.klab.track.position.Pos
  */
 package object klab {
 
-  val appName = "KAanlysis"
+  val appName = "K-Lab"
 
-  val appVersion = "0.1.1"
+  val appVersion = "0.1.2"
 
   UIManager.setLookAndFeel ( new WebLookAndFeel() ); // Swing L&F
 

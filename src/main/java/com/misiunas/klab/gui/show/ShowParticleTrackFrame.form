@@ -46,7 +46,7 @@
               <forms defaultalign-horz="false"/>
             </constraints>
             <properties>
-              <icon value="com/misiunas/klab/gui/show/iMac.png"/>
+              <icon value="icons/iMac.png"/>
               <text value="Play"/>
             </properties>
           </component>

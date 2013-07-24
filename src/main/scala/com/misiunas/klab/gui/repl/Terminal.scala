@@ -26,6 +26,7 @@ object Terminal {
   val settings = new Settings
   settings.usejavacp.value = true
   settings.deprecation.value = true
+  //settings.embeddedDefaults[SampleILoop] // experimental support for running within sbt:http://www.scala-sbt.org/release/docs/faq
   println(settings.classpath.value)
   //classpath.foreach(settings.classpath.append(_))
   //classpath.foreach(println(_))

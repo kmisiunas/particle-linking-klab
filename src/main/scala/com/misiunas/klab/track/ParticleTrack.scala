@@ -119,15 +119,18 @@ object ParticleTrack {
     new ParticleTrack(id,list,units,experiment)
   def apply(id: Int, list: List[Pos], units: List[String]) : ParticleTrack =
     new ParticleTrack(id,list,units)
-  def apply(id: Int, list: List[Any]) : ParticleTrack = list match {
-    case l:List[Pos] => new ParticleTrack(id,l)
-    case l:List[ParticleTrack] => ParticleTrack(id,
-      l.map( _.list).flatten,
-      l.head.units,
-      l.head.experiment,
-      "Joined particle track from tracs = {" + l.map(_.id).mkString(",")+"}",
-      l.head.time).timeOrder
-    case _ => throw new Exception("Error: "+list+" could not be formatted into ParticleTrack")
+  def apply(id: Int, list: List[Pos]) : ParticleTrack =  new ParticleTrack(id,list)
+  def apply(id: Int, list: List[Any], listType:String) : ParticleTrack = listType match {
+    case "ParticleTrack" => {
+        val l = list.asInstanceOf[ List[ParticleTrack]]
+        ParticleTrack(id,
+        l.map( _.list).flatten,
+        l.head.units,
+        l.head.experiment,
+        "Joined particle track from tracks = {" + l.map(_.id).mkString(",")+"}",
+        l.head.time).timeOrder
+    }
+    case _ => throw new Exception("Error: "+listType+" could not be formatted into ParticleTrack")
   }
   def apply(json: String) : ParticleTrack = ParticleTrack.fromJSON(json)
 

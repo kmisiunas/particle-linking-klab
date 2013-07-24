@@ -66,6 +66,7 @@ abstract class Assembly (val experiment:String, val comment: String, val time: L
 
   def toJSON : String = pretty(render(json))
 
+
   // ---------------- Manipulate methods --------------
 
   /** forall a function on all ParticleTracks - expensive, try to minimise calls to it */

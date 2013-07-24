@@ -1,19 +1,38 @@
 import AssemblyKeys._ // put this at the top of the file
+import sbtassembly.Plugin._
 
 assemblySettings
 
 name := "KLab"
 
+organization := "com.misiunas"
+
 version := "0.1.2"
 
 scalaVersion := "2.10.2"
 
-packageOptions in assembly += Package.ManifestAttributes("SplashScreen-Image" -> "/res/splash.jpg")
+packageOptions in assembly += Package.ManifestAttributes("SplashScreen-Image" -> "splash.png")
+
+// comment about res dirs: http://stackoverflow.com/questions/8588285/how-to-configure-sbt-to-load-resources-when-running-application
+
+mergeStrategy in assembly <<= (mergeStrategy in assembly) { (old) =>
+  {
+    case "META-INF/DEPENDENCIES" => MergeStrategy.discard
+    case "META-INF/MANIFEST.MF" => MergeStrategy.discard
+    case "META-INF/BCKEY.DSA" => MergeStrategy.discard
+    case "META-INF/BCKEY.SF" => MergeStrategy.discard
+    case PathList("org", "fusesource", xs @ _*) => MergeStrategy.last
+    case PathList("META-INF", "native", xs @ _*)=> MergeStrategy.last
+    case "rootdoc.txt" => MergeStrategy.first
+    case _ => MergeStrategy.deduplicate
+  }
+}
+
+// ----------- Libraries ---------------
+
 
 // BREEZE - https://github.com/scalanlp/breeze/
 libraryDependencies  += "org.scalanlp" % "breeze-math_2.10" % "0.4-SNAPSHOT"
-
-//libraryDependencies  += "org.scalanlp" % "breeze-viz_2.10" % "0.4-SNAPSHOT" // will not be supported soon
 
 resolvers ++= Seq(
             // other resolvers here
@@ -51,7 +70,7 @@ libraryDependencies += "jgoodies" % "forms" % "1.0.5"
 libraryDependencies <+= scalaVersion { "org.scala-lang" % "scala-swing" % _ }
 
 // allows interaction with terminal? -> does not work
-//libraryDependencies <+= scalaVersion { "org.scala-lang" % "jline" % _ }
+libraryDependencies <+= scalaVersion { "org.scala-lang" % "jline" % _ }
 
 // argument phrasing: https://github.com/Rogach/scallop
 
@@ -61,3 +80,5 @@ libraryDependencies <+= scalaVersion { "org.scala-lang" % "scala-swing" % _ }
 libraryDependencies += "de.sciss" %% "scalainterpreterpane" % "1.4.+"
 
 // JFreeChart for scala: https://github.com/wookietreiber/scala-chart
+// wrapped in scala: https://github.com/wookietreiber/scala-chart
+libraryDependencies += "com.github.wookietreiber" %% "scala-chart" % "latest.integration"

@@ -30,6 +30,10 @@ class Box2D private (p1:Point, p2: Point, p3:Point, p4:Point) extends GeoVolume{
           Plane2D(p4,p1).distance(p) ).min
   }
 
+  // --------- Other methods ------
+  override def toString :String = "Box2D("+p1+"; "+p2+"; "+p3+"; "+p4+")"
+
+
 }
 
 object Box2D {

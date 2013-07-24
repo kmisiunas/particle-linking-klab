@@ -56,7 +56,7 @@ object Continuum {
       if(needsEnd.isEmpty) return Nil
       if(needsBeginning.isEmpty) throw new Exception("Warning: Set contains elements that still need beginning, but there is no ends to match them with")
       val pt : ParticleTrack = needsEnd.head
-      val timeTolerance = (pt.timeRange._2-pt.timeRange._2)/pt.size * relativeTimeTolerance
+      val timeTolerance = (pt.timeRange._2-pt.timeRange._1)/pt.size * relativeTimeTolerance
       // TODO: code sensitive to coordinate systems
       // TODO: could include time in ordering if we know typical diffusion constant
       val contTrack = (setWB ++ setWBE)
@@ -100,7 +100,7 @@ object Continuum {
     println(" - of which "+finCorrections.map(_.size-1).sum +" made complete tracks")
     var newIDs: Int = ta.maxBy(_.id).id // current top id
     def getNewID: Int = {newIDs = newIDs+1; newIDs}
-    val newTracks = finCorrections.map(ParticleTrack(getNewID, _))
+    val newTracks = finCorrections.map(m => ParticleTrack(getNewID, m, "ParticleTrack"))
     println(" - thus "+newTracks.size +" new tracks were constructed")
     return ta.remove((setWB ++ setWBE ++ setWE).toList).add(newTracks)
   }

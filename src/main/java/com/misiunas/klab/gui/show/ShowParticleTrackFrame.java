@@ -69,7 +69,7 @@ public class ShowParticleTrackFrame {
         panel2.setLayout(new FormLayout("fill:m:grow,left:5dlu:noGrow,center:max(p;100px):grow(10.0),left:4dlu:noGrow,fill:max(m;4px):noGrow", "center:d:grow,top:3dlu:noGrow,center:max(d;4px):noGrow"));
         panel1.add(panel2, cc.xy(1, 3));
         playWebToggleButton = new WebToggleButton();
-        playWebToggleButton.setIcon(new ImageIcon(getClass().getResource("/com/misiunas/klab/gui/show/iMac.png")));
+        playWebToggleButton.setIcon(new ImageIcon(getClass().getResource("/icons/iMac.png")));
         playWebToggleButton.setText("Play");
         panel2.add(playWebToggleButton, cc.xy(1, 3, CellConstraints.LEFT, CellConstraints.DEFAULT));
         webSlider1 = new WebSlider();

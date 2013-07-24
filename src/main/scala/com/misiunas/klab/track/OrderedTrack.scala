@@ -18,7 +18,7 @@ trait OrderedTrack extends Track{
   /** orders the Pos list according to their time  - should not be needed if everything was prepared correctly */
   def timeOrder : OrderedTrack
 
-  /** checks if list conforms to specs */
+  /** checks if list conforms to specs : true if it is good quality */
   def qualityCheck : Boolean = list.sortWith(_.t < _.t) == list
 
   /** finds index of Pos that is closest to specified time - t*/
