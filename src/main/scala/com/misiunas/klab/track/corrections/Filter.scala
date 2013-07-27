@@ -1,7 +1,8 @@
 package com.misiunas.klab.track.corrections
 
-import com.misiunas.klab.track.assemblies.Assembly
+import com.misiunas.klab.track.assemblies.{TrackAssembly, Assembly}
 import com.misiunas.klab.track.geometry.GeoVolume
+import com.misiunas.klab.track.ParticleTrack
 
 /**
  * == Custom filters for track assemblies ==
@@ -19,17 +20,23 @@ object Filter {
    * @param min (default 2)
    * @param max (default infinity)
    */
-  def bySize(ta: Assembly, min: Int = 2, max: Int = inf) : Assembly =
+  def bySize(ta: TrackAssembly, min: Int = 2, max: Int = inf) : TrackAssembly =
     ta.remove(ta.filterNot(pt => pt.size >= min && pt.size <= max).toSeq)
 
   /**
    * Filters out particle tracks that never enter the specified volume element
    * @param inside the region inside which the particles have to be
    */
-  def byLocation(ta: Assembly, inside: GeoVolume) : Assembly =
+  def byLocation(ta: TrackAssembly, inside: GeoVolume) : TrackAssembly =
     ta.remove(
       ta.filter(
         _.list.forall(!inside.isWithin(_)) ).toSeq )
+
+  /** Filter out non-continuous tracks in set region */
+  def byContinuity(ta: TrackAssembly, within: GeoVolume) : TrackAssembly = {
+    val nc = Continuum.findNonContinuousTracks(ta,within)
+    ta.remove( (nc._1 ++ nc._2 ++ nc._3).toSeq )
+  }
 
 
 }

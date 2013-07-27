@@ -1,6 +1,8 @@
 import AssemblyKeys._ // put this at the top of the file
 import sbtassembly.Plugin._
 
+seq(appbundle.settings: _*)
+
 assemblySettings
 
 name := "KLab"
@@ -15,18 +17,31 @@ packageOptions in assembly += Package.ManifestAttributes("SplashScreen-Image" ->
 
 // comment about res dirs: http://stackoverflow.com/questions/8588285/how-to-configure-sbt-to-load-resources-when-running-application
 
+// Produces a jar without dependencies and scala language jar included
+assembleArtifact in packageScala := false
+
+assembleArtifact in packageDependency := false
+
+//dependencyClasspath in assembly := io.File("KLab-assembly-0.1.2-deps.jar").classpath
+//classpath in assembly += "KLab-assembly-0.1.2-deps.jar"
+
 mergeStrategy in assembly <<= (mergeStrategy in assembly) { (old) =>
   {
     case "META-INF/DEPENDENCIES" => MergeStrategy.discard
     case "META-INF/MANIFEST.MF" => MergeStrategy.discard
     case "META-INF/BCKEY.DSA" => MergeStrategy.discard
     case "META-INF/BCKEY.SF" => MergeStrategy.discard
+    case "META-INF/NOTICE.txt" => MergeStrategy.discard
+    case "META-INF/NOTICE" => MergeStrategy.discard
+    case "META-INF/LICENSE.txt" => MergeStrategy.discard
     case PathList("org", "fusesource", xs @ _*) => MergeStrategy.last
     case PathList("META-INF", "native", xs @ _*)=> MergeStrategy.last
     case "rootdoc.txt" => MergeStrategy.first
     case _ => MergeStrategy.deduplicate
   }
 }
+
+//retrieveManaged := true // copies all the jars into lib_managed
 
 // ----------- Libraries ---------------
 

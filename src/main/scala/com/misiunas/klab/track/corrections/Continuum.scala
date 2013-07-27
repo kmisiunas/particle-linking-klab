@@ -8,10 +8,25 @@ import com.misiunas.klab.track.geometry.{GeoVolume, GeoSurface}
 /**
  * == Object containing functions that stitch an non-continuous particle tracks ==
  *
+ * Continuum algorithm takes inspiration from
+ * [[http://www.mathworks.com/matlabcentral/fileexchange/34040-simple-tracker Simple Tracker by Jean-Yves Tinevez]].
+ * Comments:
+ *
+ * [[http://en.wikipedia.org/wiki/Hungarian_algorithm Hungarian algorithm]] is used to link up particle
+ * tracks frame by frame. It can be solved in o(x^3^) -
+ * [[https://code.google.com/p/simulation-csx210/source/browse/trunk/src/scalation/maxima/Hungarian.scala?spec=svn81&r=81 scala implementation]]
+ * . This will be important when tracking the particles outside the channel. Another implementation:
+ * [[https://github.com/KevinStern/software-and-algorithms/blob/master/src/main/java/blogspot/software_and_algorithms/stern_library/optimization/HungarianAlgorithm.java]]
+ *
+ *  Then they join up gaps by joining tracks that are closest.
+ *
+ *  The algorithm might be further improved if we account for probabilistic distribution for the colloid to diffuse to a given position.
+ *
  * User: karolis@misiunas.com
  * Date: 20/07/2013
  * Time: 23:40
  */
+
 object Continuum {
 
   /**

@@ -1,6 +1,7 @@
 package com.misiunas.klab.track.geometry
 
 import com.misiunas.klab.track.position.Pos
+import Math._
 
 /**
  * == A 2D box representation (Quadrilateral) ==
@@ -30,9 +31,19 @@ class Box2D private (p1:Point, p2: Point, p3:Point, p4:Point) extends GeoVolume{
           Plane2D(p4,p1).distance(p) ).min
   }
 
+  // --------- Properties of object --------
+
+  lazy val widestX = abs(max.x - min.x)
+  lazy val widestY = abs(max.y - min.y)
+
+  lazy val min : Point = Point(list.sortWith(_.x<_.x).head.x, list.sortWith(_.y<_.y).head.y)
+  lazy val max : Point = Point(list.sortWith(_.x>_.x).head.x, list.sortWith(_.y>_.y).head.y)
+
   // --------- Other methods ------
   override def toString :String = "Box2D("+p1+"; "+p2+"; "+p3+"; "+p4+")"
 
+  /** list of points defining the box */
+  def list = List(p1,p2,p3,p4)
 
 }
 

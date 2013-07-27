@@ -5,7 +5,7 @@ import scala.tools.nsc.interpreter.{ReplReporter, ILoop}
 import com.misiunas.klab
 
 import com.misiunas.klab.io.LoadFile.loadString
-
+import com.misiunas.klab.gui.Imports
 
 
 /**
@@ -31,11 +31,11 @@ object Terminal {
   //classpath.foreach(settings.classpath.append(_))
   //classpath.foreach(println(_))
   settings.classpath.append("/Users/kmisiunas/Dropbox/PhD/Software/KAnalysis/target/scala-2.10/KAnalysis-assembly-0.1.1.jar")
-  new SampleILoop().process(settings)
+  new Terminal().process(settings)
 
 }
 
-class SampleILoop extends ILoop {
+class Terminal extends ILoop {
 
   // custom comand request
   final val psColor = "\033[36m"  // http://www.scala-lang.org/api/current/index.html#scala.Console$
@@ -45,12 +45,7 @@ class SampleILoop extends ILoop {
 
   addThunk {
    intp.beQuietDuring {
-     intp.addImports("java.lang.Math._")
-      intp.addImports("com.misiunas.klab.track._")
-      intp.addImports("com.misiunas.klab.track.assemblies._")
-      intp.addImports("com.misiunas.klab.io.SaveFile.save")
-      intp.addImports("com.misiunas.klab.io.LoadFile.loadString")
-      intp.addImports("com.misiunas.klab.io.fileChooser")
+     Imports.main.foreach(intp.addImports(_))
     }
   }
 

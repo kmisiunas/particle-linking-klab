@@ -5,6 +5,7 @@ import com.misiunas.klab.track.assemblies.Assembly
 import com.misiunas.klab.track.position.Pos
 import scalax.chart._
 import scalax.chart.Charting._
+import com.misiunas.klab.track.geometry.Channel
 
 /**
  * == Position Histogram ==
@@ -17,14 +18,17 @@ import scalax.chart.Charting._
  */
 class PosHistogram private (val occurrences: List[Int], // number of times particle appears in certain pos
                             val sliceAt: List[Double], // slice positions
-                            val posMapping : (Pos => Double) // way to map Pos to a linear map
-                            ) extends CompatibleWithCSV[PosHistogram]{
+                            val posMapping : (Pos => Double), // way to map Pos to a linear map
+                            val experiment: String // name of the experiment
+                           ) extends CompatibleWithCSV[PosHistogram]{
+
+  /** normalisation factor for the particles within the range */
+  lazy val normalisation = occurrences.tail.dropRight(1).sum
 
   /** Shows the histogram */
   def show() = {
-
-    val chart = XYBarChart(occurrences.tail.zip(sliceAt).toXYSeriesCollection("some points"))
-    chart.show
+    val chart = XYBarChart(sliceAt.zip(occurrences.tail.map(_*1)).toXYSeriesCollection(experiment))
+    chart.show(title="Occurrence frequency at certain position")
   }
 
   /**
@@ -48,15 +52,16 @@ object PosHistogram {
     val size = sliceAt.size
     val array : Array[Int] = Array.ofDim(sliceAt.size+1)
     def addVal(r: Double) = {
-      val pos = idxSliceAt.find(r>_._1)
+      val pos = idxSliceAt.find(r<_._1)
       if(pos.isEmpty) array(size) = array(size) + 1
       else array(pos.get._2) = array(pos.get._2) + 1
     }
     pt.foreach(_.list.foreach(p => addVal(path(p))))
-    return new PosHistogram(array.toList, sliceAt, path)
+    return new PosHistogram(array.toList, sliceAt, path, pt.experiment)
   }
 
-
+  def apply(pt: Assembly, ch: Channel) : PosHistogram =
+    PosHistogram(pt, ch.gridX, ch.direction)
 
 
 }

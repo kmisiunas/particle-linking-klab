@@ -35,15 +35,15 @@ class TrackAssembly private (val listMap : Map[Int, ParticleTrack],
   protected def updateMap(map: Map[Int, ParticleTrack]): TrackAssembly = TrackAssembly(map, experiment, comment, time)
 
   /** forall a function on all ParticleTracks - expensive, try to minimise calls to it */
-  def changeEach(f: (ParticleTrack) => ParticleTrack): Assembly =
+  def changeEach(f: (ParticleTrack) => ParticleTrack) : TrackAssembly  =
     updateMap( listMap.map( m =>  (m._1, f(m._2))).toMap )
 
-  def remove(s: Seq[ParticleTrack]): TrackAssembly = {
+  def remove(s: Seq[ParticleTrack]) : TrackAssembly  = {
     val set = s.map(_.id).toSet
     return TrackAssembly(listMap.filterNot(m => set(m._1)) , experiment, comment, time)
   }
 
-  def add(s: Seq[ParticleTrack]): TrackAssembly =
+  def add(s: Seq[ParticleTrack]) : TrackAssembly =
     TrackAssembly(listMap ++ (s.map(pt => (pt.id, pt)).toMap) , experiment, comment, time)
 }
 
