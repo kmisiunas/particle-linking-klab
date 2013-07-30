@@ -1,6 +1,6 @@
 package com.misiunas.klab.track
 
-import com.misiunas.klab.track.position.Pos
+import com.misiunas.klab.track.geometry.position.Pos
 
 /**
  * == Track abstract trait to follow position in space time of an object ==

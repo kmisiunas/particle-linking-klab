@@ -5,7 +5,7 @@ import com.misiunas.klab.track.ParticleTrack
 import net.liftweb.json.JsonDSL._
 import net.liftweb.json._
 import net.liftweb.json.Serialization.{read, write}
-import com.misiunas.klab.track.position.Pos
+import com.misiunas.klab.track.geometry.position.Pos
 
 //import main.scala.LoadFiles
 
@@ -42,7 +42,8 @@ class ParticleTrackTest extends FunSuite {
   test("ParticleTrack qualityCheck() and timeOrder()") {
     assert(pt1.qualityCheck)
     assert(!pt2.qualityCheck)
-    assert(pt2.timeOrder == pt3) //TODO: this test sometimes fails!!!!?
+    val p = pt2.timeOrder
+    assert(p == pt3, "error:"+p) //TODO: this test sometimes fails!!!!?
   }
 
   test("ParticleTrack timeRange() and range()") {

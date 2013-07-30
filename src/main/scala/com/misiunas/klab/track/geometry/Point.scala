@@ -1,6 +1,6 @@
 package com.misiunas.klab.track.geometry
 
-import com.misiunas.klab.track.position.Pos
+import com.misiunas.klab.track.geometry.position.Pos
 import breeze.linalg.DenseVector
 import org.apache.commons.math3.analysis.function.Sqrt
 

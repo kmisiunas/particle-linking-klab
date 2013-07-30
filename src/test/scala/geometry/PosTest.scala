@@ -1,6 +1,6 @@
 package geometry
 
-import com.misiunas.klab.track.position.Pos
+import com.misiunas.klab.track.geometry.position.Pos
 import com.misiunas.klab.track.ParticleTrack
 import org.scalatest.FunSuite
 

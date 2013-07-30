@@ -15,18 +15,18 @@ import scala.collection.GenTraversableOnce
  * Date: 12/07/2013
  * Time: 15:53
  */
-object SaveFile {
+object Save {
 
   /** Saves any type of object to a specified file. If file name could not be determined will
       * save to a default /"output/" dir.
       */
-  def save(data: Any, file: String = "output/", kind:String = "auto") : Unit = {
+  def apply(data: Any, file: String = "output/", kind:String = "auto") : Unit = {
       // if kind -> try saving with that kind
       // else try to determine kind and save with that kind
       // else save as text file
       val fp = formatFilePath(data, file, kind)
       kind.toLowerCase match{
-        case "auto" | "automatic" => save(data, fp, determineKind(data, fp))
+        case "auto" | "automatic" => apply(data, fp, determineKind(data, fp))
         case "json" => write(data.asInstanceOf[CompatibleWithJSON[Any]].toJSON, fp)
         case "csv" => write(data.asInstanceOf[GenTraversableOnce[Any]].mkString(","), fp)
         case _ => write(data.toString, fp)

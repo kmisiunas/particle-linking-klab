@@ -22,3 +22,22 @@ http://www.jcraft.com/jcterm/
 https://github.com/kmisiunas/DragonConsole
 http://wiki.netbeans.org/TerminalEmulator
 http://help.eclipse.org/indigo/index.jsp?topic=/org.eclipse.platform.doc.isv/reference/api/org/eclipse/jface/text/source/SourceViewer.html
+
+
+--- For sbt-assembly ---
+
+mergeStrategy in assembly <<= (mergeStrategy in assembly) { (old) =>
+  {
+    case "META-INF/DEPENDENCIES" => MergeStrategy.discard
+    case "META-INF/MANIFEST.MF" => MergeStrategy.discard
+    case "META-INF/BCKEY.DSA" => MergeStrategy.discard
+    case "META-INF/BCKEY.SF" => MergeStrategy.discard
+    case "META-INF/NOTICE.txt" => MergeStrategy.discard
+    case "META-INF/NOTICE" => MergeStrategy.discard
+    case "META-INF/LICENSE.txt" => MergeStrategy.discard
+    case PathList("org", "fusesource", xs @ _*) => MergeStrategy.last
+    case PathList("META-INF", "native", xs @ _*)=> MergeStrategy.last
+    case "rootdoc.txt" => MergeStrategy.first
+    case _ => MergeStrategy.deduplicate
+  }
+}

@@ -4,7 +4,7 @@ import com.misiunas.klab.track.formating.CompatibleWithJSON
 import net.liftweb.json._
 import net.liftweb.json.JsonDSL._
 import com.misiunas.klab.track.ParticleTrack
-import com.misiunas.klab.track.position.Pos
+import com.misiunas.klab.track.geometry.position.Pos
 
 
 /**

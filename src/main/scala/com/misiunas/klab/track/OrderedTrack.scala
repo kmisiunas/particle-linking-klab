@@ -1,6 +1,6 @@
 package com.misiunas.klab.track
 
-import com.misiunas.klab.track.position.Pos
+import com.misiunas.klab.track.geometry.position.Pos
 import com.misiunas.klab.track._
 
 /**
@@ -46,7 +46,11 @@ trait OrderedTrack extends Track{
   }
 
   /** finds Position closes to specified time */
-  def findAtTime(t: Double) : Pos = apply(findAtTimeIdx(t))
+  def findAtTime(t: Double) : Pos = try {
+    apply(findAtTimeIdx(t))
+  } catch {
+    case e:Exception => return null
+  }
 
   lazy val timeRange : TimeRange = (apply(0).t, apply(size-1).t)
 

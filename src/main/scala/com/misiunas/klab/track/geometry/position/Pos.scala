@@ -1,4 +1,4 @@
-package com.misiunas.klab.track.position
+package com.misiunas.klab.track.geometry.position
 
 import com.misiunas.klab.track.formating.CompatibleWithJSON
 import net.liftweb.json._
@@ -32,6 +32,8 @@ class Pos protected (val t: Double, override val x:Double, override val y:Double
   def get = (t,x,y,z)
 
   def list = List(t,x,y,z)
+
+  def toPoint: Point = Point(x,y,z)
 
   // ------------------  Manipulation Methods ---------------
 

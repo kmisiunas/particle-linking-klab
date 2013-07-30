@@ -3,9 +3,9 @@ package com.misiunas.klab.track
 import org.joda.time.DateTime
 import net.liftweb.json.JsonDSL._
 import net.liftweb.json._
-import com.misiunas.klab.track.units.HasUnits
+import com.misiunas.klab.track.geometry.position.units.HasUnits
 import com.misiunas.klab.track.formating.CompatibleWithJSON
-import com.misiunas.klab.track.position.Pos
+import com.misiunas.klab.track.geometry.position.Pos
 
 
 /**

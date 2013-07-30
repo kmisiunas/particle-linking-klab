@@ -1,4 +1,4 @@
-package com.misiunas.klab.track.position
+package com.misiunas.klab.track.geometry.position
 
 /**
  * == Position of a vector representation ==

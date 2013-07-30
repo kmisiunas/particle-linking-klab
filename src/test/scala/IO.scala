@@ -1,4 +1,4 @@
-import com.misiunas.klab.io.SaveFile._
+import com.misiunas.klab.io.Save
 import org.scalatest.FunSuite
 
 /**
@@ -9,7 +9,7 @@ import org.scalatest.FunSuite
 class IO extends FunSuite{
 
   test("Save file test") {
-    save("A test string to be saved", "testDir/testFile.txt")
+    Save("A test string to be saved", "testDir/testFile.txt")
   }
 
 

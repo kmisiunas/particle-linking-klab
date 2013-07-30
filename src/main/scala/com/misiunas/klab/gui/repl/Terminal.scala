@@ -4,7 +4,7 @@ import scala.tools.nsc.Settings
 import scala.tools.nsc.interpreter.{ReplReporter, ILoop}
 import com.misiunas.klab
 
-import com.misiunas.klab.io.LoadFile.loadString
+import com.misiunas.klab.io.Load.loadString
 import com.misiunas.klab.gui.Imports
 
 
@@ -17,21 +17,28 @@ import com.misiunas.klab.gui.Imports
  */
 object Terminal {
 
-  lazy val urls = java.lang.Thread.currentThread.getContextClassLoader match {
-    case cl: java.net.URLClassLoader => cl.getURLs.toList
-    case _ => sys.error("classloader is not a URLClassLoader")
-  }
-  lazy val classpath = urls map {_.toString}
+  lazy val c = new Colors()
 
-  val settings = new Settings
-  settings.usejavacp.value = true
-  settings.deprecation.value = true
-  //settings.embeddedDefaults[SampleILoop] // experimental support for running within sbt:http://www.scala-sbt.org/release/docs/faq
-  println(settings.classpath.value)
-  //classpath.foreach(settings.classpath.append(_))
-  //classpath.foreach(println(_))
-  settings.classpath.append("/Users/kmisiunas/Dropbox/PhD/Software/KAnalysis/target/scala-2.10/KAnalysis-assembly-0.1.1.jar")
-  new Terminal().process(settings)
+  def apply() = {
+    // not necessary?
+//    lazy val urls = java.lang.Thread.currentThread.getContextClassLoader match {
+//      case cl: java.net.URLClassLoader => cl.getURLs.toList
+//      case _ => sys.error("classloader is not a URLClassLoader")
+//    }
+//    lazy val classpath = urls map {_.toString}
+
+    // essential!
+    val settings = new scala.tools.nsc.Settings
+    settings.usejavacp.value = true
+    settings.deprecation.value = true
+    settings.withErrorFn(m => println(c.error + m + c.end))
+
+    //settings.embeddedDefaults[SampleILoop] // experimental support for running within sbt:http://www.scala-sbt.org/release/docs/faq
+    // experimental auto detection of class paths : http://speaking-my-language.blogspot.co.uk/2009/11/embedded-scala-interpreter.html
+    //settings.classpath.append("/Users/kmisiunas/Dropbox/PhD/Software/KAnalysis/target/scala-2.10/KAnalysis-assembly-0.1.1.jar")
+
+    new Terminal().process(settings)
+  }
 
 }
 

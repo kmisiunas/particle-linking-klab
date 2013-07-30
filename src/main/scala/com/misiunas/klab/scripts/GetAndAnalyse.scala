@@ -30,12 +30,14 @@ object GetAndAnalyse {
     if(file.isEmpty || file == "null" || file == "nullnull") file = io.fileChooser
     if(file.isEmpty || file == "null" || file == "nullnull") return null
 
-    val raw = TrackAssembly(io.LoadFile.loadString(file))
+    val raw = TrackAssembly(io.Load.loadString(file))
     println("loaded: "+raw)
 
     val channel = Channel.simpleAlongX(5, 95, 40)
     val corr: TrackAssembly = Filter.byContinuity(Filter.byLocation(Filter.bySize(raw), channel), channel)
     println("filtered: "+corr)
+
+    //val corr = com.misiunas.klab.track.corrections.Continuum.autoCorrection(pt)
 
     val r = Range(5,96,2).toList.map(_.toDouble)
     PosHistogram(corr, r, _.x).show()

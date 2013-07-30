@@ -1,7 +1,6 @@
 import AssemblyKeys._ // put this at the top of the file
 import sbtassembly.Plugin._
-
-seq(appbundle.settings: _*)
+//import xerial.sbt.Pack._
 
 assemblySettings
 
@@ -13,17 +12,13 @@ version := "0.1.2"
 
 scalaVersion := "2.10.2"
 
-packageOptions in assembly += Package.ManifestAttributes("SplashScreen-Image" -> "splash.png")
-
-// comment about res dirs: http://stackoverflow.com/questions/8588285/how-to-configure-sbt-to-load-resources-when-running-application
 
 // Produces a jar without dependencies and scala language jar included
 assembleArtifact in packageScala := false
 
 assembleArtifact in packageDependency := false
 
-//dependencyClasspath in assembly := io.File("KLab-assembly-0.1.2-deps.jar").classpath
-//classpath in assembly += "KLab-assembly-0.1.2-deps.jar"
+//packageOptions in assembly += Package.ManifestAttributes("SplashScreen-Image" -> "splash.png")
 
 mergeStrategy in assembly <<= (mergeStrategy in assembly) { (old) =>
   {
@@ -75,6 +70,8 @@ libraryDependencies += "com.github.nscala-time" %% "nscala-time" % "0.4.2"
 libraryDependencies += "net.liftweb" %% "lift-json" % "2.5.1"
 
 // Automatic serialization to JSON: https://github.com/scala/pickling
+
+//Graph database https://github.com/twitter/flockdb
 
 // ------------------ GUI -----------------
 

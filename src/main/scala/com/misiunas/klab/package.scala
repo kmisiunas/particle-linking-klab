@@ -5,7 +5,7 @@ import com.alee.laf.WebLookAndFeel
 import com.misiunas.klab.gui.show.ShowParticleTrack
 import javax.swing.UIManager
 import com.misiunas.klab.track.ParticleTrack
-import com.misiunas.klab.track.position.Pos
+import com.misiunas.klab.track.geometry.position.Pos
 
 /**
  * User: karolis@misiunas.com
@@ -16,7 +16,7 @@ package object klab {
 
   val appName = "K-Lab"
 
-  val appVersion = "0.1.2"
+  val appVersion = "0.1.3"
 
   UIManager.setLookAndFeel ( new WebLookAndFeel() ); // Swing L&F
 
@@ -25,7 +25,7 @@ package object klab {
     if(args.isEmpty) SimpleGUI.run
     else
       args.head match {
-        case "terminal" | "t" | "console" | "-t" => Terminal
+        case "terminal" | "t" | "console" | "-t" => Terminal()
         case _ => SimpleGUI.run
       }
   }

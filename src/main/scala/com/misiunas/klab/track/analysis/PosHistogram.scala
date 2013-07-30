@@ -2,7 +2,7 @@ package com.misiunas.klab.track.analysis
 
 import com.misiunas.klab.track.formating.CompatibleWithCSV
 import com.misiunas.klab.track.assemblies.Assembly
-import com.misiunas.klab.track.position.Pos
+import com.misiunas.klab.track.geometry.position.Pos
 import scalax.chart._
 import scalax.chart.Charting._
 import com.misiunas.klab.track.geometry.Channel

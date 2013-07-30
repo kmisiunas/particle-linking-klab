@@ -1,4 +1,8 @@
-addSbtPlugin("de.sciss" % "sbt-appbundle" % "1.0.1")
+//addSbtPlugin("org.xerial.sbt" % "sbt-pack" % "0.2")
+// https://github.com/xerial/sbt-pack
+// command: pack
+
+//addSbtPlugin("de.sciss" % "sbt-appbundle" % "1.0.1")
 //https://github.com/sbt/sbt-appbundle - good for collecting all jars in one dir
 // comman: appbundle
 

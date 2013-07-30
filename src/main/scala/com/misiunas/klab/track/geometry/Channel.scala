@@ -1,7 +1,7 @@
 package com.misiunas.klab.track.geometry
 
 import com.misiunas.klab.track.formating.CompatibleWithJSON
-import com.misiunas.klab.track.position.Pos
+import com.misiunas.klab.track.geometry.position.Pos
 import scala.collection.immutable.NumericRange
 
 /**

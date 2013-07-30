@@ -1,6 +1,6 @@
 package com.misiunas.klab.track.geometry
 
-import com.misiunas.klab.track.position.Pos
+import com.misiunas.klab.track.geometry.position.Pos
 
 /**
  * User: karolis@misiunas.com
