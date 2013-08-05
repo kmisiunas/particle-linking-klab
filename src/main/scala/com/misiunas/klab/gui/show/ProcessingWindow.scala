@@ -32,6 +32,31 @@ abstract class ProcessingWindow extends PApplet{
   /** the point at which the physical map begins */
   val physicalCenter : Point
 
+  // ------------- Auto Color generator -------------
+
+  private var currentColorPicker = 0
+
+  /** reset color picker */
+  def resetColorPallet(): Unit = {currentColorPicker = 0}
+
+  /** set to next color in the pallet */
+  def nextColor(): Unit =
+    if (currentColorPicker < defaultColorList.size-1) currentColorPicker = currentColorPicker+1
+    else currentColorPicker = 0
+
+  /** get current color */
+  def getColor: Int = defaultColorList( currentColorPicker )
+
+  lazy val defaultColorList = Array(
+    color(255),
+    color(255,0,0),
+    color(0,255,0),
+    color(0,0,255),
+    color(255,0,255),
+    color(0,255,255),
+    color(255,255,0)
+  )
+
   // ------------- Variables and constants ----------
 
   val colorBG = color(237)  // background color
@@ -164,5 +189,4 @@ abstract class ProcessingWindow extends PApplet{
     viewCoord = new PVector(0,0)
     redraw
   }
-
 }

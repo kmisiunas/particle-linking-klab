@@ -35,7 +35,8 @@ class ParticleTrack private (
                     val experiment:String = "Experiment_on_"+ DateTime.now().toLocalDate.toString, // the experiment title
                     val comment: String = "",
                     val time:Long = System.currentTimeMillis())
- extends OrderedTrack with HasUnits with CompatibleWithJSON[ParticleTrack]{
+  extends OrderedTrack with HasUnits with CompatibleWithJSON[ParticleTrack]{
+
 
   // ############## Methods ##################
 
@@ -73,7 +74,7 @@ class ParticleTrack private (
 
   def fromJSON(st: String) : ParticleTrack = ParticleTrack.fromJSON(st)
 
-  override def toString : String = "ParticleTrack(id="+id+")"
+  override def toString : String = "ParticleTrack(id="+id+", size="+ size +")"
 
   def apply(i: Int): Pos = list.apply(i)
   def isEmpty = list.isEmpty

@@ -5,7 +5,7 @@ import scala.tools.nsc.interpreter.{ReplReporter, ILoop}
 import com.misiunas.klab
 
 import com.misiunas.klab.io.Load.loadString
-import com.misiunas.klab.gui.Imports
+import com.misiunas.klab.gui.{ScriptEngine, Imports}
 
 
 /**
@@ -17,7 +17,7 @@ import com.misiunas.klab.gui.Imports
  */
 object Terminal {
 
-  lazy val c = new Colors()
+  lazy val c = if(System.getProperty("os.name").toLowerCase.contains("mac")) new Colors() else new Colors()
 
   def apply() = {
     // not necessary?
@@ -31,7 +31,7 @@ object Terminal {
     val settings = new scala.tools.nsc.Settings
     settings.usejavacp.value = true
     settings.deprecation.value = true
-    settings.withErrorFn(m => println(c.error + m + c.end))
+    settings.withErrorFn(m => println(c.error + m + c.end)) // not sure what it does!
 
     //settings.embeddedDefaults[SampleILoop] // experimental support for running within sbt:http://www.scala-sbt.org/release/docs/faq
     // experimental auto detection of class paths : http://speaking-my-language.blogspot.co.uk/2009/11/embedded-scala-interpreter.html
@@ -44,15 +44,23 @@ object Terminal {
 
 class Terminal extends ILoop {
 
-  // custom comand request
-  final val psColor = "\033[36m"  // http://www.scala-lang.org/api/current/index.html#scala.Console$
-  lazy val promptSymbol : String =
-    if(System.getProperty("os.name").toLowerCase.contains("mac")) psColor+"==> "+"\033[0m" else "==> "
-  override def prompt = promptSymbol
+  def c = Terminal.c // quick access
+
+  override def prompt = c.prompt +"==> "+c.end // custom prompt
+
+  lazy val scriptEngine = new ScriptEngine(this)  // to exxecute automated scripts
+
+  /** special printing function that shows prompt */
+  def commandSc(sc:String) = {
+    println(c.autoPrompt +"script> "+c.end + sc)
+    command(sc)
+  }
 
   addThunk {
    intp.beQuietDuring {
      Imports.main.foreach(intp.addImports(_))
+     intp.bind("scriptEngine", scriptEngine) // enable scripts to be run as a commands: Run("file")
+     command("def Run(script:String = \"\") = scriptEngine.run(script)")
     }
   }
 
@@ -67,6 +75,15 @@ class Terminal extends ILoop {
       "         (o o)\n" +
       "-----oOOo-(_)-oOOo-----")
   }
+
+  /** special command input for surpressing result printing if command ends with ; */
+  override def command(line: String): Result = {
+    if(line.replaceAll("//.+$", "").trim.takeRight(1) == ";") intp.beSilentDuring(super.command(line))
+    else super.command(line)
+  }
+
+
+// use the code below if you want syntax highlighting
 
 //    var gremlinIntp: GremlinInterpreter = _
 //    override def createInterpreter() {

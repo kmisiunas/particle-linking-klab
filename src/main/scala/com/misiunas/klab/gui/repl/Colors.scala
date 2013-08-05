@@ -10,11 +10,14 @@ package com.misiunas.klab.gui.repl
 class Colors {
 
   /** terminator for selected colors */
-  def end = "\\x1b[0m"
+  def end = "\033[0m"
 
   /** error message */
-  def error = "\\x1b[31m"
+  def error = "\033[31m"
 
-  def prompt = "\\033[36m"
+  def prompt = "\033[36m"
+
+  /** color when messages are printed automatically */
+  def autoPrompt = "\033[36m"
 
 }

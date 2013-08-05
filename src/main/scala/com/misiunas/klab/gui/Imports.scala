@@ -17,7 +17,8 @@ object Imports {
     "com.misiunas.klab.track.geometry._",
     "com.misiunas.klab.track.analysis._",
     "com.misiunas.klab.track.corrections._",
-    "com.misiunas.klab.gui.show.Show"
+    "com.misiunas.klab.gui.show.Show",
+    "sys.exit"
   )
 
 }

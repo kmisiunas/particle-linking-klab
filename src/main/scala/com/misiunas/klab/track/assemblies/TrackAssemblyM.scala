@@ -46,6 +46,11 @@ class TrackAssemblyM private (val listMap : Map[Int, ParticleTrack],
     listMap ++= (s.map(pt => (pt.id, pt)).toMap)
     return this
   }
+
+  def apply(f: (List[ParticleTrack]) => List[ParticleTrack]): Assembly = ???
+
+  /** adds new list of tracks that was generated form current list */
+  def add(f: (List[ParticleTrack]) => List[ParticleTrack]): Assembly = ???
 }
 
 /**

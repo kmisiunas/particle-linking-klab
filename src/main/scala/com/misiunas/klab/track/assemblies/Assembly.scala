@@ -80,9 +80,16 @@ abstract class Assembly (val experiment:String, val comment: String, val time: L
 
   /** adds particles to the assembly */
   def add(s :Seq[ParticleTrack]): Assembly
+  /** adds new list of tracks that was generated form current list */
+  def add(f: (List[ParticleTrack]) => List[ParticleTrack]): Assembly
+
+  def apply(f : List[ParticleTrack] => List[ParticleTrack] ) : Assembly
 }
 
 object Assembly {
+
+  /** an important implicit conversion  - many method rely on this to function*/
+  implicit def assemblyToList(ta: Assembly) = ta.toList
 
   val version = 2
 

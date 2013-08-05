@@ -49,17 +49,19 @@ public class ShowParticleTrackFrame {
     }
 
     protected void prepareSlider() {
-        sliderFrameSelector.setMaximum(spt.pt().size());
+        sliderFrameSelector.setMinimum((int)spt.range()._1().t());
+        sliderFrameSelector.setValue((int)spt.range()._1().t());
+        sliderFrameSelector.setMaximum((int)spt.range()._2().t());
     }
 
     protected void prepareTimeLabel() {
-        labelTime.setText("[" + spt.pt().list().head().t() + " : " + spt.pt().list().last().t() + "] " + spt.pt().units().head());
+        labelTime.setText("[" + spt.range()._1().t() + " : " + spt.range()._2().t() + "] " + spt.units().head());
     }
 
     protected void sliderAction() {
         int frame = sliderFrameSelector.getValue();
-        labelFrameIndicator.setText(frame + " / " + sliderFrameSelector.getMaximum());
-        labelTime.setText(Double.toString(spt.pt().apply(frame - 1).t()) + " " + spt.pt().units().head());
+        labelFrameIndicator.setText(frame + " / " + sliderFrameSelector.getMaximum()); //todo
+        labelTime.setText(Double.toString(frame) + " " + spt.units().head());
         spt.drawFrames(frame - 1);
         updateSPT();
     }
@@ -145,7 +147,7 @@ public class ShowParticleTrackFrame {
         processingPanel.repaint();
         updateSPT();
         prepareTimeLabel();
-        frame.setTitle("Show( "+ spt.pt().toString() +" )");
+        frame.setTitle("Show( "+ spt.toString() +" )");
     }
 
     private void createUIComponents() {

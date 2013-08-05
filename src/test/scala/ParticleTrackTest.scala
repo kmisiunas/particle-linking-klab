@@ -54,10 +54,10 @@ class ParticleTrackTest extends FunSuite {
   test("ParticleTrack findAtTimeIdx() and findAtTime()") {
     assert(pt4.findAtTimeIdx(10) == 0)
     assert(pt4.findAtTimeIdx(28) == pt4.size-1)
-    assert(pt4.findAtTimeIdx(23) == 5)
-    assert(pt4.findAtTimeIdx(12) == 2)
+    assert(pt4.findAtTimeIdx(23) == 4)
+    assert(pt4.findAtTimeIdx(12) == 1)
     //println("pos:"+pt4.findAtTimeIdx(13.5))
-    assert(pt4.findAtTime(13.501) == Pos(14,2,2))
+    assert(pt4.findAtTime(13.501) == Pos(13,1.1,1))
   }
 
 

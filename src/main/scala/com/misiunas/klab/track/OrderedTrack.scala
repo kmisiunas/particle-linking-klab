@@ -21,35 +21,20 @@ trait OrderedTrack extends Track{
   /** checks if list conforms to specs : true if it is good quality */
   def qualityCheck : Boolean = list.sortWith(_.t < _.t) == list
 
-  /** finds index of Pos that is closest to specified time - t*/
+  /** finds index of Pos that is closest to specified time - t
+    * The Method returns time interval lower bound, not a closest element idx */
   def findAtTimeIdx(t: Double): Int = {
-    //TODO: ugly implementation and does not behave right at equal separations
-    if (timeRange._1 > t || timeRange._2 < t) throw new Exception("Warning: this track does not have position at t="+t)
-    if (t == apply(0).t) return 0
-    if (t == apply(size-1).t) return size-1
-    def search(down: Int, up: Int) : Int = {
-      val nr = (up-down)/2 + down
-      if (apply(nr).t == t) return nr
-      if(up==down) return up
-      if(up-down == 1)
-        if( Math.abs(t-apply(up).t) >= Math.abs(t-apply(down).t)) return down
-        else return up
-      if(apply(nr).t > t) return search(nr, down)
-      else return search(up, nr)
-    }
-    def correct(i: Int) : Int = {
-      if(i>0 && Math.abs(t-apply(i-1).t) < Math.abs(t-apply(i).t))  return i-1
-      else if(i<size-1 && Math.abs(t-apply(i+1).t) < Math.abs(t-apply(i).t))  return i+1
-      else return i
-    }
-    correct(search(0, size-1))
+    if (timeRange._1 > t || timeRange._2 < t) return -1
+    if (t == timeRange._2) return size-1
+    // simple search by iteration, because using lists makes it iterate anyway!
+    list.indexWhere(_.t > t) -1
   }
 
   /** finds Position closes to specified time */
-  def findAtTime(t: Double) : Pos = try {
-    apply(findAtTimeIdx(t))
-  } catch {
-    case e:Exception => return null
+  def findAtTime(t: Double) : Pos = {
+    val idx = findAtTimeIdx(t)
+    if (idx == -1) return null
+    else return apply(idx)
   }
 
   lazy val timeRange : TimeRange = (apply(0).t, apply(size-1).t)

@@ -21,34 +21,34 @@ object Filter {
    * @param min (default 2)
    * @param max (default infinity)
    */
-  def bySize(ta: TrackAssembly, min: Int = 2, max: Int = inf) : TrackAssembly =
-    ta.remove(ta.filterNot(pt => pt.size >= min && pt.size <= max).toSeq)
-
+  def bySize(min: Int, max: Int = inf): PTFilter =
+    ta => ta.filter(pt => pt.size >= min && pt.size <= max).toList
 
   /**
    * Filters out particle tracks that never enter the specified volume element
    * @param inside the region inside which the particles have to be
    */
-  def byLocation(ta: TrackAssembly, inside: GeoVolume) : TrackAssembly =
-    ta.remove(
-      ta.filter(
-        _.list.forall(!inside.isWithin(_)) ).toSeq )
+  def byLocation( inside: GeoVolume): PTFilter =
+    ta => ta.filter(_.list.forall(!inside.isWithin(_)) ).toList
 
 
   /** Filter out non-continuous tracks in set region */
-  def byContinuity(ta: TrackAssembly, within: GeoVolume = Everywhere()) : TrackAssembly = {
-    val nc = Continuum.findNonContinuousTracks(ta,within)
-    ta.remove( (nc._1 ++ nc._2 ++ nc._3).toSeq )
+  def byContinuity(within: GeoVolume = Everywhere()): PTFilter =
+  ta => {
+    val nc = Continuum.find(within)(ta)
+    (nc._1 ++ nc._2 ++ nc._3).toList
   }
 
 
   /** Filters all tracks that overlap by specified proximity in specified area (expensive: > n^4^ or even n^5^) */
-  def byProximity(ta: TrackAssembly, minDistance: Double, within: GeoVolume = Everywhere()) : TrackAssembly = {
-    val overlapping = ta.filterNot(t =>
-      Proximity.distances(t, ta).filter(a => within.isWithin(a._2._2)).filter(_._2._1 < minDistance).isEmpty
-    )
-    // exclude tracks that do not comply with the separation
-    ta.remove( overlapping.toList )
-  }
+  def byProximity(minDistance: Double, within: GeoVolume = Everywhere()): PTFilter =
+  ta =>
+     ta.filterNot(t =>
+      Proximity.distances(t)(ta)
+        .filter(a => within.isWithin(a.thisPos) && within.isWithin(a.thatPos))
+        .filter(_.distance < minDistance)
+        .isEmpty
+      ).toList
+
 
 }

@@ -4,12 +4,11 @@ import net.liftweb.json.JsonAST.{JDouble, JField}
 import org.joda.time.DateTime
 import com.misiunas.klab.track.ParticleTrack
 import scala.collection
-import scala.collection
 
 /**
  * == Immutable Track Assembly ==
  *
- * A class for storing an managing immutable tracks.
+ * A class for storing an managing immutable tracks. Keep the list ordered according to their key.
  *
  * Most nuts and bolts are in Assembly class
  *
@@ -45,6 +44,10 @@ class TrackAssembly private (val listMap : Map[Int, ParticleTrack],
 
   def add(s: Seq[ParticleTrack]) : TrackAssembly =
     TrackAssembly(listMap ++ (s.map(pt => (pt.id, pt)).toMap) , experiment, comment, time)
+  def add(f: (List[ParticleTrack]) => List[ParticleTrack]): TrackAssembly = add(f(this))
+
+  def apply(f: (List[ParticleTrack]) => List[ParticleTrack]): TrackAssembly =
+    TrackAssembly(f( this.toList ), experiment, comment, time)
 }
 
 /**
@@ -52,12 +55,12 @@ class TrackAssembly private (val listMap : Map[Int, ParticleTrack],
  */
 object TrackAssembly {
 
-  def apply(listMap : Map[Int, ParticleTrack],
-            experiment: String = "Experiment_on_"+ DateTime.now().toLocalDate.toString,
-            comment: String = "",
-            time: Long = System.currentTimeMillis()) : TrackAssembly=
+  def apply(listMap : Map[Int, ParticleTrack], experiment: String, comment: String, time: Long) : TrackAssembly=
     new TrackAssembly(listMap, experiment,comment,time)
-  def apply(list: Seq[ParticleTrack], experiment: String, comment:String, time:Long) : TrackAssembly=
+  def apply(list: Seq[ParticleTrack],
+            experiment: String  = "Experiment_on_"+ DateTime.now().toLocalDate.toString,
+            comment:String = "" ,
+            time:Long = System.currentTimeMillis()) : TrackAssembly=
     TrackAssembly(list.sortWith(_.id < _.id).map(pt => (pt.id, pt)).toMap, experiment, comment, time)
   def apply(json: String) : TrackAssembly= fromJSON(json)
 
