@@ -15,7 +15,7 @@ import scala.collection.immutable.NumericRange
  */
 class Channel private (val name: String, // the name of the channel (id)
                        val geometry: Box2D, // the channel shape
-                       val direction: (Pos=>Double),// the direction of the channel
+                       val line: (Point=>Double),// the direction of the channel
                        val binX : Double, // the size of the bins along x
                        val binY: Double,  // same along y
                        val units: List[String])

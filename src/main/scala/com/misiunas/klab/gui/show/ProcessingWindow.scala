@@ -19,7 +19,7 @@ import org.joda.time.DateTime
  * Date: 28/07/2013
  * Time: 01:05
  */
-abstract class ProcessingWindow extends PApplet{
+abstract class ProcessingWindow extends ProcessingExtended {
 
   // ----------- TO IMPLEMENT in sub-class ----------
 
@@ -60,7 +60,6 @@ abstract class ProcessingWindow extends PApplet{
   // ------------- Variables and constants ----------
 
   val colorBG = color(237)  // background color
-  val fontMelno = loadFont("Menlo.vlw") // monospaced font (32) located in resources/data/
 
   /** at what stage is the zoom */
   var zoomLevel : Float = 1
@@ -90,6 +89,7 @@ abstract class ProcessingWindow extends PApplet{
 
   override def draw() = {
     background(colorBG)
+    legend.reset()
     pushMatrix()
     translate(width/2, height/2) //set the drawing in the right position
     scale(zoomLevel) // zoom
@@ -98,6 +98,7 @@ abstract class ProcessingWindow extends PApplet{
 
     popMatrix()  // reset for the rest
     //drawCursor
+    legend.draw(0,0)
   }
 
   // ----------- Coordination --------------------

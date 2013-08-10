@@ -7,12 +7,12 @@ package com.misiunas.klab.track.formating
  */
 trait CompatibleWithCSV[T] {
 
-  val cvsSeparator = ", "
+  val csvSeparator = ", "
 
   /**
    * Produces a readable CVS file. Implementation should be modular.
    */
-  def toCVS : String
+  def toCSV : String
 
   /** constructs back the object from JSON string input */
   // def fromCVS(st: String) : T

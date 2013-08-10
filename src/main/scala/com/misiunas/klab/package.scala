@@ -3,9 +3,10 @@ package com.misiunas
 import com.misiunas.klab.gui.repl.{Terminal, SimpleGUI}
 import com.alee.laf.WebLookAndFeel
 import com.misiunas.klab.gui.show.ShowParticleTrack
-import javax.swing.UIManager
+import javax.swing.{JFrame, UIManager}
 import com.misiunas.klab.track.ParticleTrack
 import com.misiunas.klab.track.geometry.position.Pos
+import java.awt.Component
 
 /**
  * User: karolis@misiunas.com
@@ -28,5 +29,11 @@ package object klab {
         case "terminal" | "t" | "console" | "-t" => Terminal()
         case _ => SimpleGUI.run
       }
+  }
+
+  lazy val guiOwner: Component = {
+    val frame = new JFrame(appName)
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
+    frame.getContentPane
   }
 }

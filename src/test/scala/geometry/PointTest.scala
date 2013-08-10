@@ -1,7 +1,6 @@
 package geometry
 
 import org.scalatest.FunSuite
-import com.misiunas.klab.track.position.Pos
 import com.misiunas.klab.track.geometry.Point
 
 /**
@@ -17,6 +16,8 @@ class PointTest extends FunSuite {
   val p2 = Point(3,2,1)
   val p3 = Point(1,4,2)
   val p4 = Point(2,2,0)
+  val p5 = Point(4,0,0)
+  val p6 = Point(0,3,0)
 
   test("Point.equals") {
     assert(p1 == Point(1.1,2.2,3.3))
@@ -32,6 +33,10 @@ class PointTest extends FunSuite {
     assert((p2 * 2) == Point(6,4,2))
     assert((2 *: p2) == Point(6,4,2))
     assert((p4.normalise) == ((1/Math.sqrt(2)) *: Point(1,1,0)),"Failed to normalize: "+ (p4.normalise))
+  }
+
+  test("Point.distance") {
+    assert(p5.distance(p6) == 5, "Distance test = "+ p5.distance(p6) + ", expected 5")
   }
 
 }

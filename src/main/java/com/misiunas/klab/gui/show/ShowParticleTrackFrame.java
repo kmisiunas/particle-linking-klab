@@ -49,9 +49,9 @@ public class ShowParticleTrackFrame {
     }
 
     protected void prepareSlider() {
-        sliderFrameSelector.setMinimum((int)spt.range()._1().t());
-        sliderFrameSelector.setValue((int)spt.range()._1().t());
-        sliderFrameSelector.setMaximum((int)spt.range()._2().t());
+        sliderFrameSelector.setMinimum((int) spt.range()._1().t()); // todo: only works well fro frames with separation 1
+        sliderFrameSelector.setValue((int) spt.range()._1().t());
+        sliderFrameSelector.setMaximum((int) spt.range()._2().t());
     }
 
     protected void prepareTimeLabel() {
@@ -60,9 +60,11 @@ public class ShowParticleTrackFrame {
 
     protected void sliderAction() {
         int frame = sliderFrameSelector.getValue();
-        labelFrameIndicator.setText(frame + " / " + sliderFrameSelector.getMaximum()); //todo
-        labelTime.setText(Double.toString(frame) + " " + spt.units().head());
-        spt.drawFrames(frame - 1);
+        int minFrame = sliderFrameSelector.getMinimum();
+        int maxFrame = sliderFrameSelector.getMaximum();
+        labelFrameIndicator.setText((frame-minFrame) + " / " + (maxFrame-minFrame)); //todo
+        labelTime.setText(frame + " " + spt.units().head());
+        spt.drawFrames(frame);
         updateSPT();
     }
 
@@ -147,7 +149,7 @@ public class ShowParticleTrackFrame {
         processingPanel.repaint();
         updateSPT();
         prepareTimeLabel();
-        frame.setTitle("Show( "+ spt.toString() +" )");
+        frame.setTitle("Show( " + spt.toString() + " )");
     }
 
     private void createUIComponents() {

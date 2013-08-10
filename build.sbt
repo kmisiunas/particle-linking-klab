@@ -12,6 +12,9 @@ version := "0.1.3"
 
 scalaVersion := "2.10.2"
 
+// -------- Assembly Config ---------
+
+test in assembly := {} // ignore tests
 
 // Produces a jar without dependencies and scala language jar included
 assembleArtifact in packageScala := false
@@ -51,9 +54,10 @@ resolvers ++= Seq(
             "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/releases/"
 )
 
-
+// TEST
 libraryDependencies += "org.scalatest" % "scalatest_2.10" % "1.9.1" % "test"
 
+// JUNIT
 libraryDependencies += "junit" % "junit" % "4.10" % "test"
 
 // Joda time for scala
@@ -62,16 +66,8 @@ libraryDependencies += "com.github.nscala-time" %% "nscala-time" % "0.4.2"
 // Library for monitoring performance
 //libraryDependencies += "nl.grons" %% "metrics-scala" % "3.0.0"
 
-// Write good code: http://basis.reify.it/
-
-// Database interaction: http://slick.typesafe.com/
-
 // Json: https://github.com/lift/lift/tree/master/framework/lift-base/lift-json
 libraryDependencies += "net.liftweb" %% "lift-json" % "2.5.1"
-
-// Automatic serialization to JSON: https://github.com/scala/pickling
-
-//Graph database https://github.com/twitter/flockdb
 
 // ------------------ GUI -----------------
 
@@ -79,14 +75,11 @@ libraryDependencies += "jgoodies" % "forms" % "1.0.5"
 
 //libraryDependencies += "com.jgoodies" % "jgoodies-common" % "1.4.0"
 
+// Remove latter, use Java swing for GUI
 libraryDependencies <+= scalaVersion { "org.scala-lang" % "scala-swing" % _ }
 
 // allows interaction with terminal? -> does not work
 libraryDependencies <+= scalaVersion { "org.scala-lang" % "jline" % _ }
-
-// argument phrasing: https://github.com/Rogach/scallop
-
-// command line options parsing: https://github.com/scopt/scopt
 
 // ScalaInterpreterPane - a Way ti interact with KAnalysis: https://github.com/Sciss/ScalaInterpreterPane
 libraryDependencies += "de.sciss" %% "scalainterpreterpane" % "1.4.+"

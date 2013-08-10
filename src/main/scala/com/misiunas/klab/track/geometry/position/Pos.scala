@@ -48,7 +48,8 @@ class Pos protected (val t: Double, override val x:Double, override val y:Double
     case _ => throw new Exception("Error: the Pos.set component could not be interpreted. You passed: "+comp)
   }
 
-
+  /** get the same position with Low Quality mark */
+  def toLQPos: LQPos = LQPos(t,x,y,z)
 
   // ------------------  Other Methods ---------------
 
@@ -66,14 +67,15 @@ class Pos protected (val t: Double, override val x:Double, override val y:Double
   def fromJSON(st:String) : Pos = Pos.fromJSON(st)
 
   /** Get time difference = this - that*/
-  def dT(p: Pos) = t - p.t
+  def dT(that: Pos) = t - that.t
+
+  /** is this a quality Pos? */
+  def quality: Boolean = true
 }
 
 object Pos {
   // creating the Position vectors!
-  def apply(t:Double, x:Double, y:Double, z:Double) : Pos = new Pos(t,x,y,z)
-  def apply(t:Double, x:Double, y:Double) : Pos = Pos(t,x,y,0)
-  def apply(t:Double, x:Double) : Pos = Pos(t,x,0,0)
+  def apply(t:Double, x:Double, y:Double = 0, z:Double = 0) : Pos = new Pos(t,x,y,z)
   def apply(x: (Double, Double, Double, Double)) : Pos = Pos(x._1,x._2,x._3,x._4)
   def apply(x: (Double, Double, Double)) : Pos = Pos(x._1,x._2,x._3)
   def apply(l: List[Double]) : Pos = if (l.size == 4) new Pos(l(0), l(1), l(2),l(3)) else

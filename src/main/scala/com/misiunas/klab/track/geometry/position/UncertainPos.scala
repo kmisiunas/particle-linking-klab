@@ -11,6 +11,4 @@ package com.misiunas.klab.track.geometry.position
  * Date: 17/07/2013
  * Time: 15:56
  */
-trait UncertainPos extends Pos{
-
-}
+trait UncertainPos extends Pos

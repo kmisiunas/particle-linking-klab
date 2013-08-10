@@ -34,7 +34,13 @@ class PosHistogram private (val occurrences: List[Int], // number of times parti
   /**
    * Produces a readable CVS file.
    */
-  def toCVS: String = ???
+  def toCSV: String = {
+    val minRange = -Double.MaxValue :: sliceAt
+    val maxRange = sliceAt :+ Double.MaxValue
+    occurrences.zip( minRange.zip( maxRange ) )
+      .map(el => el._2._1 + csvSeparator + el._2._2 + csvSeparator + el._1 + csvSeparator )
+      .mkString("minRange, maRange, count,\n", "\n","")
+  }
 }
 
 object PosHistogram {
@@ -61,7 +67,7 @@ object PosHistogram {
   }
 
   def apply(pt: Assembly, ch: Channel) : PosHistogram =
-    PosHistogram(pt, ch.gridX, ch.direction)
+    PosHistogram(pt, ch.gridX, ch.line)
 
 
 }

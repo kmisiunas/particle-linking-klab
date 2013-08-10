@@ -3,6 +3,7 @@ package com.misiunas.klab.track.analysis
 import com.misiunas.klab.track.geometry.{Everywhere, GeoVolume}
 import com.misiunas.klab.track._
 import com.misiunas.klab.track.geometry.position.Pos
+import scala.annotation.tailrec
 
 /**
  * Find various properties in assemblies
@@ -27,15 +28,17 @@ object Find {
 
 
   /** Align two particle tracks using time component. Only align components that exist in both tracks
-    * The algorithm is focused on performance as it is necessary for higher order functions */
+    * The algorithm is focused on performance as it is necessary for higher order functions
+    * Time o(n_pos) */
   def alignTwoTracks(t1: ParticleTrack, t2: ParticleTrack): List[(Pos, Pos)] = {
-    def findNext(l1: List[Pos], l2: List[Pos]): List[(Pos,Pos)] = {
-      if (l1.isEmpty || l2.isEmpty) return Nil
-      if (l1.head.t == l2.head.t) (l1.head, l2.head) :: findNext(l1.tail, l2.tail)
-      else if (l1.head.t < l2.head.t) findNext(l1.tail, l2)
-      else findNext(l1, l2.tail)
+    @tailrec
+    def findNext(l1: List[Pos], l2: List[Pos], acc: List[(Pos,Pos)]): List[(Pos,Pos)] = {
+      if (l1.isEmpty || l2.isEmpty) return acc.reverse
+      if (l1.head.t == l2.head.t) findNext(l1.tail, l2.tail, (l1.head, l2.head) :: acc)
+      else if (l1.head.t < l2.head.t) findNext(l1.tail, l2, acc)
+      else return findNext(l1, l2.tail, acc)
     }
-    findNext(t1.list, t2.list)
+    findNext(t1.list, t2.list, Nil)
   }
 
 }

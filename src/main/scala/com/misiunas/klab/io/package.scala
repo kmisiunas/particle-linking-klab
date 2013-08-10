@@ -11,7 +11,7 @@ import com.misiunas.klab
 package object io {
 
   /** file picker - can be called form the code */
-  def fileChooser : String = {
+  def fileChooser() : String = {
     val f     = new javax.swing.JFrame(klab.appName + "  (v"+klab.appVersion+")")
     val fd: FileDialog  = new FileDialog(f, "Choose a file", FileDialog.LOAD);
     //fd.setDirectory("\"");

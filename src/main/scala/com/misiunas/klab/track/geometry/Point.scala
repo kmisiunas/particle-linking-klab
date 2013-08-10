@@ -29,7 +29,7 @@ class Point protected (val x: Double, val y:Double, val z:Double) extends GeoFea
 
   // ---------- Computations ----------------
 
-  def distance(that: Point): Double = Math.sqrt( this dot that )
+  def distance(that: Point): Double = (this - that).vectorLength
 
   /** returns number of elements in this vector */
   def length : Int = 3

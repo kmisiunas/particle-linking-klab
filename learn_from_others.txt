@@ -23,4 +23,18 @@ https://github.com/kmisiunas/DragonConsole <- highly independent from std method
 http://wiki.netbeans.org/TerminalEmulator
 http://help.eclipse.org/indigo/index.jsp?topic=/org.eclipse.platform.doc.isv/reference/api/org/eclipse/jface/text/source/SourceViewer.html
 
+--- Unsorted ---
+
+// Write good code: http://basis.reify.it/
+
+// Database interaction: http://slick.typesafe.com/
+
+// Automatic serialization to JSON: https://github.com/scala/pickling
+
+//Graph database https://github.com/twitter/flockdb
+
+// argument phrasing: https://github.com/Rogach/scallop
+
+// command line options parsing: https://github.com/scopt/scopt
+
 

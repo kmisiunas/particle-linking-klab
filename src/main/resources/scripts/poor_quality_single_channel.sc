@@ -1,9 +1,9 @@
-import com.misiunas.klab.gui.show.Show
-import com.misiunas.klab.io.Load
-import com.misiunas.klab.track.analysis.{Transition, PosHistogram}
-import com.misiunas.klab.track.assemblies.TrackAssembly
-import com.misiunas.klab.track.corrections.{Continuum, Filter}
-import com.misiunas.klab.track.geometry.Channel
+import com.misiunas.klab.gui.show.Show;
+import com.misiunas.klab.io.{Path, Save, Load, fileChooser};
+import com.misiunas.klab.track.analysis.{Transition, PosHistogram};
+import com.misiunas.klab.track.assemblies.TrackAssembly;
+import com.misiunas.klab.track.corrections.{Continuum, Filter};
+import com.misiunas.klab.track.geometry.Channel;
 
 /**
  * == Analysis script for 1D channel with poor tracking routine ==
@@ -28,7 +28,9 @@ import com.misiunas.klab.track.geometry.Channel
 // - filter tracks that are non-continuous
 // - do std analysis
 
-val raw = TrackAssembly(Load());
+val file = fileChooser()
+
+val raw = TrackAssembly(Load(file));
 
 println("loaded: "+raw);
 
@@ -36,12 +38,16 @@ val channel = Channel.simpleAlongX(5, 95, 40);
 
 val joint: TrackAssembly = raw apply Continuum.pairUp(channel)
 
-val corr: TrackAssembly = joint apply Filter.bySize(5) apply Filter.byProximity(20, channel) apply Filter.byContinuity(channel)
+val corr: TrackAssembly = joint apply Filter.bySize(min=5) apply Filter.byLocation(channel) apply Filter.byProximity(12, channel) apply Filter.byContinuity(channel)
 
 //if (!Continuum.qualityCheck(corr)) throw new Exception("The assembly did not pass the quality check!")
 
 val r = Range(5,96,2).toList.map(_.toDouble);
 
-Show( PosHistogram(corr, r, _.x) )
+val hist = PosHistogram(corr, r, _.x);
+Show( hist )
+Save(hist.toCSV, Path(file).dir.cd("analysis_histogram.csv"))
 
-println( Transition(corr, channel) )
+val trans = Transition(corr, channel);
+println(trans)
+Save(trans.toString, Path(file).dir.cd("analysis_transition.txt"))

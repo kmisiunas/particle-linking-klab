@@ -43,7 +43,11 @@ class ShowParticleTrack (val listPT: Array[ParticleTrack]) extends ProcessingWin
   override def drawContent = {
     drawChannel()
     resetColorPallet()
-    listPT.foreach(pt => {drawTrack(pt); nextColor()})
+    listPT.foreach(pt =>
+    {
+      drawTrack(pt);
+      nextColor()
+    })
   }
 
   // -------- Specialised drawings -------------
@@ -55,29 +59,36 @@ class ShowParticleTrack (val listPT: Array[ParticleTrack]) extends ProcessingWin
   }
 
   private def drawTrack(pt: ParticleTrack): Unit = {
-    //val typicalDeltaT = (range._2.t - range._1.t) / pt.size
-
-    def drawPath(p1:Pos, p2:Pos, opacity: Double) = {
+    val typicalDeltaT = (range._2.t - range._1.t) / pt.size
+    /** brush under the line */
+    def prepBrushBG(): Unit = {
       stroke(20, 200)             // background to make it more clear
       strokeWeight(1.5f)
       strokeCap(PConstants.SQUARE)
-      line(rX(p1.x), rY(p1.y), rX(p2.x), rY(p2.y))
-//      if(p2.t - p1.t > typicalDeltaT*1.1) {
-//        stroke(color(230,30,30,(opacity*255).toInt))
-//        // dashed line?
-//      }   // color variation depending on time separation - 10% diffrences
-//      else if(p2.t - p1.t < typicalDeltaT*0.9) {
-//        stroke(color(30,230,30,(opacity*255).toInt))
-//      }
-//      else stroke(getColor,(opacity*255).toInt)
+    }
+    /** brush for the line */
+    def prepBrushLine(opacity: Double): Unit = {
       stroke(getColor,(opacity*255).toInt)
       strokeWeight(1.0f)
       strokeCap(PConstants.ROUND)
-      line(rX(p1.x), rY(p1.y), rX(p2.x), rY(p2.y)) // draw main line
+    }
+    /** Draws single path between tho points */
+    def drawPath(p1:Pos, p2:Pos, opacity: Double) = {
+      if(!p1.quality && !p2.quality) { // unexpected time separation
+        prepBrushBG()
+        wiggle(rX(p1.x), rY(p1.y), rX(p2.x), rY(p2.y)) // draw main line
+        prepBrushLine(opacity)
+        wiggle(rX(p1.x), rY(p1.y), rX(p2.x), rY(p2.y)) // draw main line
+      } else { // normal time separation
+        prepBrushBG()
+        line(rX(p1.x), rY(p1.y), rX(p2.x), rY(p2.y)) // draw main line
+        prepBrushLine(opacity)
+        line(rX(p1.x), rY(p1.y), rX(p2.x), rY(p2.y)) // draw main line
+      }
     }
 
     def iterateDraw(list: List[Pos], baseOpacity : Double) = {
-      val dO = (1-baseOpacity)/list.size
+      val dO = (1-baseOpacity)/list.size // for fading effect
       var opacity = baseOpacity
       def iterate(list: List[Pos], prev: Pos) : Unit = {
         if(!list.isEmpty) {
@@ -89,11 +100,12 @@ class ShowParticleTrack (val listPT: Array[ParticleTrack]) extends ProcessingWin
       iterate(list.tail, list.head)
     }
 
-    if (showPosInATrack < 0) iterateDraw(pt.list, 1)
+    if (showOnlyFrame < 0) iterateDraw(pt.list, 1)
     else {
-      val idxEnd = pt.size - pt.findAtTimeIdx(showPosInATrack)-1
-      val part = pt.list.dropRight(idxEnd).takeRight(60)
+      val idxEnd = pt.findAtTimeIdx(showOnlyFrame)+1
+      val part = pt.list.slice(idxEnd- 60, idxEnd)
       if (part.size > 2){
+        legend.add(getColor, "id="+pt.id)
         iterateDraw(part, 0.2)
       }
     }
@@ -101,19 +113,19 @@ class ShowParticleTrack (val listPT: Array[ParticleTrack]) extends ProcessingWin
 
   // -------- outer communication --------------
 
-  var showPosInATrack = -1
+  var showOnlyFrame: Double = -1
 
   /** draws all the frames in the particle track */
-  def drawAllFrames = { showPosInATrack = -1 }
+  def drawAllFrames = { showOnlyFrame = -1 }
 
   /** Draws frames indicated with a leading frame */
-  def drawFrames(id: Int) = {
-    showPosInATrack = id
+  def drawFrames(frame: Double) = {
+    showOnlyFrame = frame
   }
 
   override def toString: String =
     if (listPT.size == 1) listPT.head.toString
-    else "Many Particle Tracks"
+    else listPT.size + " Particle Tracks"
 
 }
 

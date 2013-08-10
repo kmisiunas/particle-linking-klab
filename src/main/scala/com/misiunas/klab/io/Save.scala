@@ -20,21 +20,19 @@ object Save {
   /** Saves any type of object to a specified file. If file name could not be determined will
       * save to a default /"output/" dir.
       */
-  def apply(data: Any, file: String = "output/", kind:String = "auto") : Unit = {
-      // if kind -> try saving with that kind
-      // else try to determine kind and save with that kind
-      // else save as text file
-      val fp = formatFilePath(data, file, kind)
-      kind.toLowerCase match{
-        case "auto" | "automatic" => apply(data, fp, determineKind(data, fp))
-        case "json" => write(data.asInstanceOf[CompatibleWithJSON[Any]].toJSON, fp)
-        case "csv" => write(data.asInstanceOf[GenTraversableOnce[Any]].mkString(","), fp)
-        case _ => write(data.toString, fp)
-      }
+  def apply(data: Any, file: String = "output/"): Unit = {
+    // if kind -> try saving with that kind
+    // else try to determine kind and save with that kind
+    // else save as text file
+    //val fp = formatFilePath(data, file)
+    data  match {
+      case st:String => write(st, file)
+      case _ => throw new Exception("Could not determine the type to save")
     }
+  }
 
   /** A function for optimising file paths for the user automatically */
-  def formatFilePath(data: Any, file: String, kind:String ) : String = {
+  def formatFilePath(data: Any, file: String) : String = {
     // check if the path is already correctly formatted
     val f = file.trim
     if(! """\.[a-zA-Z]{2,6}$""".r.findFirstIn(f).isEmpty) return f
@@ -42,7 +40,7 @@ object Save {
     val fileEnd = data match {
       case d:CompatibleWithJSON[Object] => ".json"
       case d:GenTraversableOnce[Any] => ".csv"
-      case _ => kind match {
+      case _ => "kind" match {
         case "csv" => "csv"
         case _ => ".txt"
       }

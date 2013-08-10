@@ -18,6 +18,7 @@ object Imports {
     "com.misiunas.klab.track.analysis._",
     "com.misiunas.klab.track.corrections._",
     "com.misiunas.klab.gui.show.Show",
+    "com.misiunas.klab.io.Path",
     "sys.exit"
   )
 

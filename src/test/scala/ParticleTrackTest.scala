@@ -43,7 +43,7 @@ class ParticleTrackTest extends FunSuite {
     assert(pt1.qualityCheck)
     assert(!pt2.qualityCheck)
     val p = pt2.timeOrder
-    assert(p == pt3, "error:"+p) //TODO: this test sometimes fails!!!!?
+    assert(p == pt3, "error:"+p.toJSON) //TODO: this test sometimes fails!!!!?
   }
 
   test("ParticleTrack timeRange() and range()") {

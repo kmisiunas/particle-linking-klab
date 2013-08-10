@@ -2,6 +2,7 @@ package com.misiunas.klab.track
 
 import com.misiunas.klab.track.geometry.position.Pos
 import com.misiunas.klab.track._
+import scala.annotation.tailrec
 
 /**
  * == represents a time ordered track ==
@@ -19,7 +20,10 @@ trait OrderedTrack extends Track{
   def timeOrder : OrderedTrack
 
   /** checks if list conforms to specs : true if it is good quality */
-  def qualityCheck : Boolean = list.sortWith(_.t < _.t) == list
+  def qualityTimeTest : Boolean = list.sortWith(_.t < _.t) == list
+
+  /** Update the structure of the ParticleTrack to indicate the quality   */
+  def qualityCheck: OrderedTrack
 
   /** finds index of Pos that is closest to specified time - t
     * The Method returns time interval lower bound, not a closest element idx */
@@ -40,7 +44,7 @@ trait OrderedTrack extends Track{
   lazy val timeRange : TimeRange = (apply(0).t, apply(size-1).t)
 
   lazy val range: STRange = {
-    def iterate(list: List[Pos], rng: STRange) : STRange = {
+    @tailrec def iterate(list: List[Pos], rng: STRange) : STRange = {
       if(list.isEmpty) return rng
       val minP = Pos(list.head.list.zip(rng._1.list).map((e:(Double,Double)) => Math.min(e._1, e._2)))
       val maxP = Pos(list.head.list.zip(rng._2.list).map((e:(Double,Double)) => Math.max(e._1, e._2)))

@@ -6,6 +6,7 @@ import com.misiunas.klab.track.assemblies.Assembly
 import com.misiunas.klab.track.geometry.position.Pos
 import com.misiunas.klab.track.geometry.{Everywhere, GeoVolume}
 import com.misiunas.klab.track.corrections.Filter
+import scala.annotation.tailrec
 
 /**
  * == Analyses proximity of tracks ==
@@ -28,7 +29,9 @@ object Proximity {
     * @param thisPos Point at which they are closest in track 1
     * @param thatPos Point at which they are closest in track 2
     */
-  class ResDistances(val ptThis: ParticleTrack, val ptThat: ParticleTrack, val distance: Double, val thisPos: Pos, val thatPos: Pos)
+  class ResDistances(val ptThis: ParticleTrack, val ptThat: ParticleTrack, val distance: Double, val thisPos: Pos, val thatPos: Pos) {
+    override def toString: String = "ResDistances: between "+ptThis+" and "+ptThat+" the distance is "+distance
+  }
 
 
   /** Finds distances at closet proximity between tracks (expensive: > n^3^)
