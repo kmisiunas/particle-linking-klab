@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="klab.gui.show.show.ShowParticleTrackFrame">
+  <grid id="27dc6" binding="panel1" default-binding="true" layout-manager="FormLayout">
+    <rowspec value="fill:p:grow"/>
+    <rowspec value="top:3dlu:noGrow"/>
+    <rowspec value="center:max(d;4px):noGrow"/>
+    <rowspec value="top:3dlu:noGrow"/>
+    <rowspec value="center:max(d;4px):noGrow"/>
+    <colspec value="fill:p:grow"/>
+    <constraints>
+      <xy x="20" y="20" width="705" height="644"/>
+    </constraints>
+    <properties/>
+    <border type="none"/>
+    <children>
+      <grid id="59bd1" binding="processingPanel" custom-create="true" layout-manager="FormLayout">
+        <rowspec value="center:d:grow"/>
+        <rowspec value="top:3dlu:noGrow"/>
+        <rowspec value="center:d:grow"/>
+        <colspec value="fill:d:grow"/>
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <forms defaultalign-horz="false" defaultalign-vert="false"/>
+        </constraints>
+        <properties>
+          <preferredSize width="600" height="400"/>
+        </properties>
+        <border type="none"/>
+        <children/>
+      </grid>
+      <grid id="2869e" binding="containerForOptions" layout-manager="FormLayout">
+        <rowspec value="center:max(d;4px):noGrow"/>
+        <colspec value="fill:max(d;4px):noGrow"/>
+        <colspec value="left:4dlu:noGrow"/>
+        <colspec value="fill:max(d;4px):noGrow"/>
+        <colspec value="left:4dlu:noGrow"/>
+        <colspec value="fill:max(d;4px):noGrow"/>
+        <colspec value="left:4dlu:noGrow"/>
+        <colspec value="fill:max(d;4px):noGrow"/>
+        <colspec value="left:4dlu:noGrow"/>
+        <colspec value="fill:max(d;4px):noGrow"/>
+        <colspec value="left:4dlu:noGrow"/>
+        <colspec value="fill:d:grow"/>
+        <constraints>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <forms/>
+        </constraints>
+        <properties/>
+        <border type="none">
+          <font/>
+          <title-color color="-16777216"/>
+          <color color="-16777216"/>
+        </border>
+        <children>
+          <component id="6bda0" class="com.alee.laf.button.WebButton" binding="buttonZoomIn">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties>
+              <icon value="icons/search.png"/>
+              <text value="Zoom In"/>
+              <toolTipText value="Zooms into the image by 1.5"/>
+              <undecorated value="false"/>
+            </properties>
+          </component>
+          <component id="521db" class="com.alee.laf.button.WebButton" binding="buttonZoomOut">
+            <constraints>
+              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties>
+              <icon value="icons/search.png"/>
+              <text value="Zoom Out"/>
+              <toolTipText value="Image will zoom out by ratio 1.5 until it is full screen"/>
+            </properties>
+          </component>
+          <component id="cfdee" class="com.alee.laf.button.WebButton" binding="buttonResetView">
+            <constraints>
+              <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties>
+              <icon value="icons/resize-shrink.png"/>
+              <text value="Reset View"/>
+              <toolTipText value="Resets position and zoom level"/>
+            </properties>
+          </component>
+          <component id="72f23" class="com.alee.laf.button.WebButton" binding="buttonSaveImage">
+            <constraints>
+              <grid row="0" column="6" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties>
+              <icon value="icons/camera.png"/>
+              <text value="Save Image"/>
+              <toolTipText value="Saves image to a file"/>
+            </properties>
+          </component>
+          <component id="1d0be" class="com.alee.laf.checkbox.WebCheckBox" binding="tickShowTimesteps">
+            <constraints>
+              <grid row="0" column="8" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties>
+              <text value="Show Timesteps"/>
+              <toolTipText value="Show 20 last positions from selected frame"/>
+            </properties>
+          </component>
+          <hspacer id="6489">
+            <constraints>
+              <grid row="0" column="10" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+          </hspacer>
+        </children>
+      </grid>
+      <grid id="1ec89" binding="animationControls" layout-manager="FormLayout">
+        <rowspec value="center:d:grow"/>
+        <rowspec value="top:3dlu:noGrow"/>
+        <rowspec value="center:max(d;4px):noGrow"/>
+        <colspec value="fill:m:noGrow"/>
+        <colspec value="left:4dlu:noGrow"/>
+        <colspec value="fill:max(d;4px):noGrow"/>
+        <colspec value="left:5dlu:noGrow"/>
+        <colspec value="center:max(p;100px):grow(10.0)"/>
+        <colspec value="left:4dlu:noGrow"/>
+        <colspec value="fill:max(m;4px):noGrow"/>
+        <constraints>
+          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <forms/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="31bf4" class="com.alee.laf.button.WebToggleButton" binding="playWebToggleButton" default-binding="true">
+            <constraints>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties>
+              <borderPainted value="false"/>
+              <doubleBuffered value="false"/>
+              <drawBottom value="true"/>
+              <drawRight value="true"/>
+              <drawRightLine value="false"/>
+              <drawTopLine value="false"/>
+              <enabled value="false"/>
+              <focusTraversalPolicyProvider value="false"/>
+              <focusable value="true"/>
+              <hideActionText value="false"/>
+              <icon value="icons/iMac.png"/>
+              <opaque value="false"/>
+              <rolloverDarkBorderOnly value="false"/>
+              <rolloverDecoratedOnly value="false"/>
+              <rolloverShadeOnly value="false"/>
+              <rolloverShine value="false"/>
+              <selected value="false"/>
+              <showDisabledShade value="false"/>
+              <text value="Play"/>
+              <toolTipText value="Toggle animation"/>
+              <undecorated value="false"/>
+              <visible value="true"/>
+            </properties>
+            <clientProperties>
+              <html.disable class="java.lang.Boolean" value="false"/>
+            </clientProperties>
+          </component>
+          <component id="f7bad" class="com.alee.laf.slider.WebSlider" binding="sliderFrameSelector">
+            <constraints>
+              <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false" defaultalign-vert="false"/>
+            </constraints>
+            <properties>
+              <enabled value="false"/>
+              <minimum value="1"/>
+              <value value="1"/>
+            </properties>
+          </component>
+          <component id="790d1" class="javax.swing.JLabel" binding="labelFrameIndicator">
+            <constraints>
+              <grid row="2" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <forms/>
+            </constraints>
+            <properties>
+              <text value="All frames"/>
+              <toolTipText value="Frame number / Total frames"/>
+            </properties>
+          </component>
+          <component id="d0d6d" class="javax.swing.JLabel" binding="labelTime" custom-create="true">
+            <constraints>
+              <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <forms/>
+            </constraints>
+            <properties>
+              <text value="[interval]"/>
+              <toolTipText value="The current frame time stamp"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+    </children>
+  </grid>
+</form>
