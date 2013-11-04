@@ -1,10 +1,10 @@
-package com.misiunas.klab.track.assemblies
+package klab.track.assemblies
 
-import com.misiunas.klab.track.formating.CompatibleWithJSON
+import klab.track.formating.CompatibleWithJSON
 import net.liftweb.json._
 import net.liftweb.json.JsonDSL._
-import com.misiunas.klab.track.ParticleTrack
-import com.misiunas.klab.track.geometry.position.Pos
+import klab.track.ParticleTrack
+import klab.track.geometry.position.Pos
 
 
 /**
@@ -31,6 +31,9 @@ abstract class Assembly (val experiment:String, val comment: String, val time: L
   def toImmutable : TrackAssembly
   /** access the map where the data is stored */
   def listMap : collection.Map[Int, ParticleTrack]
+
+  /** Gives next available id number */
+  def getAvailableId: Int = ???
 
 
   // ---------------- General implemented methods --------
@@ -70,7 +73,7 @@ abstract class Assembly (val experiment:String, val comment: String, val time: L
         ("ParticleTrack" ->
           this.map { pt =>
             (("id" -> pt.id) ~
-              ("positions" -> pt.positions.map(_.list)))
+              ("positions" -> pt.list.map(_.list)))
           }))
 
   def toJSON : String = pretty(render(json))

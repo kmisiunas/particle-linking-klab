@@ -1,12 +1,14 @@
-package com.misiunas.klab.track.corrections
+package klab.track.corrections
 
-import com.misiunas.klab.track.assemblies.{TrackAssembly, Assembly}
-import com.misiunas.klab.track._
-import com.misiunas.klab.track.geometry.position.Pos
-import com.misiunas.klab.track.geometry._
+import klab.track.assemblies.{TrackAssembly, Assembly}
+import klab.track._
+import klab.track.geometry.position.Pos
+import klab.track.geometry._
 import scala.collection.SetLike
 import scala.annotation.tailrec
-import com.misiunas.klab.track.analysis.Diffusion
+import klab.track.analysis.Diffusion
+import com.misiunas.geoscala.volumes.Volume
+import com.misiunas.geoscala.Point
 
 /**
  * == Object containing functions that stitch an non-continuous particle tracks ==
@@ -38,7 +40,7 @@ object Continuum {
   /** finds elements that are not entering through specified surfaces
     * @return (set containing tracks with wrong beginnings only, with wrong beginnings and ends, with wrong ends)
     */
-  def find(withinChannel: GeoVolume) : Iterable[ParticleTrack] => (Set[ParticleTrack], Set[ParticleTrack], Set[ParticleTrack]) =
+  def find(withinChannel: Volume) : Iterable[ParticleTrack] => (Set[ParticleTrack], Set[ParticleTrack], Set[ParticleTrack]) =
   ta => {
     val wrongEnd = ta.filter(pt => withinChannel.isWithin(pt.last)).toSet // find tracks that ends are inside the volume
     // find tracks that ends begin within the volume - they should begin outside
@@ -52,7 +54,7 @@ object Continuum {
    * Automatically finds discontinuous tracks and joins them up.
    * Also removes the tracks that could not be made continuous and small sub-tracks that are likely to be noise
    */
-  def pairUp(withinChannel: GeoVolume,
+  def pairUp(withinChannel: Volume,
              dT_ : Double = 0,  // the tolerance in time search, 0 for automatic
              messages: Boolean = true) : PTFilter =
   assembly => {
@@ -135,7 +137,7 @@ object Continuum {
   def combineJoints(idStart: Int, list: List[List[ParticleTrack]]): List[ParticleTrack] = {
     var newIDs: Int = idStart - 1 // current top id
     def getNewID: Int = {newIDs = newIDs+1; newIDs}
-    list.map(m => ParticleTrack(getNewID, m, "ParticleTrack"))
+    list.map(m => ParticleTrack(getNewID, m))
   }
 
 

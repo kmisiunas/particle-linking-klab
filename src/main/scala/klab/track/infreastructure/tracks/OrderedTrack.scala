@@ -5,29 +5,40 @@ import klab.track._
 import scala.annotation.tailrec
 
 /**
- * == represents a time ordered track ==
+ * == Represents a time ordered track ==
  *
  * User: karolis@misiunas.com
  * Date: 17/07/2013
  * Time: 15:50
  */
-trait OrderedTrack extends Track{
+trait OrderedTrack extends Track {
 
-  /** returns an ordered list with particle positions */
-  def list : List[Pos]
+  // ---------- Abstract method declarations ----------
 
-  /** orders the Pos list according to their time  - should not be needed if everything was prepared correctly */
-  def timeOrder : OrderedTrack
 
-  /** checks if list conforms to specs : true if it is good quality */
-  def isTimeOrdered : Boolean = list.sortWith(_.t < _.t) == list
+  lazy val size: Int = list.size
+  def apply(i: Int): Pos = list.apply(i)
+  def isEmpty = list.isEmpty
 
-  /** Update the structure of the ParticleTrack to indicate the quality   */
-  def qualityCheck: OrderedTrack
+  // ------------ New Methods -------------
 
-  /** finds index of Pos that is closest to specified time - t
-    * The Method returns time interval lower bound, not a closest element idx */
-  def findAtTimeIdx(t: Double): Int = {
+  /** returns last position of the particle track (implemented for efficiency) */
+  lazy val last: Pos = list.last
+
+  /** beginning of particle track */
+  lazy val head: Pos = list.head
+
+
+  /** checks if list conforms to specs : true if it is good quality.
+    * Speed: o(n)*/
+  def isTimeOrdered: Boolean =
+    list.foldLeft( -Double.MaxValue )( (was, is) => if(is.t >= was) is.t else Double.NaN) != Double.NaN
+
+
+  /** finds index of Pos that is closest to specified time (t).
+    * The Method returns time interval lower bound, not a closest element idx.
+    * Speed: o(n) - can be improved with a map to constant time (memory expensive).*/
+  def atTimeIdx(t: Double): Int = {
     if (timeRange._1 > t || timeRange._2 < t) return -1
     if (t == timeRange._2) return size-1
     // simple search by iteration, because using lists makes it iterate anyway!
@@ -35,13 +46,20 @@ trait OrderedTrack extends Track{
   }
 
   /** finds Position closes to specified time */
-  def findAtTime(t: Double) : Pos = {
-    val idx = findAtTimeIdx(t)
-    if (idx == -1) return null
-    else return apply(idx)
+  def atTime(t: Double): Option[Pos] = {
+    val idx = atTimeIdx(t)
+    if (idx == -1) Option.empty
+    else Option( apply(idx) )
   }
 
-  lazy val timeRange : TimeRange = (apply(0).t, apply(size-1).t)
+  def atTime(tMin: Double, tMax:Double): List[Pos] = list.slice(atTimeIdx(tMin), atTimeIdx(tMax))
+  def atTime(tRange: TimeRange): List[Pos] = atTime(tRange._1, tRange._1)
+
+  // --------- Implemented Methods --------------
+
+
+  override lazy val timeRange: TimeRange = (apply(0).t, apply(size-1).t)
+
 
   lazy val range: STRange = {
     @tailrec def iterate(list: List[Pos], rng: STRange) : STRange = {

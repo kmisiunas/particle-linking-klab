@@ -1,12 +1,8 @@
-package com.misiunas.klab.track
+package klab.track
 
 import org.joda.time.DateTime
-import net.liftweb.json.JsonDSL._
-import net.liftweb.json._
-import com.misiunas.klab.track.geometry.position.units.HasUnits
-import com.misiunas.klab.track.formating.CompatibleWithJSON
-import com.misiunas.klab.track.geometry.position.Pos
-import scala.annotation.tailrec
+import klab.track.geometry.position.Pos
+import klab.track.infreastructure.tracks.{TrackInfo, Track, ConstructorTrack}
 
 
 /**
@@ -18,10 +14,14 @@ import scala.annotation.tailrec
  * It should contain: id, {time,x,y,z} positions
  * also any additional information about the track.
  *
+ * This is a basic unit for all analysis. The methods in this class are
+ * optimised for performance and ease of use.
+ *
  *
  * Versions:
  *  - v1 - initial release (scala 2.10)
  *  - v2 - the Track was made into immutable object, added structure, JSON update
+ *  - v3 - separated most functionality into inheritable traits. Slight syntax improvements. toCSV added.
  *
  *  TODO: unique objects just like String
  *
@@ -36,16 +36,20 @@ class ParticleTrack private (
                     val experiment:String, // the experiment title
                     val comment: String, // store additional information
                     val time:Long) // the time stamp!
-  extends OrderedTrack with HasUnits with CompatibleWithJSON[ParticleTrack]{
+  extends ConstructorTrack[ParticleTrack] with Track with TrackInfo {
 
+  /** A private constructor method */
+  override protected def makeFrom(id: Int, list: List[Pos], units: List[String],
+                       experiment: String, comment: String, time: Long): ParticleTrack =
+    new ParticleTrack(id, list, units, experiment, comment, time)
 
   // ############## Methods ##################
 
   override def equals(other: Any): Boolean  = other match {
     case that: ParticleTrack => {
-      that.version == version &&
+      //that.version == version && // not necessary for equality
       that.id == id &&
-      that.time == time &&
+      //that.time == time && // no comparison in time as it ussaly creation time!
       that.experiment == experiment &&
       that.comment == comment &&
       that.units == units &&
@@ -53,79 +57,12 @@ class ParticleTrack private (
     case _ => false
   }
 
-
-  def positions = list //other name for the same thing
-
-
   // ############## Other ####################
-
-  /** An map for converting this to JSON structure */
-  private def json =
-    ("ParticleTrack" ->
-      ("id" -> id) ~
-      ("experiment" -> experiment) ~
-      ("time" -> time) ~
-      ("comment" -> comment) ~
-      ("version" -> version) ~
-      ("units" -> units) ~
-      ("positions" ->list.map(_.list))
-    )
-
-  def toJSON : String = pretty(render(json))
-
-  def fromJSON(st: String) : ParticleTrack = ParticleTrack.fromJSON(st)
 
   override def toString : String = "ParticleTrack(id="+id+", size="+ size +")"
 
-  def apply(i: Int): Pos = list.apply(i)
-  def isEmpty = list.isEmpty
-  lazy val size: Int = list.size
-
   /** version of particle track object */
   def version = ParticleTrack.version
-
-  /** returns last position of the particle track (implemented for efficiency) */
-  lazy val last: Pos = list.last
-
-  /** beginning of particle track */
-  val head : Pos = list.head
-
-  // ############## Modification method - slow because it is immutable object ####################
-
-  def changeId(newId: Int): ParticleTrack =
-    ParticleTrack(newId,list,units,experiment,comment,time)
-
-  def changePositions(newList: List[Pos]): ParticleTrack =
-    ParticleTrack(id,newList,units,experiment,comment,time)
-
-  def changeComment(newComment: String): ParticleTrack =
-    ParticleTrack(id,list,units,experiment,newComment,time)
-
-  def appendComment(text: String): ParticleTrack =
-    this.changeComment( if (comment.isEmpty) text else "; "+text)
-
-  def changeUnits(newList: List[Pos], newUnits: List[String]): ParticleTrack =
-    ParticleTrack(id,newList,newUnits,experiment,comment,time)
-
-  def timeOrder : ParticleTrack = changePositions(list.sortWith(_.t < _.t))
-
-  def qualityCheck: ParticleTrack = {
-    // time separation - could be better!
-    val expectedDT: Double = (timeRange._2 - timeRange._1)/(size-1) * 1.1
-    @tailrec
-    def searchT(left: List[Pos], acc: List[Pos] = Nil) : List[Pos] = {
-      if (left.tail.isEmpty) return (left.head :: acc).reverse
-      if (left.tail.head.dT(left.head) > expectedDT) // dT too big
-        searchT(left.tail.head.toLQPos :: left.tail.tail, left.head.toLQPos :: acc)
-      else if (left.tail.head.dT(left.head) <= 0) { // there are two Pos with the same time - delete one
-        searchT(left.tail.head.toLQPos :: left.tail.tail, acc)
-      } else {
-        searchT(left.tail, left.head :: acc)
-      }
-    }
-    // todo: implement spacial check!
-    changePositions(searchT(list))
-  }
 }
 
 /**
@@ -134,41 +71,42 @@ class ParticleTrack private (
 object ParticleTrack {
 
   /** the version of the particle track */
-  val version = 2
+  val version = 3
+
+  /** a cheat! - for accessing .make() method */
+  private val Maker  = new ParticleTrack (-1,Nil,Nil,"","",0)
 
   def apply(id: Int,
             list: List[Pos],
             units: List[String] = List("frame","px_x", "px_y", "px_z"),
             experiment: String = "Experiment_on_"+ DateTime.now().toLocalDate.toString,
             comment: String = "",
-            time: Long = System.currentTimeMillis()) : ParticleTrack =
-    new ParticleTrack(id,list,units,experiment, comment, time)
+            time: Long = System.currentTimeMillis()): ParticleTrack =
+    Maker.make(id,list,units,experiment, comment, time)
 
-  def apply(id: Int, list: List[Any], listType:String) : ParticleTrack = listType match {
-    case "ParticleTrack" => {
-        val l = list.asInstanceOf[ List[ParticleTrack]] // not very good code
+  def apply(id: Int, seq: Iterable[Any]): ParticleTrack = {
+    if (seq.isEmpty) throw new RuntimeException("Can't make ParticleTrack out of empty list")
+    seq.head match {
+
+      case _:Pos => { // form a new particle track
+        val l = seq.asInstanceOf[ Iterable[Pos]] // not very good code
+        apply(id = id, list = l.toList, comment = "") // todo: this code might be interpreted recursevley
+      }
+
+      case _:ParticleTrack => { // join up two tracks algorithm
+        val l = seq.asInstanceOf[ Iterable[ParticleTrack] ] // not very good code
         ParticleTrack(id,
-        l.map( _.list).flatten,
-        l.head.units,
-        l.head.experiment,
-        "Joined particle track from tracks = {" + l.map(_.id).mkString(",")+"}",
-        l.head.time).timeOrder
+          l.map( _.list).flatten.toList,
+          l.head.units,
+          l.head.experiment,
+          "Joined particle track from tracks = {" + l.map(_.id).mkString(",")+"}",
+          l.head.time) // time ordering will be applied automatically
+      }
+
+      case _ => throw new RuntimeException("Could not convert sequence into ParticleTrack: " + seq)
     }
-    case _ => throw new Exception("Error: "+listType+" could not be formatted into ParticleTrack")
   }
 
-  def apply(json: String) : ParticleTrack = ParticleTrack.fromJSON(json)
+  def apply(json: String): ParticleTrack = Maker.fromJSON(json)
 
-  def fromJSON(st: String) : ParticleTrack = {
-    implicit val formats = net.liftweb.json.DefaultFormats
-    val code = parse(st)
-    if((code \\ "version").extract[Int] != ParticleTrack.version) throw new Exception("Warning: the ParticleTrack file is version "+(code \\ "version").extract[Int] + ", while the current version is"+version)
-    return ParticleTrack(
-      id = (code \\ "id").extract[Int],
-      list = (code \\ "positions").extract[List[List[Double]]].map(Pos(_)),
-      units = (code \\ "units").extract[List[String]],
-      experiment = (code \\ "experiment").extract[String],
-      comment = (code \\ "comment").extract[String],
-      time = (code \\ "time").extract[Long] )
-  }
 }

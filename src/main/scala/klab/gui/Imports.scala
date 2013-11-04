@@ -1,4 +1,4 @@
-package com.misiunas.klab.gui
+package klab.gui
 
 /**
  * User: karolis@misiunas.com
@@ -8,18 +8,15 @@ package com.misiunas.klab.gui
 object Imports {
 
   val main : List[String] = List(
-    "com.misiunas.klab._",
-    "com.misiunas.klab.track._",             // add default imports
-    "com.misiunas.klab.track.assemblies._",             // add default imports
-    "com.misiunas.klab.io.Save" ,            // add default imports
-    "com.misiunas.klab.io.Load" ,            // add default imports
-    "com.misiunas.klab.io.fileChooser",
-    "com.misiunas.klab.track.geometry._",
-    "com.misiunas.klab.track.analysis._",
-    "com.misiunas.klab.track.corrections._",
-    "com.misiunas.klab.gui.show.Show",
-    "com.misiunas.klab.gui.repl.Print.println",
-    "com.misiunas.klab.io.Path",
+    "klab._",
+    "klab.track._",             // add default imports
+    "klab.track.assemblies._",             // add default imports
+    "klab.io.{Load,Save,Path,Import}" ,            // add default imports
+    "klab.track.geometry._",
+    "klab.track.analysis._",
+    "klab.track.corrections._",
+    "klab.gui.show.Show",
+    "klab.gui.repl.Print.println",
     "sys.exit"
   )
 

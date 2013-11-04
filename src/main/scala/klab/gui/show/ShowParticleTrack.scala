@@ -1,14 +1,11 @@
-package com.misiunas.klab.gui.show
+package klab.gui.show
 
-import processing.core.PApplet
 import processing.core._
-import com.misiunas.klab.track.ParticleTrack
-import com.alee.laf.slider.WebSlider
-import javax.swing.{JFrame, SwingConstants}
-import scala.swing.{Orientation, BoxPanel, MainFrame, Frame}
-import com.misiunas.klab.track
-import com.misiunas.klab.track.geometry.position.Pos
-import com.misiunas.klab.track.geometry.Point
+import klab.track.ParticleTrack
+import klab.track
+import klab.track.geometry.position.Pos
+import klab.gui.show.show.ShowParticleTrackFrame
+import com.misiunas.geoscala.Point
 
 /**
  * User: karolis@misiunas.com
@@ -102,7 +99,7 @@ class ShowParticleTrack (val listPT: Array[ParticleTrack]) extends ProcessingWin
 
     if (showOnlyFrame < 0) iterateDraw(pt.list, 1)
     else {
-      val idxEnd = pt.findAtTimeIdx(showOnlyFrame)+1
+      val idxEnd = pt.atTimeIdx(showOnlyFrame)+1
       val part = pt.list.slice(idxEnd- 60, idxEnd)
       if (part.size > 2){
         legend.add(getColor, "id="+pt.id)

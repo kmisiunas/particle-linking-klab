@@ -1,4 +1,4 @@
-package com.misiunas.klab.track
+package klab.track
 
 /**
  * == Package for analysing the particle track data ==

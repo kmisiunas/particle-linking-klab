@@ -1,11 +1,7 @@
-package com.misiunas.klab.gui.repl
+package klab.gui.repl
 
-import scala.tools.nsc.Settings
-import scala.tools.nsc.interpreter.{ReplReporter, ILoop}
-import com.misiunas.klab
-
-import com.misiunas.klab.io.Load.loadString
-import com.misiunas.klab.gui.{ScriptEngine, Imports}
+import scala.tools.nsc.interpreter.ILoop
+import klab.gui.{ScriptEngine, Imports}
 
 
 /**

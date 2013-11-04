@@ -1,6 +1,6 @@
-package com.misiunas.klab.io
+package klab.io
 
-import com.misiunas.klab.track.ParticleTrack
+import klab.track.ParticleTrack
 import java.nio.charset.{StandardCharsets, Charset}
 import java.nio.file.{Paths, Files}
 import java.nio.ByteBuffer
@@ -21,8 +21,8 @@ object Load {
 
   /** def auto loader from selected file prompt */
   def apply() : String = {
-    var f = fileChooser
-    if (f == null || f.isEmpty || f == "null" || f == "nullnull") f = fileChooser
+    var f = Path.find()
+    if (f == null || f.isEmpty || f == "null" || f == "nullnull") f = Path.find()
     if (f == null || f.isEmpty || f == "null" || f == "nullnull") throw new Exception("Warning: user failed to pick a file")
     else apply(f)
   }
@@ -33,6 +33,16 @@ object Load {
     return encoding.decode(
       ByteBuffer.wrap(Files.readAllBytes(Paths.get(file)))
     ).toString();
+  }
+
+  /** file stream opener.
+    * Still experimental - might run out of memory!
+    * @return lines int the file */
+  def open(file: String): List[String] = {
+    val source = scala.io.Source.fromFile(file)
+    val lines = source.getLines().toList
+    source.close()
+    lines
   }
 
 }

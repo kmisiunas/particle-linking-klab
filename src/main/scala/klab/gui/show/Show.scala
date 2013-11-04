@@ -1,7 +1,7 @@
-package com.misiunas.klab.gui.show
+package klab.gui.show
 
-import com.misiunas.klab.track.ParticleTrack
-import com.misiunas.klab.track.analysis.PosHistogram
+import klab.track.ParticleTrack
+import klab.track.analysis.PosHistogram
 
 /**
  * == DLS for show methods ==

@@ -1,4 +1,4 @@
-package com.misiunas.klab.io
+package klab.io
 
 /**
  * User: karolis@misiunas.com

@@ -1,11 +1,11 @@
-package com.misiunas.klab.track.analysis
+package klab.track.analysis
 
-import com.misiunas.klab.track.formating.CompatibleWithCSV
-import com.misiunas.klab.track.assemblies.Assembly
-import com.misiunas.klab.track.geometry.position.Pos
+import klab.track.assemblies.Assembly
+import klab.track.geometry.position.Pos
 import scalax.chart._
 import scalax.chart.Charting._
-import com.misiunas.klab.track.geometry.Channel
+import klab.track.geometry.Channel
+import klab.track.formating.ExportCSV
 
 /**
  * == Position Histogram ==
@@ -20,7 +20,7 @@ class PosHistogram private (val occurrences: List[Int], // number of times parti
                             val sliceAt: List[Double], // slice positions
                             val posMapping : (Pos => Double), // way to map Pos to a linear map
                             val experiment: String // name of the experiment
-                           ) extends CompatibleWithCSV[PosHistogram]{
+                           ) extends ExportCSV{
 
   /** normalisation factor for the particles within the range */
   lazy val normalisation = occurrences.tail.dropRight(1).sum

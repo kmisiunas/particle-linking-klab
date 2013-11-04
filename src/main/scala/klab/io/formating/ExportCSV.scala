@@ -5,7 +5,7 @@ package klab.track.formating
  * Date: 24/07/2013
  * Time: 15:47
  */
-trait CompatibleWithCSV[T] {
+trait ExportCSV {
 
   final val csvSeparator = ", "
 

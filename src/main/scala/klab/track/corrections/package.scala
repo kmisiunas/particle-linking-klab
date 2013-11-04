@@ -1,4 +1,4 @@
-package com.misiunas.klab.track
+package klab.track
 
 /**
  * == Package Contains objects to modify the assemblies containing particle tracks ==

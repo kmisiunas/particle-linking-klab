@@ -1,8 +1,8 @@
-package com.misiunas.klab.track.assemblies
+package klab.track.assemblies
 
 import net.liftweb.json.JsonAST.{JDouble, JField}
 import org.joda.time.DateTime
-import com.misiunas.klab.track.ParticleTrack
+import klab.track.ParticleTrack
 import scala.collection
 
 /**

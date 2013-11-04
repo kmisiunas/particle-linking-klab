@@ -1,7 +1,7 @@
 package geometry
 
-import com.misiunas.klab.track.geometry.position.Pos
-import com.misiunas.klab.track.ParticleTrack
+import klab.track.geometry.position.Pos
+import klab.track.ParticleTrack
 import org.scalatest.FunSuite
 
 /**
@@ -10,8 +10,6 @@ import org.scalatest.FunSuite
  * Time: 15:38
  */
 class PosTest extends FunSuite {
-
-  def approx(d1 :Double, d2:Double, acc: Double = 0.0001) : Boolean = (Math.abs(d1-d2)<acc)
 
   val p1 = Pos(1.1,2.2,3.3,4.4)
 

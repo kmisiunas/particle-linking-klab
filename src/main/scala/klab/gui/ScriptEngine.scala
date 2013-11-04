@@ -1,7 +1,7 @@
-package com.misiunas.klab.gui
+package klab.gui
 
-import com.misiunas.klab.gui.repl.Terminal
-import com.misiunas.klab.io.Load
+import klab.gui.repl.Terminal
+import klab.io.Load
 import java.net.URL
 import scala.io.Source
 import java.nio.file.Paths

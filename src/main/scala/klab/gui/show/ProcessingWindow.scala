@@ -1,8 +1,8 @@
-package com.misiunas.klab.gui.show
+package klab.gui.show
 
 import processing.core.{PVector, PConstants, PApplet}
-import com.misiunas.klab.track.geometry.Point
 import org.joda.time.DateTime
+import com.misiunas.geoscala.Point
 
 /**
  * == A general processing window for displaying tracks or assemblies of tracks ==\
@@ -24,13 +24,13 @@ abstract class ProcessingWindow extends ProcessingExtended {
   // ----------- TO IMPLEMENT in sub-class ----------
 
   /** the width of the channel to be displayed */
-  val physicalWidth : Float
+  val physicalWidth: Float
 
   /** the height of the channel to be displayed */
-  val physicalHeight : Float
+  val physicalHeight: Float
 
   /** the point at which the physical map begins */
-  val physicalCenter : Point
+  val physicalCenter: Point
 
   // ------------- Auto Color generator -------------
 

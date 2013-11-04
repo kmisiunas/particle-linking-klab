@@ -1,10 +1,11 @@
-package com.misiunas.klab.track.corrections
+package klab.track.corrections
 
-import com.misiunas.klab.track.geometry.{Channel, Point}
-import com.misiunas.klab.track.ParticleTrack
-import com.misiunas.klab.track.analysis.Find
-import com.misiunas.klab.track.geometry.position.Pos
+import klab.track.geometry.{Channel}
+import klab.track.ParticleTrack
+import klab.track.analysis.Find
+import klab.track.geometry.position.Pos
 import scala.annotation.tailrec
+import com.misiunas.geoscala.Point
 
 /**
  * == Restrictions on particle motion ==
@@ -83,8 +84,8 @@ object Confinement {
     @tailrec
     def recursive(t1: ParticleTrack, t2: ParticleTrack, atTime: List[Double]) : List[ParticleTrack] = {
       if (atTime.isEmpty) return List(t1,t2)
-      val idx1 = t1.findAtTimeIdx(atTime.head)
-      val idx2 = t2.findAtTimeIdx(atTime.head)
+      val idx1 = t1.atTimeIdx(atTime.head)
+      val idx2 = t2.atTimeIdx(atTime.head)
       recursive(
         t1.changePositions(t1.list.take(idx1) ::: t2.list.drop(idx2)),
         t2.changePositions(t2.list.take(idx2) ::: t1.list.drop(idx1)),

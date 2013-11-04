@@ -1,4 +1,4 @@
-package com.misiunas.klab.gui.repl
+package klab.gui.repl
 
 /**
  * User: karolis@misiunas.com

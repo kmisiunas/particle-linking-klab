@@ -1,12 +1,7 @@
-package com.misiunas.klab.track.analysis
+package klab.track.analysis
 
-import com.misiunas.klab.track.TimeRange
-import com.misiunas.klab.track.ParticleTrack
-import com.misiunas.klab.track.assemblies.Assembly
-import com.misiunas.klab.track.geometry.position.{LQPos, Pos}
-import com.misiunas.klab.track.geometry.{Everywhere, GeoVolume}
-import com.misiunas.klab.track.corrections.Filter
-import scala.annotation.tailrec
+import klab.track.ParticleTrack
+import klab.track.geometry.position.Pos
 
 /**
  * == Analyses proximity of tracks ==

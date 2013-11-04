@@ -1,9 +1,9 @@
-package com.misiunas.klab.track.analysis
+package klab.track.analysis
 
-import com.misiunas.klab.track.geometry.{Everywhere, GeoVolume}
-import com.misiunas.klab.track._
-import com.misiunas.klab.track.geometry.position.Pos
+import klab.track._
+import klab.track.geometry.position.Pos
 import scala.annotation.tailrec
+import com.misiunas.geoscala.volumes.Volume
 
 /**
  * Find various properties in assemblies
@@ -43,7 +43,7 @@ object Find {
 
   type TrackSegment = List[Pos]
   /** Find segments of a track that are within specified volume */
-  def segmentsWithin(within: GeoVolume): ParticleTrack => List[TrackSegment] =
+  def segmentsWithin(within: Volume): ParticleTrack => List[TrackSegment] =
   pt => {
     @tailrec
     def findSegments(left: List[Pos], acc: List[TrackSegment] = Nil): List[TrackSegment] = {

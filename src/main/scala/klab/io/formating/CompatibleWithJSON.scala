@@ -1,4 +1,6 @@
-package com.misiunas.klab.track.formating
+package klab.track.formating
+
+import klab.io.formating.ExportJSON
 
 /**
  * == to JSON and back! ==
@@ -9,14 +11,10 @@ package com.misiunas.klab.track.formating
  * Date: 17/07/2013
  * Time: 14:24
  */
-trait CompatibleWithJSON[T] {
+trait CompatibleWithJSON [Self <: CompatibleWithJSON[Self]] extends ExportJSON {
+  this: Self =>
 
-  /**
-   * Produces a readable JSON file. Implementation should be modular.
-   */
-  def toJSON : String
-
-  /** constructs back the object from JSON string input */
-  def fromJSON(st: String) : T
+  /** constructs back the object from JSON string input. */
+  def fromJSON(st: String): Self
 
 }

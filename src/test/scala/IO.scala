@@ -1,4 +1,4 @@
-import com.misiunas.klab.io.Save
+import klab.io.Save
 import org.scalatest.FunSuite
 
 /**

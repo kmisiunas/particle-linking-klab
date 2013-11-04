@@ -7,7 +7,7 @@ import com.alee.laf.panel.WebPanel;
 import com.alee.laf.slider.WebSlider;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
-import com.misiunas.klab.gui.show.ShowParticleTrack;
+import klab.gui.show.ShowParticleTrack;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -63,7 +63,7 @@ public class ShowParticleTrackFrame {
         int frame = sliderFrameSelector.getValue();
         int minFrame = sliderFrameSelector.getMinimum();
         int maxFrame = sliderFrameSelector.getMaximum();
-        labelFrameIndicator.setText((frame-minFrame) + " / " + (maxFrame-minFrame)); //todo
+        labelFrameIndicator.setText((frame - minFrame) + " / " + (maxFrame - minFrame)); //todo
         labelTime.setText(frame + " " + spt.units().head());
         spt.drawFrames(frame);
         updateSPT();

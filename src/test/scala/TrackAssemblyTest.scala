@@ -1,4 +1,3 @@
-import com.misiunas.klab.track.assemblies.{TrackAssembly}
 import org.scalatest.FunSuite
 
 /**
@@ -8,10 +7,8 @@ import org.scalatest.FunSuite
  */
 class TrackAssemblyTest extends FunSuite {
 
-  def approx(d1 :Double, d2:Double, acc: Double = 0.0001) : Boolean = (Math.abs(d1-d2)<acc)
 
-
-  test("ParticleAssembly: to JSON and back") {
+  ignore("ParticleAssembly: to JSON and back") {
 //    val pt1 = new ParticleTrack(5)
 //    pt1.positions = List( List(0,1.1,0.1,0),
 //      List(1,1.5,0.3,0),

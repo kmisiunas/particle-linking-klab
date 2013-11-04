@@ -1,6 +1,6 @@
-package com.misiunas.klab
+package klab
 
-import com.misiunas.klab.track.geometry.position.Pos
+import klab.track.geometry.position.Pos
 
 /**
  * == Track klab ==

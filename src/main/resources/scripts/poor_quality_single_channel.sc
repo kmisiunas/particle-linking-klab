@@ -2,7 +2,8 @@ import com.misiunas.klab.gui.show.Show;
 import com.misiunas.klab.io.{Path, Save, Load, fileChooser};
 import com.misiunas.klab.track.analysis.{Transition, PosHistogram};
 import com.misiunas.klab.track.assemblies.TrackAssembly;
-import com.misiunas.klab.track.corrections.{Continuum, Filter};
+import com.misiunas.klab.track.corrections.{Confinement, Continuum, Filter}
+;
 import com.misiunas.klab.track.geometry.Channel;
 
 /**
@@ -34,20 +35,21 @@ val raw = TrackAssembly(Load(file));
 
 println("loaded: "+raw);
 
-val channel = Channel.simpleAlongX(5, 95, 40);
+val channel = Channel.simpleAlongX(5, 95);
 
 val joint: TrackAssembly = raw apply Continuum.pairUp(channel)
 
-val corr: TrackAssembly = joint apply Filter.bySize(min=5) apply Filter.byLocation(channel) apply Filter.byProximity(12, channel) apply Filter.byContinuity(channel)
+val filtered: TrackAssembly = joint apply Filter.bySize(min=5) apply Filter.byLocation(channel)
 
-//if (!Continuum.qualityCheck(corr)) throw new Exception("The assembly did not pass the quality check!")
+val corr: TrackAssembly = filtered apply Confinement.autoCorrection(channel) apply Continuum.fixEnds(channel)
 
-val r = Range(5,96,2).toList.map(_.toDouble);
+val r = Range(5,96,1).toList.map(_.toDouble);
 
 val hist = PosHistogram(corr, r, _.x);
 Show( hist )
 Save(hist.toCSV, Path(file).dir.cd("analysis_histogram.csv"))
 
-val trans = Transition(corr, channel);
-println(trans)
-Save(trans.toString, Path(file).dir.cd("analysis_transition.txt"))
+val trans = Transition(corr, channel, minSize = 3);
+println(trans.mkString)
+Save(trans.mkString, Path(file).dir.cd("analysis_transition.txt"))
+Save(trans.toCSV, Path(file).dir.cd("track_transitions.csv"))

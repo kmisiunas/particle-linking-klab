@@ -1,10 +1,11 @@
-package com.misiunas.klab.io
+package klab.io
 
 import java.io.File
-import com.misiunas.klab.track.assemblies.{Assembly, TrackAssembly}
-import com.misiunas.klab.track.ParticleTrack
-import com.misiunas.klab.track.formating.CompatibleWithJSON
+import klab.track.assemblies.{Assembly, TrackAssembly}
+import klab.track.ParticleTrack
+import klab.track.formating.CompatibleWithJSON
 import scala.collection.GenTraversableOnce
+import klab.io.formating.ExportJSON
 
 /**
  * == Saving to Files object ==
@@ -38,7 +39,7 @@ object Save {
     if(! """\.[a-zA-Z]{2,6}$""".r.findFirstIn(f).isEmpty) return f
     // if not determine file ending
     val fileEnd = data match {
-      case d:CompatibleWithJSON[Object] => ".json"
+      case d:ExportJSON => ".json"
       case d:GenTraversableOnce[Any] => ".csv"
       case _ => "kind" match {
         case "csv" => "csv"
@@ -59,7 +60,7 @@ object Save {
 
   private def determineKind(data: Any, ft: String): String = {
     data match {
-      case d:CompatibleWithJSON[Object] => "json"
+      case d:ExportJSON => "json"
       case d:Seq[Any] => "csv"
       case _ => { // try to get from the file ending
         """\.[a-zA-Z]{2,6}$""".r.findFirstIn(ft).get.trim.toLowerCase match {

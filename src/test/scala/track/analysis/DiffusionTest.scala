@@ -7,11 +7,13 @@ import klab.track.assemblies.TrackAssembly
 import klab.track.analysis.Find
 
 /**
- * User: karolis@misiunas.com
- * Date: 05/08/2013
- * Time: 21:45
+ * Created with IntelliJ IDEA.
+ * User: kmisiunas
+ * Date: 04/11/2013
+ * Time: 11:53
+ * To change this template use File | Settings | File Templates.
  */
-class FindTest extends FunSuite {
+class DiffusionTest extends FunSuite {
 
   println("FindTest")
 
@@ -22,18 +24,7 @@ class FindTest extends FunSuite {
 
   val ta = TrackAssembly( List(pt1,pt2,pt3,pt4), "Test Experiment")
 
-  test("Find.atTime( time )") {
-    assert(Find.atTime(12)(ta).toSet == Set(pt1,pt2))
-    assert(Find.atTime(24)(ta).toSet == Set(pt3,pt4))
+  test("Diffusion. implement me!") {
+    assert(false)
   }
-
-  test("Find.atTime( minTime, maxTime )") {
-    assert(Find.atTime(11.5,12.2)(ta).toSet == Set(pt1,pt2))
-    assert(Find.atTime(15,21)(ta).toSet == Set(pt2,pt3,pt4))
-  }
-
-  test("Find.alignTwoTracks( ParticleTrack, ParticleTrack )") {
-    assert(Find.alignTwoTracks(pt1,pt2) == List(Pos(12,1.2,1), Pos(13,1.1,1), Pos(14,2,2)).zip( List(Pos(12,2,3), Pos(13,1.3,1), Pos(14,1.2,1)) ) )
-  }
-
 }

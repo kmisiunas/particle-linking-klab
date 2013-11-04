@@ -1,9 +1,8 @@
-package com.misiunas.klab.io
+package klab.io
 
 import java.io.File
 import java.net.URI
-import javax.swing.{JFrame, JOptionPane}
-import com.alee.laf.optionpane.WebOptionPane
+import com.alee.laf.filechooser.WebFileChooser
 
 /**
  * == Tool for quick navigation between the files and folders ==
@@ -29,7 +28,11 @@ class Path private (private val path: String) {
   // ---------- return properties -------------
 
   def fileName: String =
-    if (isFile) """^.*(?=(\..{1,5}$))""".r.findFirstIn(name).get
+    if (isFile) {
+      val woEnd = """^.*(?=(\..{1,5}$))""".r.findFirstIn(name)
+      if (woEnd.isEmpty) return ""
+      else woEnd.get
+    }
     else ""
 
   def name: String = toFile.getName
@@ -37,7 +40,7 @@ class Path private (private val path: String) {
   def dirName: String = dir.toFile.getName
 
   /** returns the relative path to the file or dir with respect to working dir */
-  def relative: String = ???
+  def relative(): String = ???
 
   /** Returns extension of the file, if a dir, it returns / */
   def extension: String = name.diff(fileName).drop(1)
@@ -47,6 +50,9 @@ class Path private (private val path: String) {
   def isDir: Boolean = path.endsWith("/")
 
   def exists: Boolean = toFile.exists()
+
+  /** returns path difference between two paths */
+  def diff(p: Path): String = this.toString.diff(p.toString)
 
   // ---------- Manipulation Methods ----------
 
@@ -126,9 +132,18 @@ object Path {
 
   /** checks formatting of provided path provided. Fixes it if it does not conform to expected norm */
   def checkPath(file: String): String = {
-    val f = file.trim
+    val f = file.trim.replace('\\', separator)
     val fO = (new File(f)) // not very fast?
-    if (fO.isDirectory && f != "/") fO.getAbsolutePath +"/" else fO.getAbsolutePath
+    if (fO.isDirectory && f != separator) fO.getAbsolutePath + separator else fO.getAbsolutePath
+  }
+
+  /** Find the path using GUI interface */
+  def find(): String = {
+    val fileChooser = new WebFileChooser ()
+    fileChooser.setMultiSelectionEnabled ( false )
+    fileChooser.showOpenDialog ( null )
+    val file = fileChooser.getSelectedFile ()
+    file.getAbsolutePath
   }
 
 }

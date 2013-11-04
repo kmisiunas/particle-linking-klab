@@ -1,6 +1,6 @@
-package com.misiunas.klab.track.assemblies
+package klab.track.assemblies
 
-import com.misiunas.klab.track.ParticleTrack
+import klab.track.ParticleTrack
 import org.joda.time.DateTime
 import collection.mutable.Map
 import scala.collection

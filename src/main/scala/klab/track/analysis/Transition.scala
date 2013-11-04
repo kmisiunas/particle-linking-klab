@@ -1,12 +1,12 @@
-package com.misiunas.klab.track.analysis
+package klab.track.analysis
 
-import com.misiunas.klab.track.formating.{CompatibleWithCSV, CompatibleWithJSON}
+import klab.track.formating.{ExportCSV, CompatibleWithJSON}
 import org.joda.time.DateTime
-import com.misiunas.klab.track.assemblies.Assembly
-import com.misiunas.klab.track.geometry.Channel
-import com.misiunas.klab.track.ParticleTrack
+import klab.track.assemblies.Assembly
+import klab.track.geometry.Channel
+import klab.track.ParticleTrack
 import scala.annotation.tailrec
-import com.misiunas.klab.track.geometry.position.Pos
+import klab.track.geometry.position.Pos
 
 /**
  * == Class for analysing transition across the channel ==
@@ -25,7 +25,7 @@ class Transition private (val list : List[Transition.ResTransition],
                           val experiment: String,
                           val channel: Channel,
                           val analysisParam: String)
-  extends CompatibleWithCSV[Transition]{
+  extends ExportCSV{
 
   lazy val csvHeader = {
     val timeUnit = list.head.track.units(0)
@@ -89,7 +89,7 @@ object Transition {
                        val transition: ResTransitionType,       // type of the event
                        val timeInChannel: Double,               // time spent in the channel
                        val timeInterval: (Double, Double))      // time range within the channel
-    extends CompatibleWithCSV[ResTransition]{
+    extends ExportCSV{
 
     def toCSV: String = track.id + csvSeparator + transition.identification + csvSeparator +
       transition.shortName + csvSeparator + timeInChannel + csvSeparator  +
