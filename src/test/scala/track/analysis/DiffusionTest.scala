@@ -4,7 +4,8 @@ import org.scalatest.FunSuite
 import klab.track.ParticleTrack
 import klab.track.geometry.position.Pos
 import klab.track.assemblies.TrackAssembly
-import klab.track.analysis.Find
+import klab.track.analysis.{Diffusion, Find}
+import com.misiunas.geoscala.vectors.Vec
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,16 +16,54 @@ import klab.track.analysis.Find
  */
 class DiffusionTest extends FunSuite {
 
-  println("FindTest")
+  val pt1 = ParticleTrack(1, List( Pos(1,2,1), Pos(2,0,0), Pos(3,1,1), Pos(5,0,0),   Pos(6,1,1) )).qualityCheck
+  val pt2 = ParticleTrack(2, List( Pos(1,2,-3), Pos(2,0,0), Pos(3,1,1), Pos(4,0,0),   Pos(5,1,1), Pos(6,0,0),
+                                    Pos(7,1,1), Pos(8,2,2),   Pos(9,3,3))).qualityCheck
 
-  val pt1 = ParticleTrack(1, List( Pos(10,1,1), Pos(11,1.3,1), Pos(12,1.2,1), Pos(13,1.1,1), Pos(14,2,2) ))
-  val pt2 = ParticleTrack(2, List( Pos(12,2,3), Pos(13,1.3,1), Pos(14,1.2,1), Pos(15,1.1,1), Pos(16,2,2) )) //special
-  val pt3 = ParticleTrack(3, List( Pos(20,2,3), Pos(21,1.3,1), Pos(23,1.1,1), Pos(24,2,2),   Pos(25,1.2,1) ))
-  val pt4 = ParticleTrack(4, List( Pos(15,2,3), Pos(16,1.3,1), Pos(17,1.1,1), Pos(18,2,2),   Pos(19,1.2,1), Pos(20,1.2,1), Pos(21,1.2,1), Pos(22,1.2,1),Pos(23,1.2,1),Pos(23,1.3,1),Pos(24,1.2,1),Pos(25,1.2,1),Pos(26,1.2,1) ))
-
-  val ta = TrackAssembly( List(pt1,pt2,pt3,pt4), "Test Experiment")
-
-  test("Diffusion. implement me!") {
-    assert(false)
+  test("Diffusion.msd(1) #1") {
+    val t = Diffusion.msd(1)(pt1.list)
+    assert(t.size == 1 && t.head.size == 1, t)
+    assert(t.head.head.n == 2)
+    assert(t.head.head.msd == Vec(4,1,0))
+    assert(t.head.head.pos == Pos(1.5,1,0.5,0))
   }
+
+  test("Diffusion.msd(1) #2") {
+    val t = Diffusion.msd(1)(pt2.list)
+    assert(t.size == pt2.size-1 && t.head.size == 1)
+    assert(t(3).head.n == 2)
+    assert(t(3).head.msd == Vec(1,1,0))
+    assert(t(3).head.pos == Pos(4.5,0.5,0.5,0), t.map(_.head.pos))
+  }
+
+  test("Diffusion.msd(2) ") {
+    assert(Diffusion.msd(2)(pt1.list) == Nil) // empty
+
+    val t = Diffusion.msd(2)(pt2.list)
+    assert(t.size == pt2.size-2 && t.head.size == 2,
+      "t.size="+t.size +", pt2.size="+pt2.size +"\n size list=" + t.map(_.size))
+    assert(t(0)(1).n == 3)
+    assert(t(0)(0).msd == Vec(4,9,0))
+    assert(t(0)(1).msd == Vec(0.5,8,0), "msd = " + t(0)(1).msd +"\n pos= "+ t(0)(1).pos)
+    assert(t(0)(1).pos == Pos(2,3/3,-2.0/3,0))
+  }
+
+  test("Diffusion.naive_Di") {
+    val di = Diffusion.naive_Di(pt2.list)
+    assert(di(0).Di == Vec(2, 4.5, 0))
+    assert(di(1).Di == Vec(0.5, 0.5, 0))
+    assert(di(0).pos == Pos(1.5, 1, -1.5))
+    assert(di(1).pos == Pos(2.5, 0.5, 0.5))
+  }
+
+  test("Diffusion.SavingAndDoyle_Di") {
+    val di = Diffusion.savingAndDoyle_Di(pt2.list)
+    assert(di(0).Di == (Vec(0.5,8,0) - Vec(4,9,0)) * 0.5)
+    assert(di(0).pos == Pos(2, 1, -2.0/3))
+  }
+
+  test("Diffusion.unitsOfDi ") {
+    assert( Diffusion.unitsOfDi(pt2) == List("px_x^2 / frame", "px_y^2 / frame", "px_z^2 / frame") , Diffusion.unitsOfDi(pt2))
+  }
+
 }
