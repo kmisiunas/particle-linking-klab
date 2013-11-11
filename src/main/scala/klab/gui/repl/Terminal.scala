@@ -2,6 +2,7 @@ package klab.gui.repl
 
 import scala.tools.nsc.interpreter.ILoop
 import klab.gui.{ScriptEngine, Imports}
+import klab.Main
 
 
 /**
@@ -25,7 +26,8 @@ object Terminal {
 
     // essential!
     val settings = new scala.tools.nsc.Settings
-    settings.usejavacp.value = true
+    settings.usejavacp.value = true // outside sbt
+    //settings.embeddedDefaults[Main.type] // inside sbt
     settings.deprecation.value = true
     settings.withErrorFn(m => println(c.error + m + c.end)) // not sure what it does!
 

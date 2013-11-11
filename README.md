@@ -20,6 +20,7 @@ Useful SBT compiler commands
  - 'assemblyPackageDependency' generates separate .jar file for the libraries used
  - 'gen-idea' generates library bindings with intellij IDEA
  - 'doc' generate scaladocs
+ - 'clean' helps to remove sbt compilation artifacts
 
 Requirements
 ------------

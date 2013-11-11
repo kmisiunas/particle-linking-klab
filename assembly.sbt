@@ -17,6 +17,7 @@ jarName in assembly := "KLab.jar"
 
 //packageOptions in assembly += Package.ManifestAttributes("SplashScreen-Image" -> "splash.png")
 
+
 mergeStrategy in assembly <<= (mergeStrategy in assembly) { (old) =>
 {
   case "META-INF/DEPENDENCIES" => MergeStrategy.discard
@@ -29,8 +30,7 @@ mergeStrategy in assembly <<= (mergeStrategy in assembly) { (old) =>
   case PathList("org", "fusesource", xs @ _*) => MergeStrategy.last
   case PathList("META-INF", "native", xs @ _*)=> MergeStrategy.last
   case "rootdoc.txt" => MergeStrategy.first
+  case PathList("com", "jgoodies", "forms", xs @ _*) => MergeStrategy.first
   case _ => MergeStrategy.deduplicate
 }
 }
-
-//retrieveManaged := true // copies all the jars into lib_managed

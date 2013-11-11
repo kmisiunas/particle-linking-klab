@@ -7,7 +7,7 @@ package klab.gui
  */
 object Imports {
 
-  val main : List[String] = List(
+  val main: List[String] = List(
     "klab._",
     "klab.track._",             // add default imports
     "klab.track.assemblies._",             // add default imports
@@ -19,5 +19,8 @@ object Imports {
     "klab.gui.repl.Print.println",
     "sys.exit"
   )
+
+  /** Automatic import to provided REPL */
+  def auto() = ???
 
 }
