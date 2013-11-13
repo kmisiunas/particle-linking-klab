@@ -1,7 +1,7 @@
 
 name := "KLab"
 
-version := "0.1.4"
+version := "0.1.5"
 
 scalaVersion := "2.10.3"
 
@@ -57,6 +57,9 @@ libraryDependencies += "com.github.wookietreiber" %% "scala-chart" % "latest.int
 
 
 // ------------- Unnessasary ---------------
+
+// Breeze visualization - https://github.com/scalanlp/breeze-viz
+//libraryDependencies += "org.scalanlp" % "breeze-viz_2.10" % "0.5.2"
 
 // JUNIT - not sure if needed separatley?
 // libraryDependencies += "junit" % "junit" % "4.10" % "test"

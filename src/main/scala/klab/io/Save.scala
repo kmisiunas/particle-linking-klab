@@ -6,79 +6,66 @@ import klab.track.ParticleTrack
 import klab.track.formating.CompatibleWithJSON
 import scala.collection.GenTraversableOnce
 import klab.io.formating.ExportJSON
+import klab.io.infrastructure.save.SaveType
+import org.joda.time.DateTime
 
 /**
  * == Saving to Files object ==
  *
- * TODO: contains object cast - should be redesigned in log term. Using maps would help.
+ * Usage:
+ *  - Save( data , path/file , kind(optional) )
+ *  - kind should indicate the type of file one wants to produce
  *
+ * Features:
+ *  - works with format handlers. New ones can be added by implementing SaveType and adding them to known list
+ *
+ * Version: 0.1.5
  * User: karolis@misiunas.com
  * Date: 12/07/2013
- * Time: 15:53
  */
 object Save {
 
   /** Saves any type of object to a specified file. If file name could not be determined will
       * save to a default /"output/" dir.
       */
-  def apply(data: Any, file: String = "output/"): Unit = {
-    // if kind -> try saving with that kind
-    // else try to determine kind and save with that kind
-    // else save as text file
-    //val fp = formatFilePath(data, file)
-    data  match {
-      case st:String => write(st, file)
-      case _ => throw new Exception("Could not determine the type to save")
+  def apply(data: Any, file: String = "output/", kind: String = ""): Unit = {
+    val knowHandlers =
+      if (kind.isEmpty) SaveType.getAll.sortBy( - _.priority)
+      else SaveType.getAll.filter(kind.toLowerCase.trim == _.kind).sortBy( - _.priority)
+    // method to find matching file in the list
+    def findFirstHandler(list: List[SaveType]): Unit = {
+      if (list.isEmpty) println("Data was NOT saved. Not a known type of data, consider passing default string constructor: data.toString")
+      else if (list.head.isType(data)) write(list.head.getWriter(data), formatFilePath(file, list.head))
+      else findFirstHandler(list.tail)
     }
+    findFirstHandler(knowHandlers)
   }
 
   /** A function for optimising file paths for the user automatically */
-  def formatFilePath(data: Any, file: String) : String = {
-    // check if the path is already correctly formatted
-    val f = file.trim
-    if(! """\.[a-zA-Z]{2,6}$""".r.findFirstIn(f).isEmpty) return f
-    // if not determine file ending
-    val fileEnd = data match {
-      case d:ExportJSON => ".json"
-      case d:GenTraversableOnce[Any] => ".csv"
-      case _ => "kind" match {
-        case "csv" => "csv"
-        case _ => ".txt"
-      }
-    }
+  private def formatFilePath(file: String, saveType: SaveType) : String = {
     // check if the file name was provided. if not create one
-    val fileName = if(f.endsWith("/") || f.endsWith("\\")) {
-      data match {
-        case d:Assembly => "TrackAssembly_" + d.experiment
-        case d:ParticleTrack => "ParticleTrack_"+d.id
-        case d:Seq[Any] => "tmp_data"
-        case _ => "tmp_output"
-      }
-    } else ""
-    return f + fileName + fileEnd
+    val f = file.trim
+    val fileName =
+      if(f.endsWith("/") || f.endsWith("\\"))
+        "raw_" + DateTime.now.toString("YYYY-MM-dd_HHmm")
+      else ""
+
+    // check if the path is already correctly formatted
+    val fileExt = if("""\.[a-zA-Z]{2,6}$""".r.findFirstIn(f).isEmpty) saveType.defaultFileExtension
+      else ""
+
+    f + fileName + fileExt
   }
 
-  private def determineKind(data: Any, ft: String): String = {
-    data match {
-      case d:ExportJSON => "json"
-      case d:Seq[Any] => "csv"
-      case _ => { // try to get from the file ending
-        """\.[a-zA-Z]{2,6}$""".r.findFirstIn(ft).get.trim.toLowerCase match {
-          case ".json" =>  "json"
-          case ".csv" => "csv"
-          case _ => "text"
-        }
-      }
-    }
-  }
-
-  private def write(st :String, file: String) : Unit = {
+  private def write(st: Iterator[String], file: String) : Unit = {
     val f = new File(file)
     if (!f.getParentFile().exists()) f.getParentFile().mkdirs()
     if (!f.exists()) f.createNewFile()
     val p = new java.io.PrintWriter(f)
     try {
-      p.print(st)
+      while(st.hasNext) {
+        p.println(st.next())
+      }
     }
     catch {
       case e:Exception => println("Error: could not write to file \""+file+"\" because: "+e)

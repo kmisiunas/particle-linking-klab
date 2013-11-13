@@ -13,7 +13,7 @@ package object klab {
 
   val appName = "K-Lab"
 
-  val appVersion = "0.1.4"
+  val appVersion = "0.1.5"
 
   lazy val guiOwner: Component = {
     val frame = new JFrame(appName)

@@ -26,6 +26,7 @@ Requirements
 ------------
  - Scala 2.10
  - SBT 0.13
+ - Recommended to have BLAS or LAPACK installed
 
 Authors
 -------

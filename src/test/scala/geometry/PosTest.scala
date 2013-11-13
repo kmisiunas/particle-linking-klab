@@ -12,6 +12,7 @@ import org.scalatest.FunSuite
 class PosTest extends FunSuite {
 
   val p1 = Pos(1.1,2.2,3.3,4.4)
+  val p2 = Pos(2,-1,4,0)
 
   test("Pos.equals") {
     assert(p1 == Pos(1.1,2.2,3.3,4.4))
@@ -24,6 +25,11 @@ class PosTest extends FunSuite {
     assert(enc == "[1.1,2.2,3.3,4.4]")
     val p2 = Pos.fromJSON(enc)
     assert(p1 == p2)
+  }
+
+  test("Pos.min and Pos.max") {
+    assert(p1.max(p2) == Pos(2, 2.2, 4, 4.4))
+    assert(p1.min(p2) == Pos(1.1, -1, 3.3, 0))
   }
 
 }
