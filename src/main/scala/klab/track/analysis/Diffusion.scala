@@ -42,7 +42,7 @@ object Diffusion {
     * @param pos - the mean position and time for a given MSD point
     * @param n - the number of frames over which the MSD point was estimated
     */
-  class MSD(val msd: Vec, val pos: Pos, val n: Int)
+  class MSD(val msd: Vec, val pos: Pos, val n: Int) { override def toString = "MSD("+msd+" at "+pos+" with n="+n+")"}
 
 
   /** Estimates MSDi for a Particle Track

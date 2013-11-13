@@ -60,9 +60,9 @@ class Pos protected (val t: Double, override val x:Double, override val y:Double
 
   def mkString = "("+x+", "+y+", "+z+") at t="+t
 
-  def toJSON : String = compact(render(JsonDSL.seq2jvalue(list.map(JsonDSL.double2jvalue(_)))))
+  def toJSON: String = compact(render(JsonDSL.seq2jvalue(list.map(JsonDSL.double2jvalue(_)))))
 
-  def fromJSON(st:String) : Pos = Pos.fromJSON(st)
+  def fromJSON(st:String): Pos = Pos.fromJSON(st)
 
   /** Get time difference = this - that*/
   def dT(that: Pos) = t - that.t
@@ -76,6 +76,12 @@ class Pos protected (val t: Double, override val x:Double, override val y:Double
   /** Multiples all the elements in Pos vector */
   def ** (d: Double): Pos = Pos(t*d, x*d, y*d, z*d)
 
+  /** returns maximum value between two points */
+  def max(that: Pos): Pos = Pos( this.list.zip(that.list).map(v => Math.max(v._1, v._2)) )
+
+  /** returns minimum value between two points */
+  def min(that: Pos): Pos = Pos( this.list.zip(that.list).map(v => Math.min(v._1, v._2)) )
+
 }
 
 object Pos {
@@ -87,10 +93,11 @@ object Pos {
   def apply(l: List[Double]): Pos = if (l.size == 4) new Pos(l(0), l(1), l(2),l(3)) else
     if (l.size == 3) Pos(l(0), l(1), l(2),0) else
     throw new Exception("Error: Pos could not be created from a list:"+l)
-  def apply(ar: Array[Double]) : Pos = if (ar.size == 4) Pos(ar(0),ar(1),ar(2),ar(3)) else
-  if (ar.size == 3) Pos(ar(0),ar(1),ar(2),0) else
-    throw new Exception("Error: Pos could not be created from a array:"+ar)
-  def apply(json: String) : Pos = Pos.fromJSON(json)
+  def apply(ar: Array[Double]): Pos =
+    if (ar.size == 4) Pos(ar(0),ar(1),ar(2),ar(3)) else
+    if (ar.size == 3) Pos(ar(0),ar(1),ar(2),0) else
+      throw new Exception("Error: Pos could not be created from a array:"+ar)
+  def apply(json: String): Pos = Pos.fromJSON(json)
 
   def fromJSON(st:String) : Pos = {
     implicit val formats = net.liftweb.json.DefaultFormats
