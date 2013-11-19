@@ -1,22 +1,19 @@
-package klab.gui.show.show;
+package klab.gui.windows;
 
 import com.alee.laf.button.WebButton;
 import com.alee.laf.button.WebToggleButton;
 import com.alee.laf.checkbox.WebCheckBox;
-import com.alee.laf.panel.WebPanel;
 import com.alee.laf.slider.WebSlider;
+import com.intellij.uiDesigner.core.Spacer;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
-import klab.gui.show.ShowParticleTrack;
+import klab.gui.windows.ShowParticleTrack;
 
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 /**
  * User: karolis@misiunas.com
@@ -201,7 +198,7 @@ public class ShowParticleTrackFrame {
         tickShowTimesteps.setText("Show Timesteps");
         tickShowTimesteps.setToolTipText("Show 20 last positions from selected frame");
         containerForOptions.add(tickShowTimesteps, cc.xy(9, 1, CellConstraints.LEFT, CellConstraints.DEFAULT));
-        final com.intellij.uiDesigner.core.Spacer spacer1 = new com.intellij.uiDesigner.core.Spacer();
+        final Spacer spacer1 = new Spacer();
         containerForOptions.add(spacer1, cc.xy(11, 1, CellConstraints.FILL, CellConstraints.DEFAULT));
         animationControls = new JPanel();
         animationControls.setLayout(new FormLayout("fill:m:noGrow,left:4dlu:noGrow,fill:max(d;4px):noGrow,left:5dlu:noGrow,center:max(p;100px):grow(10.0),left:4dlu:noGrow,fill:max(m;4px):noGrow", "center:d:grow,top:3dlu:noGrow,center:max(d;4px):noGrow"));

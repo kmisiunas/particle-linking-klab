@@ -22,7 +22,7 @@ class SaveBreezeTest extends FunSuite{
   val ans = List("1.0,0.0,2.0," , "3.0,0.0,0.0,")
 
   test("SaveBreeze.getWriter") {
-    val gen = SaveBreeze.getWriter(m).toList
+    val gen = SaveBreeze.getWriter(m,"").toList
     assert(gen == ans)
   }
 

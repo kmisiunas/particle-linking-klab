@@ -14,8 +14,6 @@ import klab.Main
  */
 object Terminal {
 
-  lazy val c = if(System.getProperty("os.name").toLowerCase.contains("mac")) new Colors() else new Colors()
-
   def apply() = {
     // not necessary?
 //    lazy val urls = java.lang.Thread.currentThread.getContextClassLoader match {
@@ -29,7 +27,7 @@ object Terminal {
     settings.usejavacp.value = true // outside sbt
     //settings.embeddedDefaults[Main.type] // inside sbt
     settings.deprecation.value = true
-    settings.withErrorFn(m => println(c.error + m + c.end)) // not sure what it does!
+    settings.withErrorFn(m => println(Colors.error + m + Colors.end)) // not sure what it does!
 
     //settings.embeddedDefaults[SampleILoop] // experimental support for running within sbt:http://www.scala-sbt.org/release/docs/faq
     // experimental auto detection of class paths : http://speaking-my-language.blogspot.co.uk/2009/11/embedded-scala-interpreter.html
@@ -42,15 +40,13 @@ object Terminal {
 
 class Terminal extends ILoop {
 
-  def c = Terminal.c // quick access
-
-  override def prompt = c.prompt +"==> "+c.end // custom prompt
+  override def prompt = Colors.prompt + "==> " + Colors.end // custom prompt
 
   lazy val scriptEngine = new ScriptEngine(this)  // to exxecute automated scripts
 
   /** special printing function that shows prompt */
   def commandSc(sc:String) = {
-    println(c.autoPrompt +"script> "+c.end + sc)
+    println(Colors.autoPrompt + "script> " + Colors.end + sc)
     command(sc)
   }
 

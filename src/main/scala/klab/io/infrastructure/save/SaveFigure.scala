@@ -1,28 +1,27 @@
 package klab.io.infrastructure.save
 
+import breeze.plot.Figure
+
 /**
- * ## Saves string to a file - helper
+ * ## Saves Breeze Visualisation
  *
  * User: kmisiunas
- * Date: 13/11/2013
+ * Date: 18/11/2013
  */
-object SaveString extends SaveType {
+object SaveFigure extends SaveType {
 
-  override val defaultFileExtension = ".txt"
-  override val kind: String = "txt"
-  override val priority: Int = 0
+  override val defaultFileExtension = ".pdf"
+  override val kind: String = "png"
 
   /** Returns true if this handler can deal with this data type */
   def isType(that: Any): Boolean = that match {
-    case x: String => true
-    case (x: String) :: _ => true
+    case x: Figure => true
     case _ => false
   }
 
   /** Returns iterator that will be written to a file - a line for each string */
   def getWriter(that: Any, path: String): Iterator[String] = that match {
-    case x: String => Iterator(x)
-    case x: Iterable[String] => x.toIterator
+    case x: Figure => {x.saveas(path); Iterator.empty }
     case _ => throw new UnsupportedOperationException("This version of SaveType can't handle this type")
   }
 

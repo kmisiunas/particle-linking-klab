@@ -1,28 +1,27 @@
 package klab.io.infrastructure.save
 
+import klab.io.formating.ExportJSON
+
 /**
- * ## Saves string to a file - helper
  *
  * User: kmisiunas
- * Date: 13/11/2013
+ * Date: 18/11/2013
  */
-object SaveString extends SaveType {
+object SaveJSON extends SaveType {
 
-  override val defaultFileExtension = ".txt"
-  override val kind: String = "txt"
-  override val priority: Int = 0
+  override val defaultFileExtension = ".json"
+  override val kind: String = "json"
+  override val priority: Int = 1
 
   /** Returns true if this handler can deal with this data type */
   def isType(that: Any): Boolean = that match {
-    case x: String => true
-    case (x: String) :: _ => true
+    case x: ExportJSON => true
     case _ => false
   }
 
   /** Returns iterator that will be written to a file - a line for each string */
   def getWriter(that: Any, path: String): Iterator[String] = that match {
-    case x: String => Iterator(x)
-    case x: Iterable[String] => x.toIterator
+    case x: ExportJSON => Iterator(x.toJSON)
     case _ => throw new UnsupportedOperationException("This version of SaveType can't handle this type")
   }
 

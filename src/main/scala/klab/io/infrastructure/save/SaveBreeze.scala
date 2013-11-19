@@ -31,9 +31,9 @@ object SaveBreeze extends SaveType {
   }
 
   /** Returns iterator that will be written to a file - a line for each string */
-  def getWriter(that: Any): Iterator[String] = that match {
+  def getWriter(that: Any, path: String): Iterator[String] = that match {
     case x: DenseMatrix[Double] => SaveArrayAnyVal.fromArrayToIteratorC(x.data, x.cols, x.rows)
-    case x: DenseMatrix[Int] => SaveArrayAnyVal.fromArrayToIteratorC(x.data, x.cols, x.rows)
+    case x: DenseMatrix[Int] => SaveArrayAnyVal.fromArrayToIteratorC(x.data, x.cols, x.rows) // does not work?
     case x: DenseVector[Double] => SaveArrayAnyVal.fromArrayToIterator(x.data, 1, x.length)
     case x: DenseVector[Int] => SaveArrayAnyVal.fromArrayToIterator(x.data, 1, x.length)
     case _ => throw new UnsupportedOperationException("This version of SaveType can't handle this type")

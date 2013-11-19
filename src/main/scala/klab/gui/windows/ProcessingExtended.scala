@@ -1,4 +1,4 @@
-package klab.gui.show
+package klab.gui.windows
 
 import processing.core.{PConstants, PApplet}
 import scala.collection.mutable

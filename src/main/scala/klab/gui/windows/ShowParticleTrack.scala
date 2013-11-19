@@ -1,10 +1,9 @@
-package klab.gui.show
+package klab.gui.windows
 
 import processing.core._
 import klab.track.ParticleTrack
 import klab.track
 import klab.track.geometry.position.Pos
-import klab.gui.show.show.ShowParticleTrackFrame
 import com.misiunas.geoscala.Point
 
 /**

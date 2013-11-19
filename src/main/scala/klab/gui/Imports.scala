@@ -5,7 +5,7 @@ package klab.gui
  *
  * All the standard tools should be listed under Imports.main
  *
- * The imports should be separate if we want them to be analysed for TAB list available commands - to test this
+ * The imports should be separate if we want them to be analysed for TAB list available commands
  *
  * User: karolis@misiunas.com
  * Date: 21/07/2013
@@ -14,7 +14,7 @@ package klab.gui
 object Imports {
 
   /** Main imports for REPL */
-  val main: List[String] = List(
+  def main: List[String] = List(
     "klab._",
     "klab.track._",             // add default imports
     "klab.track.{ParticleTrack}",             // add default imports
@@ -23,13 +23,23 @@ object Imports {
     "klab.track.geometry.{Channel}",
     "klab.track.geometry.position.{Pos}",
     "klab.track.analysis._",
-    "klab.track.analysis.{Diffusion,LocalDiffusion,Find,Proximity,Transition}",
+    "klab.track.analysis.{Diffusion,DiffusionLocal,Find,Proximity,Transition,DiffusionCorrelation}",
     "klab.track.corrections._",
     "klab.track.corrections.{Filter,Continuum,Confinement}",
-    "klab.gui.show.Show",
-    "klab.gui.repl.Print.println",
+    "klab.gui.{Show,Print}",
+    "klab.gui.Print.println",
+    "com.misiunas.geoscala.vectors.Vec",
+    "com.misiunas.geoscala.Point",
     "sys.exit"
+  ) ::: breeze
+
+  /** imports of Breeze libraries for REPL */
+  val breeze: List[String] = List(
+    "breeze.linalg.{DenseVector,DenseMatrix}",
+    "breeze.plot.Figure"
   )
+
+
 
   /** Automatic import to provided REPL */
   def auto() = ???

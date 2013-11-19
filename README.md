@@ -8,10 +8,16 @@ Roadmap
  - Create sophisticated track reconstruction algorithm
  - Provide all essential analysis tools
 
-Usage
------
+Starting
+--------
 Start app by typing 'java -jar KLab.jar -t'. Where flag -t indicates that terminal version should be started.
 If libraries are stored outside the main JAR file one should run it via: 'java -cp "KLab.jar:KLab-assembly-0.1.4-deps.jar" klab.klab'
+
+Basic Usage
+-----------
+The simplest way to get started is with 'Run()' command. It runs an automated analysis script.
+If 'Run()' is typed it will display all known scrips - this includes packaged ones with the software and also ones in
+'/scripts/' folder. An example is scrip would be '''Run("example_script")'''.
 
 Useful SBT compiler commands
 ----------------------------

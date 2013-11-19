@@ -41,7 +41,7 @@ libraryDependencies += "net.liftweb" %% "lift-json" % "2.5.1"
 
 // ------------------ GUI -----------------
 
-// library for GUI designer in Intellij
+// library for GUI designer in Intellij - needed if one does not get attached by intellij ieda
 libraryDependencies += "com.intellij" % "javac2" % "7.0.3"
 
 // allows interaction with terminal? -> does not work
@@ -54,6 +54,9 @@ libraryDependencies +=  "org.scala-lang" % "scala-compiler" % "2.10.3"
 // JFreeChart for scala: https://github.com/wookietreiber/scala-chart
 // wrapped in scala: https://github.com/wookietreiber/scala-chart
 libraryDependencies += "com.github.wookietreiber" %% "scala-chart" % "latest.integration"
+
+// Breeze visualisation - https://github.com/scalanlp/breeze-viz
+libraryDependencies += "org.scalanlp" % "breeze-viz_2.10" % "0.5.2"
 
 
 // ------------- Unnessasary ---------------

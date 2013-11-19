@@ -1,3 +1,4 @@
+import klab.io.{Import, Path}
 
 /**
  * == Analysis script for 1D channel with poor tracking routine ==
@@ -14,23 +15,18 @@
  * Time: 16:56
  */
 
-// Plan:
-// - load TrackAssembly
-// - Join up tracks within in a channel
-// - filter tracks that are too small
-// - filter tracks that are too close
-// - filter tracks that are non-continuous
-// - do std analysis
+println("Please choose the directory (with subdirectories) containing the files with tracks");
 
-val file = fileChooser()
 
-val raw = TrackAssembly(Load(file));
+val file = Path.find()
+
+val raw = Import.dirToAssembly(file, "finding overlaps");
 
 println("loaded: "+raw);
 
-val channel = Channel.simpleAlongX(5, 95);
+val overlaps = klab.track.corrections.Confinement.findOverlaps( _.x )( raw )
 
-val joint: TrackAssembly = raw apply Continuum.pairUp(channel)
+println("loaded: "+raw);
 
 val filtered: TrackAssembly = joint apply Filter.bySize(min=5) apply Filter.byLocation(channel)
 

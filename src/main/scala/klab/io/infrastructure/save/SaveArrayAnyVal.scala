@@ -20,7 +20,7 @@ object SaveArrayAnyVal extends SaveType {
   }
 
   /** Returns iterator that will be written to a file - a line for each string */
-  def getWriter(that: Any): Iterator[String] = that match {
+  def getWriter(that: Any, path: String): Iterator[String] = that match {
     case x: Array[AnyVal] => fromArrayToIterator(x, 1, x.length)
     case _ => throw new UnsupportedOperationException("SaveArrayAnyVal can't handle this type")
   }

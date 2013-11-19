@@ -35,8 +35,10 @@ object Save {
     // method to find matching file in the list
     def findFirstHandler(list: List[SaveType]): Unit = {
       if (list.isEmpty) println("Data was NOT saved. Not a known type of data, consider passing default string constructor: data.toString")
-      else if (list.head.isType(data)) write(list.head.getWriter(data), formatFilePath(file, list.head))
-      else findFirstHandler(list.tail)
+      else if (list.head.isType(data)){
+        val formatFile = formatFilePath(file, list.head)
+        write(list.head.getWriter(data, formatFile), formatFile)
+      } else findFirstHandler(list.tail)
     }
     findFirstHandler(knowHandlers)
   }
@@ -57,7 +59,8 @@ object Save {
     f + fileName + fileExt
   }
 
-  private def write(st: Iterator[String], file: String) : Unit = {
+  private def write(st: Iterator[String], file: String): Unit = {
+    if (st.isEmpty) return ()
     val f = new File(file)
     if (!f.getParentFile().exists()) f.getParentFile().mkdirs()
     if (!f.exists()) f.createNewFile()

@@ -12,7 +12,7 @@ package klab.io.infrastructure.save
 abstract class SaveType {
 
   /** The priority of this save file - higher number = more important */
-  val priority: Int = 1
+  val priority: Int = 2
   
   /** Default file extension to fall back to if non was provided */
   val defaultFileExtension: String = ".txt"
@@ -24,7 +24,7 @@ abstract class SaveType {
   def isType(that: Any): Boolean
   
   /** Returns iterator that will be written to a file - a line for each string */
-  def getWriter(that: Any): Iterator[String]
+  def getWriter(that: Any, path: String): Iterator[String]
 }
 
 object SaveType {
@@ -36,7 +36,9 @@ object SaveType {
   def getAll: List[SaveType] = List(
     SaveBreeze,
     SaveArrayAnyVal,
-    SaveString
+    SaveString,
+    SaveFigure,
+    SaveJSON
   )
 
 }

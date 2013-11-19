@@ -1,4 +1,4 @@
-package klab.gui.show
+package klab.gui.windows
 
 import processing.core.{PVector, PConstants, PApplet}
 import org.joda.time.DateTime
