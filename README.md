@@ -17,7 +17,7 @@ Basic Usage
 -----------
 The simplest way to get started is with 'Run()' command. It runs an automated analysis script.
 If 'Run()' is typed it will display all known scrips - this includes packaged ones with the software and also ones in
-'/scripts/' folder. An example is scrip would be '''Run("example_script")'''.
+'/scripts/' folder. An example is scrip would be 'Run("example_script")'.
 
 Useful SBT compiler commands
 ----------------------------
