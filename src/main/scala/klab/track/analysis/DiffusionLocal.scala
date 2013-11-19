@@ -15,7 +15,7 @@ import com.misiunas.geoscala.Point
  * User: kmisiunas
  * Date: 11/11/2013
  */
-object LocalDiffusion {
+object DiffusionLocal {
 
   def apply = ???
 
@@ -66,13 +66,21 @@ object LocalDiffusion {
     })
     std = std.map( _ :/ (n + DenseMatrix.ones[Double](size._1, size._2)) )
     std.foreach(breeze.numerics.sqrt.inPlace( _ ))
+    // create axis labels
+    val axisX = DenseMatrix.zeros[Double](size._1,1)
+    val axisY = DenseMatrix.zeros[Double](size._2,1)
+    (0 to size._1).foreach( i => axisX.update(i,1, r0.x + spacing.x*i ))
+    (0 to size._1).foreach( i => axisY.update(i,1, r0.y + spacing.y*i ))
+
     Map( "n" -> n,
       "dx" -> mean(0),
       "dy" -> mean(1),
       "dz" -> mean(2),
       "stdx" -> std(0),
       "stdy" -> std(1),
-      "stdz" -> std(2) )
+      "stdz" -> std(2),
+      "axisx" -> axisX,
+      "axisy" -> axisY)
   }
   
   
