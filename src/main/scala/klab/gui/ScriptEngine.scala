@@ -34,15 +34,15 @@ class ScriptEngine (private val t: Terminal){
     else if ((new File("/scripts" +script+".sc")).exists()) process(Load("/scripts" +script+".sc"))
     else {
       val buildInScripts = ScriptEngine.getJarScripts()
-      val sc = buildInScripts.find( _.contains("scripts" +script+".sc") )
+      val sc = buildInScripts.find( _.contains("scripts/" +script+".sc") )
       if (!sc.isEmpty) {
         val raw = Source.fromInputStream(
           getClass.getResourceAsStream("/"+sc.get)
         ).getLines.mkString("\n")
         execute(ScriptEngine.prepare(raw))
       } else {
-        println("To run a script type its name. New scripts should be placed in the \"scripts/\" folder")
-        println("To run script in different directory type \"file\"")
+        print("To run a script type its name. New scripts should be placed in the \"scripts/\" folder. ")
+        println("To run script in different directory type Run(\"file\")")
         println("Available scripts:")
         buildInScripts.foreach(f => println(" - "+ """(?<=scripts/).+(?=\.sc)""".r.findFirstIn(f).get ))
         //todo print file scrips

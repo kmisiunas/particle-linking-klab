@@ -1,9 +1,12 @@
 package klab
 
-import javax.swing.{JFrame, UIManager}
+import javax.swing.{JOptionPane, UIManager}
 import com.alee.laf.WebLookAndFeel
 import klab.gui.repl.Terminal
-import java.awt.Component
+import klab.io.Path
+import com.alee.laf.optionpane.WebOptionPane
+import java.awt.datatransfer.{Clipboard, StringSelection}
+import java.awt.Toolkit
 
 /**
  * Main class
@@ -25,8 +28,22 @@ object Main {
 
     if(args.isEmpty){
       //Terminal()
-      println("Debug - Hello World!")
-      //val p = Runtime.getRuntime().exec("java -cp \"KLab.jar:KLab-assembly-0.1.4-deps.jar:scala-library-2.10.3-assembly.jar\"  -t");
+
+      val file: String = Path(Main.getClass.getProtectionDomain().getCodeSource().getLocation().getPath())
+      val command: String = "java -jar " + file + " -t"
+
+      val options: Array[AnyRef] = Array("Copy to clipboard", "Cancel")
+      val res = JOptionPane.showOptionDialog ( null, "Run command in Terminal or PowerShell: \n" + command,
+        "KLab Instructions",JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options(0) )
+      // copy command to clipboard
+      if (options(res) == "Copy to clipboard") {
+        val  stringSelection: StringSelection = new StringSelection (command);
+        val clpbrd: Clipboard = Toolkit.getDefaultToolkit ().getSystemClipboard ();
+        clpbrd.setContents (stringSelection, null);
+      }
+      println("To run Klab run this: " )
+      println(command)
+
     }
     else
       args.head match {

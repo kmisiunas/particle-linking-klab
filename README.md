@@ -30,9 +30,10 @@ Useful SBT compiler commands
 
 Requirements
 ------------
- - Scala 2.10
- - SBT 0.13
+ - JVM 1.6 or 1.7
  - Recommended to have BLAS or LAPACK installed
+ - Scala 2.10 (for compilation)
+ - SBT 0.13 (for compilation)
 
 Authors
 -------

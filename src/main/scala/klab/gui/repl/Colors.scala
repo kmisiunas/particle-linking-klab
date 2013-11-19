@@ -20,7 +20,7 @@ object Colors {
   def prompt = colors("prompt")
 
   /** color when messages are printed automatically */
-  def autoPrompt = "\033[36m"
+  def autoPrompt = colors("prompt")
 
   /** color when messages are printed automatically */
   def print = colors("print")
@@ -29,8 +29,8 @@ object Colors {
   def help = colors("help")
 
   /** Color map for the system */
-  lazy val colors:  Map[String,String] = unix
-    //if(System.getProperty("os.name").toLowerCase.contains("mac")) new Colors() else new Colors()
+  lazy val colors:  Map[String,String] =
+    if(System.getProperty("os.name").toLowerCase.contains("mac")) unix else neutral
 
   /** Unix compatible color codes (works with PowerShell) */
   val unix: Map[String,String] = Map(

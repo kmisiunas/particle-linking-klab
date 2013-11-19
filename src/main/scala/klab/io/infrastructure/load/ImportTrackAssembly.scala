@@ -14,7 +14,8 @@ object ImportTrackAssembly {
 
   val trackExtension = "txt"
 
-  val filterTitlesWith = List("filter", "frame", "length", "comment", "info", "parameter")
+  val filterTitlesWith = List("filter", "frame", "length", "comment", "info", "parameter", "overlap",
+    "info", "description")
 
   /** scans provided dir and creates track assembly out of it */
   def fromTable(dir: String, experiment: String): TrackAssembly = {
