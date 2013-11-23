@@ -18,7 +18,7 @@ object Import {
     * @param dir path to directory where the single track files are
     * @param experiment - describe the experiment
     */
-  def dirToAssembly(dir: String, experiment: String = ""): TrackAssembly =
+  def dirToAssembly(dir: String = Path.find(), experiment: String = "unnamed"): TrackAssembly =
     ImportTrackAssembly.fromTable(dir, experiment)
 
 
