@@ -29,7 +29,9 @@ object ShowType {
     */
   def knownTypes: List[ShowType] = List(
     ShowParticleTrack,
-    ShowHelp
+    ShowHelp,
+    ShowDenseVector,
+    ShowDenseMatrix
   )
 
 }

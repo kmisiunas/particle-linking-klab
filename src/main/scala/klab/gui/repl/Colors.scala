@@ -5,6 +5,19 @@ package klab.gui.repl
  *
  * todo: change entire model for coloring
  *
+ * CLEAR   = "\e[0m"
+    BOLD    = "\e[1m"
+
+    # Colors
+    BLACK   = "\e[30m"
+    RED     = "\e[31m"
+    GREEN   = "\e[32m"
+    YELLOW  = "\e[33m"
+    BLUE    = "\e[34m"
+    MAGENTA = "\e[35m"
+    CYAN    = "\e[36m"
+    WHITE   = "\e[37m"
+ *
  * User: karolis@misiunas.com
  * Date: 30/07/2013
  * Time: 14:54
@@ -15,7 +28,7 @@ object Colors {
   def end = colors("end")
 
   /** error message */
-  def error = colors("end")
+  def error = colors("error")
 
   def prompt = colors("prompt")
 
@@ -35,10 +48,11 @@ object Colors {
   /** Unix compatible color codes (works with PowerShell) */
   val unix: Map[String,String] = Map(
     "end" -> "\033[0m",
-    "error" -> "\033[91m",
+    "error" -> "\033[31m",
     "prompt" -> "\033[36m",
     "print" -> "\033[33m",
-    "help" -> "\033[33m"
+    "help" -> "\033[33m",
+    "warning" -> "\033[33m"
   )
 
   val neutral: Map[String,String] = Map(

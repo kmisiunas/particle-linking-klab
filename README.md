@@ -4,14 +4,20 @@ Project aimed at analysing diffusion experiment data using Scala/Java.
 
 Roadmap
 -------
- - Develop import code from external video trackers
- - Create sophisticated track reconstruction algorithm
- - Provide all essential analysis tools
+ - [x] Develop import code from external video trackers
+ - [ ] Create sophisticated track reconstruction algorithm
+ - [ ] Provide all essential analysis tools
+ - [ ] Full integration with breeze and universality of analysis results
+ - [ ] JSON as streams
+ - [ ] Automatic buffering Assembly for very large data sets
+ - [ ] Redesign Assembly
+ - [ ] universal id system?
 
 Starting
 --------
-Start app by typing 'java -jar KLab.jar -t'. Where flag -t indicates that terminal version should be started.
-If libraries are stored outside the main JAR file one should run it via: 'java -cp "KLab.jar:KLab-assembly-0.1.4-deps.jar" klab.klab'
+Start app by  double clicking the 'KLab.jar' file, it will give an option to copy the command that should be pasted into
+Console, Terminal or PowerShell. Flag -t indicates that terminal version should be started.
+If libraries are stored outside the main JAR file one should run it via: 'java -cp "KLab.jar:KLab-assembly-0.1.4-deps.jar" klab.klab -t'
 
 Basic Usage
 -----------
@@ -38,5 +44,4 @@ Requirements
 Authors
 -------
 Karolis Misiunas
-km558@cam.ac.uk
-k.misiunas@gmail.com
+km558@cam.ac.uk or k.misiunas@gmail.com
