@@ -17,8 +17,6 @@ import com.misiunas.geoscala.Point
  */
 object DiffusionLocal {
 
-  def apply = ???
-
   /** Estimates the local diffusion in matrix form.
     *
     * Works with 2D binning
@@ -69,8 +67,8 @@ object DiffusionLocal {
     // create axis labels
     val axisX = DenseMatrix.zeros[Double](size._1,1)
     val axisY = DenseMatrix.zeros[Double](size._2,1)
-    (0 to size._1).foreach( i => axisX.update(i,1, r0.x + spacing.x*i ))
-    (0 to size._1).foreach( i => axisY.update(i,1, r0.y + spacing.y*i ))
+    (0 until size._1).foreach( i => axisX.update(i,0, r0.x + spacing.x*i ))
+    (0 until size._2).foreach( i => axisY.update(i,0, r0.y + spacing.y*i ))
 
     Map( "n" -> n,
       "dx" -> mean(0),

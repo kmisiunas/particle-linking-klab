@@ -37,12 +37,12 @@ class TrackAssemblyM private (val listMap : Map[Int, ParticleTrack],
     return this
   }
 
-  def remove(s: Seq[ParticleTrack]): TrackAssemblyM = {
+  def remove(s: Iterable[ParticleTrack]): TrackAssemblyM = {
     s.map(_.id).foreach(listMap.remove(_))
     return this
   }
 
-  def add(s: Seq[ParticleTrack]): TrackAssemblyM = {
+  def add(s: Iterable[ParticleTrack]): TrackAssemblyM = {
     listMap ++= (s.map(pt => (pt.id, pt)).toMap)
     return this
   }
@@ -51,6 +51,12 @@ class TrackAssemblyM private (val listMap : Map[Int, ParticleTrack],
 
   /** adds new list of tracks that was generated form current list */
   def add(f: (List[ParticleTrack]) => List[ParticleTrack]): Assembly = ???
+
+  /** Method for appending another TrackAssembly with time frames where other have left off */
+  def append(list: Iterable[ParticleTrack], timeGap: Double): Assembly = ???
+
+  /** approximate size of this particle track assembly */
+  def memory: Double = ???
 }
 
 /**

@@ -78,6 +78,9 @@ abstract class Assembly (val experiment:String, val comment: String, val time: L
 
   def toJSON : String = pretty(render(json))
 
+  /** approximate size of this particle track assembly */
+  def memory: Double
+
 
   // ---------------- Manipulate methods --------------
 
@@ -88,14 +91,17 @@ abstract class Assembly (val experiment:String, val comment: String, val time: L
   def copy : Assembly
 
   /** removes specified tracks from the assembly */
-  def remove(s: Seq[ParticleTrack]): Assembly
+  def remove(s: Iterable[ParticleTrack]): Assembly
 
   /** adds particles to the assembly */
-  def add(s :Seq[ParticleTrack]): Assembly
+  def add(s :Iterable[ParticleTrack]): Assembly
   /** adds new list of tracks that was generated form current list */
   def add(f: (List[ParticleTrack]) => List[ParticleTrack]): Assembly
 
   def apply(f : List[ParticleTrack] => List[ParticleTrack] ) : Assembly
+
+  /** Method for appending another TrackAssembly with time frames where other have left off */
+  def append(list: Iterable[ParticleTrack], timeGap: Double = 0.0): Assembly
 }
 
 object Assembly {

@@ -12,10 +12,13 @@ import klab.track.formating.ExportCSV
  *
  * An analysis tool for binning particle positions to a 1D mapping
  *
+ * TODO: Replace with more universal code !
+ *
  * User: karolis@misiunas.com
  * Date: 24/07/2013
  * Time: 15:41
  */
+@deprecated
 class PosHistogram private (val occurrences: List[Int], // number of times particle appears in certain pos
                             val sliceAt: List[Double], // slice positions
                             val posMapping : (Pos => Double), // way to map Pos to a linear map
@@ -43,6 +46,7 @@ class PosHistogram private (val occurrences: List[Int], // number of times parti
   }
 }
 
+@deprecated
 object PosHistogram {
   /** represents a slice of 1D histogram (Number of elements, lower pos, upper pos) */
   type Slice = (Int, Double, Double)

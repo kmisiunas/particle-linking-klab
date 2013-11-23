@@ -4,6 +4,7 @@ import net.liftweb.json.JsonAST.{JDouble, JField}
 import org.joda.time.DateTime
 import klab.track.ParticleTrack
 import scala.collection
+import klab.track.geometry.position.Pos
 
 /**
  * == Immutable Track Assembly ==
@@ -37,17 +38,29 @@ class TrackAssembly private (val listMap : Map[Int, ParticleTrack],
   def changeEach(f: (ParticleTrack) => ParticleTrack) : TrackAssembly  =
     updateMap( listMap.map( m =>  (m._1, f(m._2))).toMap )
 
-  def remove(s: Seq[ParticleTrack]) : TrackAssembly  = {
+  def remove(s: Iterable[ParticleTrack]): TrackAssembly  = {
     val set = s.map(_.id).toSet
     return TrackAssembly(listMap.filterNot(m => set(m._1)) , experiment, comment, time)
   }
 
-  def add(s: Seq[ParticleTrack]) : TrackAssembly =
-    TrackAssembly(listMap ++ (s.map(pt => (pt.id, pt)).toMap) , experiment, comment, time)
+  def add(list: Iterable[ParticleTrack]): TrackAssembly =
+    TrackAssembly(listMap ++ (list.map(pt => (pt.id, pt)).toMap) , experiment, comment, time)
+
   def add(f: (List[ParticleTrack]) => List[ParticleTrack]): TrackAssembly = add(f(this))
 
   def apply(f: (List[ParticleTrack]) => List[ParticleTrack]): TrackAssembly =
     TrackAssembly(f( this.toList ), experiment, comment, time)
+
+  /** Method for appending another TrackAssembly with time frames where other have left off */
+  def append(list: Iterable[ParticleTrack], timeGap: Double): TrackAssembly = {
+    val lastT: Double = this.maxBy(_.timeRange._2).timeRange._2
+    val fdT: Pos => Pos = p => p ++ Pos(timeGap + lastT, 0,0,0)
+    val shifted = list.map(_.changePositions(fdT)).toList
+    this.add(shifted.head.changePositions( p => p.toLQPos) :: shifted.tail)
+  }
+
+  /** approximate size of this particle track assembly */
+  lazy val memory: Double = listMap.foldLeft(0.0)( (sum:Double, el:(Int,ParticleTrack)) => sum + el._2.size  )
 }
 
 /**

@@ -7,9 +7,14 @@ import klab.track.ParticleTrack
 /**
  * == Estimate the diffusion coefficient ==
  *
+ * Methods implemented:
+ *  - naive - takes first point in MSD to estimate diffusion coefficient
+ *  - savingAndDoyle - uses first two points of MSD to get slope and estimates from it.
+ *
+ * This object is of CRYTICAL importance!
+ *
  * User: karolis@misiunas.com
  * Date: 26/07/2013
- * Time: 13:31
  */
 object Diffusion {
 

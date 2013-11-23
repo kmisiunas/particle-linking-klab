@@ -4,13 +4,19 @@ import klab.track._
 import klab.track.geometry.position.Pos
 import scala.annotation.tailrec
 import com.misiunas.geoscala.volumes.Volume
+import com.misiunas.geoscala.Point
+import klab.track.corrections.Confinement.ResOverlap
+import klab.track.corrections.Confinement
 
 /**
  * Find various properties in assemblies
  *
+ * TODO:
+ *  - general found result representation: Set or List?
+ *  - most finding method from all other places should be ported here
+ *
  * User: karolis@misiunas.com
  * Date: 31/07/2013
- * Time: 16:45
  */
 object Find {
 
@@ -63,5 +69,9 @@ object Find {
     }
     findSegments(pt.list)
   }
+
+  /** Find track overlaps along certain axis */
+  def overlaps(line: Point => Double): Iterable[ParticleTrack] => List[ResOverlap] = Confinement.findOverlaps(line)
+
 
 }
