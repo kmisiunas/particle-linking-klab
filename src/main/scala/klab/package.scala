@@ -11,9 +11,9 @@ import java.awt.Component
  */
 package object klab {
 
-  val appName = "K-Lab"
+  val appName = "KLab"
 
-  val appVersion = "0.1.5"
+  val appVersion = "0.1.6"
 
   lazy val guiOwner: Component = {
     val frame = new JFrame(appName)

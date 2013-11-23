@@ -30,7 +30,7 @@ object Main {
       //Terminal()
 
       val file: String = Path(Main.getClass.getProtectionDomain().getCodeSource().getLocation().getPath())
-      val command: String = "java -jar " + file + " -t"
+      val command: String = "java -Xms1g -Xmx2g -jar " + file + " -t"
 
       val options: Array[AnyRef] = Array("Copy to clipboard", "Cancel")
       val res = JOptionPane.showOptionDialog ( null, "Run command in Terminal or PowerShell: \n" + command,

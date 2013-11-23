@@ -139,11 +139,14 @@ object Path {
 
   /** Find the path using GUI interface */
   def find(): String = {
-    val fileChooser = new WebFileChooser ()
-    fileChooser.setMultiSelectionEnabled ( false )
-    fileChooser.showOpenDialog ( null )
-    val file = fileChooser.getSelectedFile ()
+    val fileChooser = new WebFileChooser(lastPath)
+    fileChooser.setMultiSelectionEnabled( false )
+    fileChooser.showOpenDialog( null )
+    val file = fileChooser.getSelectedFile()
+    lastPath = Path(file.getAbsolutePath).dir
     file.getAbsolutePath
   }
+
+  private var lastPath: String = Path.work
 
 }

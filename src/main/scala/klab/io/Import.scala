@@ -22,6 +22,8 @@ object Import {
     ImportTrackAssembly.fromTable(dir, experiment)
 
 
+  /** Imports TrackAssembly from a JSON file */
+  def jsonToAssembly(file: String = Path.find()): TrackAssembly = TrackAssembly(Load(file))
 
 
 }

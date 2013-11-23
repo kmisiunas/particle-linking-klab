@@ -27,8 +27,8 @@ val overlaps = klab.track.corrections.Confinement.findOverlaps( _.x )( raw );
 
 println("found " + overlaps.size + " overlaps");
 
-Save(overlaps.flatMap(_.atTimes).sorted.map(_.toString).toList, Path(file).dir + "overlap_frames.txt")
+if (!overlaps.isEmpty) Save(overlaps.flatMap(_.atTimes).sorted.map(_.toString).toList, Path(file).dir + "overlap_frames.txt")
 
-println("saved frames to " + Path(file).dir + "overlap_frames.txt");
+if (!overlaps.isEmpty)println("saved frames to " + Path(file).dir + "overlap_frames.txt");
 
 
