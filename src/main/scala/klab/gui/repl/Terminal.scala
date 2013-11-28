@@ -1,37 +1,34 @@
 package klab.gui.repl
 
-import scala.tools.nsc.interpreter.ILoop
-import klab.gui.{ScriptEngine, Imports}
-import klab.Main
-
+import scala.tools.nsc.interpreter.{ReplReporter, ILoop}
+import klab.gui.{Print, Imports}
 
 /**
  * == GUI based on terminal ==
  *
+ * Main interaction interface based on Scala REPL
+ *
+ * Aims:
+ *  - [x] Fully Scala based and compatible
+ *  - [x] Coloring for better support
+ *  - [x] Suppress output if input has semi colon ;
+ *  - [ ] Custom error messages with ability to get full message
+ *  - [x] Unix and Windows support
+ *
+ *
+ * Version 0.1.6
  * User: karolis@misiunas.com
  * Date: 18/07/2013
- * Time: 19:51
  */
 object Terminal {
 
   def apply() = {
-    // not necessary?
-//    lazy val urls = java.lang.Thread.currentThread.getContextClassLoader match {
-//      case cl: java.net.URLClassLoader => cl.getURLs.toList
-//      case _ => sys.error("classloader is not a URLClassLoader")
-//    }
-//    lazy val classpath = urls map {_.toString}
-
     // essential!
     val settings = new scala.tools.nsc.Settings
     settings.usejavacp.value = true // outside sbt
-    //settings.embeddedDefaults[Main.type] // inside sbt
+    //settings.embeddedDefaults[Main.type] // inside sbt - not wery useful
     settings.deprecation.value = true
     settings.withErrorFn(m => println(Colors.error + m + Colors.end)) // not sure what it does!
-
-    //settings.embeddedDefaults[SampleILoop] // experimental support for running within sbt:http://www.scala-sbt.org/release/docs/faq
-    // experimental auto detection of class paths : http://speaking-my-language.blogspot.co.uk/2009/11/embedded-scala-interpreter.html
-    //settings.classpath.append("/Users/kmisiunas/Dropbox/PhD/Software/KAnalysis/target/scala-2.10/KAnalysis-assembly-0.1.1.jar")
 
     new Terminal().process(settings)
   }
@@ -44,19 +41,16 @@ class Terminal extends ILoop {
 
   lazy val scriptEngine = new ScriptEngine(this)  // to exxecute automated scripts
 
-  /** special printing function that shows prompt */
-  def commandSc(sc:String) = {
-    println(Colors.autoPrompt + "script> " + Colors.end + sc)
-    command(sc)
-  }
-
   addThunk {
    intp.beQuietDuring {
      Imports.main.foreach(intp.addImports(_))
      intp.bind("scriptEngine", scriptEngine) // enable scripts to be run as a commands: Run("file")
      command("def Run(script:String = \"\") = scriptEngine.run(script)")
+     intp.bind("debug", this) // for debugging Terminal structure
     }
+    Print.printMethod = st => {intp.reporter.printMessage(st); intp.reporter.flush() }
   }
+
 
   override def printWelcome() {
     echo(
@@ -70,22 +64,36 @@ class Terminal extends ILoop {
       "-----oOOo-(_)-oOOo-----")
   }
 
-  /** special command input for surpressing result printing if command ends with ; */
+  /** special command input for suppressing result printing if command ends with ; */
   override def command(line: String): Result = {
     if(line.replaceAll("//.+$", "").trim.takeRight(1) == ";") intp.beSilentDuring(super.command(line))
     else super.command(line)
   }
 
+  /** Create a new interpreter. */
+  override def createInterpreter() {
+    if (addedClasspath != "")
+      settings.classpath append addedClasspath
+    intp = new KLabInterpreter
+  }
 
-// use the code below if you want syntax highlighting
+  class KLabInterpreter extends ILoopInterpreter {
+    override lazy val reporter: ReplReporter = new KLabReporter(this)
+  }
 
-//    var gremlinIntp: GremlinInterpreter = _
-//    override def createInterpreter() {
-//      if (addedClasspath != "")
-//        settings.classpath.append(addedClasspath)
-//      gremlinIntp = new GremlinInterpreter
-//      intp = gremlinIntp
-//    }
+  // not very important - help for the user
+  override def commands: List[LoopCommand] = super.commands ++
+    List(LoopCommand.nullary("error", "show the suppressed java error/Exception", errorCommand))
+
+
+  /** executes with :error */
+  private def errorCommand(): Result = {
+    KLabReporter.lastError match {
+      case None => "Can't find any cached errors."
+      case Some(err) => "Full error message: \n" + err
+    }
+  }
+
 
 //    /**Overriden to print out the value evaluated from the specified line. */
 //    override def command(line: String): Result = {
@@ -118,18 +126,4 @@ class Terminal extends ILoop {
 //        case _                          ⇒ Iterator.single(value)
 //      }
 //    }
-
-//    class GremlinInterpreter extends ILoopInterpreter {
-//      override lazy val reporter: ReplReporter = new ReplReporter(this) {
-//        /**Stop ReplReporter from printing to console. Instead we print in GremlinILoop.command. */
-//        override def printMessage(msg: String) {}
-//      }
-//      def prevRequest: Option[Request] = prevRequestList.lastOption
-//
-//      /**Returns the last value evaluated by this interpreter. See https://issues.scala-lang.org/browse/SI-4899 for details. */
-//      def lastValue: Either[Throwable, AnyRef] =
-//        prevRequest.getOrElse(throw new NullPointerException()).lineRep.callEither("$result")
-//    }
-
-
 }

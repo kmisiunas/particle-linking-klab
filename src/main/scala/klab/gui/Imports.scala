@@ -25,18 +25,21 @@ object Imports {
     "klab.track.analysis._",
     "klab.track.analysis.{Diffusion,DiffusionLocal,Find,Proximity,Transition,DiffusionCorrelation}",
     "klab.track.corrections._",
-    "klab.track.corrections.{Filter,Continuum,Confinement}",
-    "klab.gui.{Show,Print}",
-    "klab.gui.Print.println",
+    "klab.track.corrections.{Filter,Correction,Assemble}",
     "com.misiunas.geoscala.vectors.Vec",
-    "com.misiunas.geoscala.Point",
-    "sys.exit"
-  ) ::: breeze
+    "com.misiunas.geoscala.Point"
+  ) ::: breeze ::: user
 
   /** imports of Breeze libraries for REPL */
   val breeze: List[String] = List(
     "breeze.linalg.{DenseVector,DenseMatrix}",
     "breeze.plot.Figure"
+  )
+
+  val user: List[String] = List(
+    "klab.gui.{Show,Print,TimeIt}",
+    "klab.gui.Print.println",
+    "sys.exit"
   )
 
 

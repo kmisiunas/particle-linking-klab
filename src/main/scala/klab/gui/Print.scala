@@ -1,6 +1,7 @@
 package klab.gui
 
 import klab.gui.repl.Colors
+import java.io.PrintStream
 
 /**
  * User: karolis@misiunas.com
@@ -9,16 +10,25 @@ import klab.gui.repl.Colors
  */
 object Print {
 
-  def apply(a: Any) = System.out.println(Colors.print + a + Colors.end)
+  /** Print steam for all output */
+  var printMethod: String => Unit = Console.out.println
+
+  private def print = printMethod
 
   /** consistent with scala notation */
-  def println(a: Any) = System.out.println(Colors.print + a + Colors.end)
+  def println(a: Any) = print(Colors.print + a + Colors.end)
 
-  // todo: auto logging
+  def apply(a: Any) = print(Colors.print + a + Colors.end)
+
+  def simple(a: Any) = print(a.toString)
+
+  def log(key: String, msg: String) = println("[" + key + "] " + msg)
+
+  // todo: auto logging?
   /** System warning for error */
-  def error(a: Any) = System.out.println(Colors.error + "Error: " + a + Colors.end)
+  def error(a: Any) = print(Colors.error + "Error: " + a + Colors.end)
 
   /** help print */
-  def help(a: Any) = System.out.println(Colors.help + a + Colors.end)
+  def help(a: Any) = print(Colors.help + a + Colors.end)
 
 }

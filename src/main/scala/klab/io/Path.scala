@@ -142,7 +142,8 @@ object Path {
     val fileChooser = new WebFileChooser(lastPath)
     fileChooser.setMultiSelectionEnabled( false )
     fileChooser.showOpenDialog( null )
-    val file = fileChooser.getSelectedFile()
+    val file: File = fileChooser.getSelectedFile()
+    if (file == null) throw new RuntimeException("User canceled the operation")
     lastPath = Path(file.getAbsolutePath).dir
     file.getAbsolutePath
   }

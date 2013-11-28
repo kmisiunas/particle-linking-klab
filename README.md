@@ -12,6 +12,7 @@ Roadmap
  - [ ] Automatic buffering Assembly for very large data sets
  - [ ] Redesign Assembly
  - [ ] universal id system?
+ - [ ] JSON save  LQPos points!
 
 Starting
 --------

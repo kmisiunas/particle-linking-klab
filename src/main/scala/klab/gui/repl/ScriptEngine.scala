@@ -1,13 +1,13 @@
-package klab.gui
+package klab.gui.repl
 
 import klab.gui.repl.Terminal
 import klab.io.Load
-import java.net.URL
 import scala.io.Source
-import java.nio.file.Paths
 import java.io.File
 import java.util.zip.{ZipEntry, ZipInputStream}
 import scala.collection.mutable
+import klab.gui.{Print, Imports}
+import klab.gui.Print.println
 
 
 /**
@@ -19,7 +19,7 @@ import scala.collection.mutable
  */
 class ScriptEngine (private val t: Terminal){
 
-  /** runs a script if it can be found in the terminal  */
+  /** Runs a script: First tries to locate it.  */
   def run( script : String ) = {
     def process(s: String) =  execute(ScriptEngine.prepare(s))
     // if empty or "auto" do file open
@@ -50,7 +50,26 @@ class ScriptEngine (private val t: Terminal){
     }
   }
 
-  private def execute(list: List[String]) = list.foreach(t.commandSc(_))
+  /** Sends commands for execution to ILoop REPL.
+    * Should stop if there was a unhandled exception encountered.
+    */
+  private def execute(list: List[String]): Unit = {
+    if (list.isEmpty) return ()
+    val cmd = list.head
+    if (cmd.startsWith("import ")) t.beSilentDuring( t.command(cmd) ) // silent imports
+    else commandSc(cmd)
+    if (KLabReporter.errorOccurred) {   // ups.. did not go according to plan
+      Print.error("unexpected behaviour that terminated the script")
+      return ()
+    }
+    else return execute( list.tail )
+  }
+
+  /** special printing function that shows prompt */
+  private def commandSc(sc:String) = {
+    Print.simple(Colors.autoPrompt + "script> " + Colors.end + sc)
+    t.command(sc)
+  }
 
 }
 
@@ -61,7 +80,6 @@ object ScriptEngine {
     raw.replaceAll("/\\*(.|\\n)+?\\*/", "\n") // remove comments with /* */
       .split('\n')
       .filterNot(_.trim.isEmpty) // remove empty lines
-      .filterNot(s => (s.contains("import") && !Imports.main.forall(!s.contains(_)))) // remove duplicate imports
       .toList
       .map(_.trim)
 

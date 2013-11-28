@@ -5,7 +5,7 @@ package klab.gui.repl
  *
  * todo: change entire model for coloring
  *
- * CLEAR   = "\e[0m"
+ *  CLEAR   = "\e[0m"
     BOLD    = "\e[1m"
 
     # Colors
@@ -41,9 +41,11 @@ object Colors {
   /** color when messages are printed automatically */
   def help = colors("help")
 
+  def res = colors("res")
+
   /** Color map for the system */
   lazy val colors:  Map[String,String] =
-    if(System.getProperty("os.name").toLowerCase.contains("mac")) unix else neutral
+    if(System.getProperty("os.name").toLowerCase.contains("windows")) neutral else unix
 
   /** Unix compatible color codes (works with PowerShell) */
   val unix: Map[String,String] = Map(
@@ -52,7 +54,8 @@ object Colors {
     "prompt" -> "\033[36m",
     "print" -> "\033[33m",
     "help" -> "\033[33m",
-    "warning" -> "\033[33m"
+    "warning" -> "\033[33m",
+    "res" -> "\033[33m"
   )
 
   val neutral: Map[String,String] = Map(
@@ -60,7 +63,9 @@ object Colors {
     "error" -> "",
     "prompt" -> "",
     "print" -> "",
-    "help" -> ""
+    "help" -> "",
+    "warning" -> "",
+    "res" -> ""
   )
 
 }
