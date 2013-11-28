@@ -86,20 +86,8 @@ object Confinement {
     recursive(Find.atTime(track.timeRange._1, track.timeRange._2)(list).toList)
   }
 
-
-  /** Cuts and joins two tracks at specified times.
-    * No LQPos introduced here */
-  def swapAtOverlap(r: ResOverlap, newIds: (Int, Int)): List[ParticleTrack] = {
-    val idx1 = r._1.atTimeIdx(r.atTime)
-    val idx2 = r._2.atTimeIdx(r.atTime)
-    List(
-        r._1.changePositions(r._1.list.take(idx1) ::: r._2.list.drop(idx2)).changeId(newIds._1),
-        r._2.changePositions(r._2.list.take(idx2) ::: r._1.list.drop(idx1)).changeId(newIds._2)
-    )
-  }
-
-
   /** Method for removing overlapping tracks in a channel
+    *
     *
     * Method description:
     *  - Find tracks that enter the specified region
@@ -121,20 +109,70 @@ object Confinement {
     val inside = Find.enters(within)(ta)
     val overlaps = Find.overlaps(along)(inside)
                       .filter( r => within.isWithin(r.atPoint) )
-    println("found " + overlaps.size + "overlapping tracks")
+    println( overlaps.size + " overlaps were found")
     // find simple overlaps
     val overlapComplexity = overlaps.map( o => (o, {
       val s1 = Set(o._1,o._2)
       overlaps count (o2 => {val s2 = Set(o2._1, o2._2); (s1 & s2).size == 1} )
     } ) )
-    // unwind the simple overlaps
+    // unwind the simple overlaps - easy
     val simpleOverlaps = overlapComplexity.filter(_._2 == 0).map(_._1)
-    val simpleNewTracks = simpleOverlaps.flatMap( swapAtOverlap( _ , (id.next(), id.next()) ) )
+    val simpleSet = simpleOverlaps.flatMap(_.toSet).toSet
+    val simpleNewTracks = changeInOrder(simpleOverlaps, simpleSet) -- simpleSet
     println(simpleOverlaps.size + " simple overlaps found and fixed")
-    val newTracks = simpleNewTracks
-    val correctedTracks = (ta.toSet &~ simpleOverlaps.flatMap(_.toSet).toSet) ++ newTracks
-    println(overlapComplexity.filter(_._2 > 0).size + " complex tacks could not be fixed")
+    // deal with complex case - naive recursive method
+    // lets assume there is only one correct way to unwind the tracks
+    val complexOverlaps = overlapComplexity.filter(_._2 > 0).map(_._1)
+    val complexSet = complexOverlaps.flatMap(_.toSet).toSet
+    def unwindOneByOne(current: Set[ParticleTrack]): Set[ParticleTrack] = {
+      // find one overlap, fix it and see if any overlaps are left
+      findFirstOverlapWithin(along, within)(current) match {
+        case None => return current
+        case Some(o) => unwindOneByOne(current -- o.toSet ++ swapAtOverlap(o))
+      }
+    }
+    val complexNewTracks = unwindOneByOne(complexSet)
+    println(overlapComplexity.filter(_._2 > 0).size + " complex overlaps found and fixed")
+    // compile final answer
+    val newTracks = (simpleNewTracks ++ complexNewTracks).map( _.changeId(id.next()) )
+    val removeTracks = simpleSet ++ complexSet
+    val correctedTracks = ta.toSet -- removeTracks ++ newTracks
+    // final quality check - time waste, but necessary because unit testing might not get these!
+    if (!Find.overlaps(along)(correctedTracks).isEmpty) throw new RuntimeException("Track overlap algorithm failed to find correct unwinding")
+    if (correctedTracks.size != ta.size) throw new RuntimeException("Unexpected change in number of tracks")
     returnSameType[TrackAssembly](ta)(correctedTracks)
   }
+
+  private def changeInOrder(swaps: List[ResOverlap], currentSet: Set[ParticleTrack]): Set[ParticleTrack] = {
+    if (swaps.isEmpty) return currentSet
+    val ids = swaps.head.toSet.map(_.id)
+    val swapThese = currentSet.filter( t => ids.contains(t.id) )
+    val r = new ResOverlap(swapThese.head,swapThese.tail.head, swaps.head.atTime )
+    changeInOrder( swaps.tail, currentSet -- swapThese ++ swapAtOverlap(r))
+  }
+
+
+  /** Cuts and joins two tracks at specified times.
+    * No LQPos introduced here */
+  def swapAtOverlap(r: ResOverlap): List[ParticleTrack] = {
+    val idx1 = r._1.atTimeIdx(r.atTime)
+    val idx2 = r._2.atTimeIdx(r.atTime)
+    List(
+      r._1.changePositions(r._1.list.take(idx1) ::: r._2.list.drop(idx2)),
+      r._2.changePositions(r._2.list.take(idx2) ::: r._1.list.drop(idx1))
+    )
+  }
+
+  /** Finds first overlap within a volume */
+  def findFirstOverlapWithin(line: Point => Double, within: Volume): Iterable[ParticleTrack] => Option[ResOverlap] =
+    ta => {
+      def recursive(list: List[ParticleTrack]): Option[ResOverlap] = {
+        if (list.isEmpty) return None
+        val trackOverlaps = findOverlapsForTrack(list.head, list.tail, line).filter(r => within.isWithin( r.atPoint ))
+        if (trackOverlaps.isEmpty) return recursive(list.tail)
+        else return Some( trackOverlaps.head )
+      }
+      recursive(ta.toList)
+    }
 
 }
