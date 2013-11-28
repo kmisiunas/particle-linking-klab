@@ -13,6 +13,17 @@ import klab.track.geometry.position.Pos
  *
  * Most nuts and bolts are in Assembly class
  *
+ * TODO:
+ *  - make toList very efficient by storing it in a list!
+ *  - if stored as a Seq, make it time ordered
+ *  - map not used that often, use lazy map evaluation
+ *  - make an abstract class with ability to work on separate parts of the assembly ->
+ *        is list or other structure better for this?
+ *  - maybe not assemble should be savable but particle tracks? Thus allowing manipulation of small objects while long tracks are in memory?
+ *  - Mutable state not necessary - jut make efficient non-mutable state
+ *  - very efficient memory management
+ *  - JSON can save LQpos via -> {t,x,y,z,NaN}
+ *
  * User: karolis@misiunas.com
  * Date: 12/07/2013
  * Time: 15:50
@@ -70,11 +81,11 @@ object TrackAssembly {
 
   def apply(listMap : Map[Int, ParticleTrack], experiment: String, comment: String, time: Long) : TrackAssembly=
     new TrackAssembly(listMap, experiment,comment,time)
-  def apply(list: Seq[ParticleTrack],
+  def apply(list: Iterable[ParticleTrack],
             experiment: String  = "Experiment_on_"+ DateTime.now().toLocalDate.toString,
             comment:String = "" ,
             time:Long = System.currentTimeMillis()) : TrackAssembly=
-    TrackAssembly(list.sortWith(_.id < _.id).map(pt => (pt.id, pt)).toMap, experiment, comment, time)
+    TrackAssembly(list.toSeq.sortWith(_.id < _.id).map(pt => (pt.id, pt)).toMap, experiment, comment, time)
   def apply(json: String) : TrackAssembly= fromJSON(json)
 
   def fromJSON(st : String) : TrackAssembly = {

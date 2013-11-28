@@ -7,7 +7,7 @@ import com.misiunas.geoscala.Point
 /**
  *  == Representation of single physical position in time and space ==
  *
- *  It is stored as a list with
+ *  Immutable object
  *
  * User: karolis@misiunas.com
  * Date: 17/07/2013
@@ -17,7 +17,7 @@ class Pos protected (val t: Double, override val x:Double, override val y:Double
   extends Point (x,y,z)
   with CompatibleWithJSON[Pos] {
 
-  //TODO: make only single copy of each object in the system? Is this possible? and is it efficient?
+  override protected def makeFrom(e1: Double, e2: Double, e3: Double): Pos = new Pos(t, e1,e2,e3) // experimntal!
 
   // ------------------  Access Methods ---------------
 

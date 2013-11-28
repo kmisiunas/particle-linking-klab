@@ -17,17 +17,24 @@ import klab.track.infreastructure.tracks.{TrackInfo, Track, ConstructorTrack}
  * This is a basic unit for all analysis. The methods in this class are
  * optimised for performance and ease of use.
  *
+ * TODO:
+ *  - hash key equals, compute a key that will be quicker to compare to other Particle Track
+ *  - copy
+ *
+ * Features:
+ *  - Fast equals() method via reference checking
+ *  - immutable object
+ *
  *
  * Versions:
  *  - v1 - initial release (scala 2.10)
  *  - v2 - the Track was made into immutable object, added structure, JSON update
  *  - v3 - separated most functionality into inheritable traits. Slight syntax improvements. toCSV added.
+ *  - v0.1.6 - quick equals method via reference check!
  *
- *  TODO: unique objects just like String
- *
- *  @author karolis@misiunas.com,
- *  Date: 11/07/2013,
- *  Time: 14:28
+ * Version: 0.1.6
+ * Author karolis@misiunas.com,
+ * Date: 11/07/2013,
  */
 class ParticleTrack private (
                     val id: Int, // ID of the particle
@@ -47,13 +54,16 @@ class ParticleTrack private (
 
   override def equals(other: Any): Boolean  = other match {
     case that: ParticleTrack => {
-      //that.version == version && // not necessary for equality
-      that.id == id &&
-      //that.time == time && // no comparison in time as it ussaly creation time!
-      that.experiment == experiment &&
-      that.comment == comment &&
-      that.units == units &&
-      that.list == list }
+      if (that eq this) true else { // a quick reference check
+        //that.version == version && // not necessary for equality
+        that.id == id &&
+        //that.time == time && // no comparison in time as it ussaly creation time!
+        that.experiment == experiment &&
+        //that.comment == comment &&  // only care about the data!
+        that.units == units &&
+        that.list == list
+      }
+    }
     case _ => false
   }
 

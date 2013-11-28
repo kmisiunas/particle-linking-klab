@@ -32,9 +32,6 @@ abstract class Assembly (val experiment:String, val comment: String, val time: L
   /** access the map where the data is stored */
   def listMap : collection.Map[Int, ParticleTrack]
 
-  /** Gives next available id number */
-  def getAvailableId: Int = ???
-
 
   // ---------------- General implemented methods --------
 
@@ -102,6 +99,19 @@ abstract class Assembly (val experiment:String, val comment: String, val time: L
 
   /** Method for appending another TrackAssembly with time frames where other have left off */
   def append(list: Iterable[ParticleTrack], timeGap: Double = 0.0): Assembly
+
+  // ------------------ Id management ---------------
+
+  class IdMaker(private var lastId: Int){
+    def next(): Int = {
+      lastId = lastId + 1
+      lastId
+    }
+  }
+
+  /** returns id maker that can make increasing numbers of id's */
+  def getIdMaker: IdMaker = new IdMaker( listMap.keys.max )
+
 }
 
 object Assembly {
