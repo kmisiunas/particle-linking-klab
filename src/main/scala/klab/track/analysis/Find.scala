@@ -5,8 +5,8 @@ import klab.track.geometry.position.Pos
 import scala.annotation.tailrec
 import com.misiunas.geoscala.volumes.Volume
 import com.misiunas.geoscala.Point
-import klab.track.corrections.Confinement.ResOverlap
-import klab.track.corrections.Confinement
+import klab.track.corrections.specialised.Confinement
+import Confinement.ResOverlap
 
 /**
  * Find various properties in assemblies
@@ -19,6 +19,8 @@ import klab.track.corrections.Confinement
  * Date: 31/07/2013
  */
 object Find {
+
+  type PTFind = Iterable[ParticleTrack] => Set[ParticleTrack]
 
   /** Find tracks that exist at a specified time */
   def atTime(t: Double): PTFind =
@@ -72,6 +74,14 @@ object Find {
 
   /** Find track overlaps along certain axis */
   def overlaps(line: Point => Double): Iterable[ParticleTrack] => List[ResOverlap] = Confinement.findOverlaps(line)
+
+  /** Finds tracks that entered the volume at some point */
+  def enters(volume: Volume): PTFind =
+    ta => ta.filterNot( _.list.forall( !volume.isWithin(_) ) ).toSet
+
+  /** Finds tracks that always were in the volume */
+  def isWithin(volume: Volume): PTFind =
+    ta => ta.filter( _.list.forall( volume.isWithin(_) ) ).toSet
 
 
 }

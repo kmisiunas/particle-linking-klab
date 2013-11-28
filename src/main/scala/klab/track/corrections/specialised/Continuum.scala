@@ -1,4 +1,4 @@
-package klab.track.corrections
+package klab.track.corrections.specialised
 
 import klab.track.assemblies.{TrackAssembly, Assembly}
 import klab.track._
@@ -9,6 +9,7 @@ import scala.annotation.tailrec
 import klab.track.analysis.Diffusion
 import com.misiunas.geoscala.volumes.Volume
 import com.misiunas.geoscala.Point
+import klab.track.corrections._
 
 /**
  * == Object containing functions that stitch an non-continuous particle tracks ==
@@ -60,7 +61,7 @@ object Continuum {
   assembly => {
     def println(s:String): Unit = if(messages) System.out.println(s) // printing override
     println("Straiting Continuum.pairUp for Assembly with " + assembly.size + " tracks")
-    val ta: List[ParticleTrack] = Filter.bySize(filterSizeMin)(assembly) // filter out small elements
+    val ta = Filter.bySize(filterSizeMin)(assembly) // filter out small elements
     println(" - found "+ta.size+" tracks after applying a Filter.bySize(>="+ filterSizeMin + ")")
     val dT = if(dT_ > 0) dT_ else {
       val l = ta.map(t => (t.timeRange._2-t.timeRange._1)/(t.size-1))

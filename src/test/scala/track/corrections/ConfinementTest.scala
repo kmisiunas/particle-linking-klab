@@ -5,8 +5,8 @@ import klab.track.ParticleTrack
 import klab.track.geometry.position.Pos
 import klab.track.assemblies.TrackAssembly
 import klab.track.geometry.Channel
-import klab.track.corrections.{Confinement, Continuum}
-import klab.track.corrections.Confinement.ResOverlap
+import klab.track.corrections.specialised.Confinement
+import Confinement.ResOverlap
 
 /**
  * User: karolis@misiunas.com
@@ -27,11 +27,11 @@ class ConfinementTest extends FunSuite {
 
   //val channel = Channel.simpleAlongX(2,8)
 
-  test("Confinement.autoCorrection") {
+  ignore("Confinement.autoCorrection") {
     assert(true)
   }
 
-  test("Confinement.correctTrack") {
+  ignore("Confinement.correctTrack") {
     assert(true)
   }
 
@@ -39,7 +39,7 @@ class ConfinementTest extends FunSuite {
     Confinement.findOverlaps(_.x)(ta).foreach(println(_))
     assert(
       Confinement.findOverlaps(_.x)(ta).toSet ==
-        Set(new ResOverlap(pt1,pt2,  List(13,17)), new ResOverlap(pt1,pt3, List(12))) )
+        Set(new ResOverlap(pt1,pt2, 13.0), new ResOverlap(pt1,pt2, 17.0),new ResOverlap(pt1,pt3, 12.0)) )
   }
 
 

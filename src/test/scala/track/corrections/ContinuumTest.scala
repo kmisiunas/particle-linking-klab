@@ -5,8 +5,8 @@ import klab.track.ParticleTrack
 import klab.track.geometry.position.Pos
 import klab.track.assemblies.TrackAssembly
 import klab.track.geometry.Channel
-import klab.track.corrections.Continuum
 import scala.Predef._
+import klab.track.corrections.specialised.Continuum
 
 /**
  * User: karolis@misiunas.com

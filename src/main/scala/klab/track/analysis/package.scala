@@ -17,5 +17,5 @@ package klab.track
  */
 package object analysis {
 
-  type PTFind = Iterable[ParticleTrack] => Set[ParticleTrack]
+
 }
