@@ -135,11 +135,12 @@ object Confinement {
     println(overlapComplexity.filter(_._2 > 0).size + " complex overlaps found and fixed")
     // compile final answer
     val newTracks = (simpleNewTracks ++ complexNewTracks).map( _.changeId(id.next()) )
+    println(newTracks.size + " new tracks were injected")
     val removeTracks = simpleSet ++ complexSet
     val correctedTracks = ta.toSet -- removeTracks ++ newTracks
     // final quality check - time waste, but necessary because unit testing might not get these!
     if (!Find.overlaps(along)(correctedTracks).isEmpty) throw new RuntimeException("Track overlap algorithm failed to find correct unwinding")
-    if (correctedTracks.size != ta.size) throw new RuntimeException("Unexpected change in number of tracks")
+    if (correctedTracks.size != ta.size)  throw new RuntimeException("Unexpected change in number of tracks")
     returnSameType[TrackAssembly](ta)(correctedTracks)
   }
 

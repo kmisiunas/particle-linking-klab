@@ -6,7 +6,7 @@ import klab.gui.Print.log
  * == Times an executable function ==
  *
  * Usage:
- * TimeIt( functionToExecute ) will print time it took to execute that function!
+ * TimeIt( functionToExecute ) will print time it took to execute that function
  *
  *
  * Created by kmisiunas on 28/11/2013.
