@@ -7,6 +7,8 @@ import com.misiunas.geoscala.volumes.Volume
 import com.misiunas.geoscala.Point
 import klab.track.corrections.specialised.Confinement
 import Confinement.ResOverlap
+import klab.track.analysis.infrastructure.{JumpDirection, Proximity}
+import klab.track.analysis.infrastructure.JumpDirection.PairInteraction
 
 /**
  * Find various properties in assemblies
@@ -34,20 +36,6 @@ object Find {
       || (pt.timeRange._1 <= tMin && pt.timeRange._2 >= tMin)
     ).toSet
 
-
-  /** Align two particle tracks using time component. Only align components that exist in both tracks
-    * The algorithm is focused on performance as it is necessary for higher order functions
-    * Time o(n_pos) */
-  def alignTwoTracks(t1: ParticleTrack, t2: ParticleTrack): List[(Pos, Pos)] = {
-    @tailrec
-    def findNext(l1: List[Pos], l2: List[Pos], acc: List[(Pos,Pos)]): List[(Pos,Pos)] = {
-      if (l1.isEmpty || l2.isEmpty) return acc.reverse
-      if (l1.head.t == l2.head.t) findNext(l1.tail, l2.tail, (l1.head, l2.head) :: acc)
-      else if (l1.head.t < l2.head.t) findNext(l1.tail, l2, acc)
-      else return findNext(l1, l2.tail, acc)
-    }
-    findNext(t1.list, t2.list, Nil)
-  }
 
   type TrackSegment = List[Pos]
   /** Find segments of a track that are within specified volume */
@@ -83,5 +71,19 @@ object Find {
   def isWithin(volume: Volume): PTFind =
     ta => ta.filter( _.list.forall( volume.isWithin(_) ) ).toSet
 
+  /** Find tracks that coexist with a given track */
+  def coexist(t: ParticleTrack): PTFind = Proximity.find(t)
+
+
+  /** Find the time stamps at which two tracks overlap
+    *
+    * Note: Excluded LQPos from the overlaps */
+   def timeOverlapBetween(t1: ParticleTrack, t2: ParticleTrack): List[Double] = {
+    ??? // do we really want this method?
+  }
+
+  /** Finds and aligns two particle interactions */
+  def twoParticleInteractions: Iterable[ParticleTrack] => List[PairInteraction] =
+    JumpDirection.findTwoParticleInteractions()
 
 }

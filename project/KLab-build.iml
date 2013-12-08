@@ -43,6 +43,7 @@
           <root url="jar://$USER_HOME$/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/run-0.13.0.jar!/" />
           <root url="jar://$USER_HOME$/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/persist-0.13.0.jar!/" />
           <root url="jar://$USER_HOME$/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/actions-0.13.0.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/scala_2.10/sbt_0.13/org.jetbrains/sbt-structure/jars/sbt-structure-1.0.3.jar!/" />
           <root url="jar://$USER_HOME$/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/logging-0.13.0.jar!/" />
           <root url="jar://$USER_HOME$/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/tracking-0.13.0.jar!/" />
           <root url="jar://$USER_HOME$/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/api-0.13.0.jar!/" />
@@ -51,7 +52,6 @@
           <root url="jar://$USER_HOME$/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/main-settings-0.13.0.jar!/" />
           <root url="jar://$USER_HOME$/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/tasks-0.13.0.jar!/" />
           <root url="jar://$USER_HOME$/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/testing-0.13.0.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/scala_2.10/sbt_0.13/org.jetbrains/sbt-structure/jars/sbt-structure-1.0.1.jar!/" />
           <root url="jar://$USER_HOME$/.sbt/boot/scala-2.10.2/lib/scala-compiler.jar!/" />
           <root url="jar://$USER_HOME$/.sbt/boot/scala-2.10.2/lib/jansi.jar!/" />
           <root url="jar://$USER_HOME$/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/io-0.13.0.jar!/" />

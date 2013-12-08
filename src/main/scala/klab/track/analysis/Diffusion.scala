@@ -18,6 +18,13 @@ import klab.track.ParticleTrack
  */
 object Diffusion {
 
+  /** Easy access to DiffusionCorrelation object */
+  def Correlation = DiffusionCorrelation
+
+  /** Easy access to DiffusionLocal object */
+  def Local = DiffusionLocal
+
+
   /** Low Quality diffusion estimator for simple problems */
   @deprecated
   def mean1D(line: Pos => Double): Iterable[Pos] => Double =

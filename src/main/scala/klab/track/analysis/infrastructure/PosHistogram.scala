@@ -1,4 +1,4 @@
-package klab.track.analysis
+package klab.track.analysis.infrastructure
 
 import klab.track.assemblies.Assembly
 import klab.track.geometry.position.Pos

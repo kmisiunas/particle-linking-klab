@@ -1,4 +1,4 @@
-package klab.track.analysis
+package klab.track.analysis.infrastructure
 
 import klab.track.formating.{ExportCSV, CompatibleWithJSON}
 import org.joda.time.DateTime

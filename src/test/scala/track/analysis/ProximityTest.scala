@@ -5,7 +5,7 @@ import klab.track.ParticleTrack
 import klab.track.geometry.position.Pos
 import klab.track.assemblies.TrackAssembly
 import klab.track.geometry.Channel
-import klab.track.analysis.Proximity
+import klab.track.analysis.infrastructure.Proximity
 
 /**
  * User: karolis@misiunas.com

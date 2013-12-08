@@ -1,8 +1,9 @@
-package klab.track.analysis
+package klab.track.analysis.infrastructure
 
 import klab.track.ParticleTrack
 import klab.track.geometry.position.Pos
 import klab.track.analysis.Find.PTFind
+import klab.track.analysis.Find
 
 /**
  * == Analyses proximity of tracks ==
