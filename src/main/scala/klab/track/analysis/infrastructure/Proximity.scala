@@ -4,6 +4,7 @@ import klab.track.ParticleTrack
 import klab.track.geometry.position.Pos
 import klab.track.analysis.Find.PTFind
 import klab.track.analysis.Find
+import klab.track.operators.TwoTracks
 
 /**
  * == Analyses proximity of tracks ==
@@ -47,7 +48,7 @@ object Proximity {
     /** find distance between track and specified track */
     def findDistance(t: ParticleTrack): ResDistances = {
       // scan through all the elements looking for shortest distance
-      val overlap = Find.alignTwoTracks(track, t) // only elements that coexist
+      val overlap = TwoTracks.pairUpOverlaps(track, t) // only elements that coexist
       if (overlap.isEmpty) return null // tmp fix, todo replace with Option
       val d = overlap.sortBy(tupleP => tupleP._1.distance(tupleP._2)).head
       return new ResDistances(track, t, d._1.distance(d._2), d._1, d._2)

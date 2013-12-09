@@ -20,12 +20,17 @@ object Bin {
 
     /** binary search of ordered list - O(log(n))*/
     def findIndex(x: Double, min: Int = 0, max: Int = bins.length-1): Option[Int] = {
-      if (max < min) return None
-      val mid = min + ((max - min) / 2)
-      if(bins(mid) > x) findIndex(x, min, mid-1)
-      else if(bins(mid) < x) findIndex(x, mid+1, max)
-      else Option(mid) // found
+      def recursive(min: Int, max: Int): Option[Int] = min + ((max - min) / 2) match {
+        case _ if max < min =>
+          if ((bins(max) - x).abs < (bins(min) - x).abs) Some(max) else Some(min)
+        case mid if bins(mid) > x => recursive(min, mid-1)
+        case mid if bins(mid) < x => recursive(mid+1, max)
+        case mid => Some(mid)
+      }
+      if (x<bins(0) || x>bins(bins.length-1))  None
+      else recursive(0, bins.length-1)
     }
+
 
     def iterate(left: List[(Double, Double)]): Unit = {
       if(left.isEmpty) return ()

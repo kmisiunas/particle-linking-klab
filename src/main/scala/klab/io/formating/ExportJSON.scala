@@ -1,5 +1,7 @@
 package klab.io.formating
 
+import play.api.libs.json.{Json, JsValue}
+
 /**
  * == can export class as JSON ==
  *
@@ -10,6 +12,12 @@ package klab.io.formating
 trait ExportJSON {
 
   /** Produces a readable JSON file. Implementation should be modular. */
-  def toJSON: String
+  def toJson: String = Json.prettyPrint( toJsonValue )
+
+  /** Stream - important to override for very large objects! */
+  def toJsonIterator: Iterator[String] = Iterator(toJson)
+
+  /** creates Json Value */
+  def toJsonValue: JsValue
 
 }

@@ -32,11 +32,12 @@ object JumpDirection {
     def analyse(i: PairInteraction): List[(Double, Double)] = {
       def iterate(left: List[(Pos,Pos)], acc: List[(Double, Double)] = Nil): List[(Double, Double)] = {
         if (left.tail.isEmpty) return acc
-        if (left(0)._1.t != left(1)._1.t) iterate(left.tail, acc)
+        if (left(0)._1.t +1 != left(1)._1.t) iterate(left.tail, acc)
         else {
           val jump1 = left(0)._1 - left(1)._1
           val jump2 = left(0)._2 - left(1)._2
-          if (along(jump1).signum == along(jump2).signum) iterate(left.tail, (left(0)._1.t, 1.0) :: acc)
+          if (along(jump1).signum == along(jump2).signum)
+            iterate(left.tail, (along(left(0)._1) - along(left(0)._2), 1.0) :: acc)
           else iterate(left.tail, acc)
         }
       }
@@ -46,8 +47,8 @@ object JumpDirection {
     def count(i: PairInteraction): List[(Double, Double)] = {
       def iterate(left: List[(Pos,Pos)], acc: List[(Double, Double)] = Nil): List[(Double, Double)] = {
         if (left.tail.isEmpty) return acc
-        if (left(0)._1.t != left(1)._1.t) iterate(left.tail, acc)
-        else iterate(left.tail, (left(0)._1.t, 1.0) :: acc )
+        if (left(0)._1.t + 1 != left(1)._1.t) iterate(left.tail, acc) // ignore if frame is missing
+        else iterate(left.tail, (along(left(0)._1) - along(left(0)._2), 1.0) :: acc )
       }
       iterate(i.interact)
     }

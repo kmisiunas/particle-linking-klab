@@ -8,11 +8,11 @@ Roadmap
  - [ ] Create sophisticated track reconstruction algorithm
  - [ ] Provide all essential analysis tools
  - [ ] Full integration with breeze and universality of analysis results
- - [ ] JSON as streams
+ - [x] JSON as iterator
  - [ ] Automatic buffering Assembly for very large data sets
  - [ ] Redesign Assembly
- - [ ] universal id system?
- - [ ] JSON save  LQPos points!
+ - [ ] universal id system
+ - [x] JSON save LQPos points
 
 Starting
 --------

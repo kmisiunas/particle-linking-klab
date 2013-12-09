@@ -2,8 +2,6 @@ package klab.track.analysis.infrastructure
 
 import klab.track.assemblies.Assembly
 import klab.track.geometry.position.Pos
-import scalax.chart._
-import scalax.chart.Charting._
 import klab.track.geometry.Channel
 import klab.track.formating.ExportCSV
 
@@ -30,8 +28,8 @@ class PosHistogram private (val occurrences: List[Int], // number of times parti
 
   /** Shows the histogram */
   def show() = {
-    val chart = XYBarChart(sliceAt.zip(occurrences.tail.map(_*1)).toXYSeriesCollection(experiment))
-    chart.show(title="Occurrence frequency at certain position")
+    //val chart = XYBarChart(sliceAt.zip(occurrences.tail.map(_*1)).toXYSeriesCollection(experiment))
+    //chart.show(title="Occurrence frequency at certain position")
   }
 
   /**

@@ -1,10 +1,9 @@
 package klab.track.corrections
 
-import klab.track.assemblies.{TrackAssembly, Assembly}
 import klab.track.ParticleTrack
-import klab.track.analysis.Proximity
 import com.misiunas.geoscala.volumes.{Everywhere, Volume}
 import klab.track.corrections.specialised.Continuum
+import klab.track.analysis.infrastructure.Proximity
 
 /**
  * == Custom filters for track assemblies ==

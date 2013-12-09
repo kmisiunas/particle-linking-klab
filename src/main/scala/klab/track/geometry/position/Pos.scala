@@ -1,8 +1,8 @@
 package klab.track.geometry.position
 
-import klab.track.formating.CompatibleWithJSON
-import net.liftweb.json._
 import com.misiunas.geoscala.Point
+import klab.io.formating.ExportJSON
+import play.api.libs.json.{Json, JsValue}
 
 /**
  *  == Representation of single physical position in time and space ==
@@ -15,7 +15,7 @@ import com.misiunas.geoscala.Point
  */
 class Pos protected (val t: Double, override val x:Double, override val y:Double, override val z:Double )
   extends Point (x,y,z)
-  with CompatibleWithJSON[Pos] {
+  with ExportJSON {
 
   override protected def makeFrom(e1: Double, e2: Double, e3: Double): Pos = new Pos(t, e1,e2,e3) // experimntal!
 
@@ -56,13 +56,11 @@ class Pos protected (val t: Double, override val x:Double, override val y:Double
     case _ => false
   }
 
-  override def toString = "Pos("+t+", "+x+", "+y+", "+z+")"
+  override def toString = if (z == 0) "Pos("+t+", "+x+", "+y+")" else "Pos("+t+", "+x+", "+y+", "+z+")"
 
   def mkString = "("+x+", "+y+", "+z+") at t="+t
 
-  def toJSON: String = compact(render(JsonDSL.seq2jvalue(list.map(JsonDSL.double2jvalue(_)))))
-
-  def fromJSON(st:String): Pos = Pos.fromJSON(st)
+  def toJsonValue: JsValue = if (z == 0) Json.arr(t, x, y) else Json.arr(t, x, y, z)
 
   /** Get time difference = this - that*/
   def dT(that: Pos) = t - that.t
@@ -90,19 +88,19 @@ object Pos {
   def apply(t:Double, p:Point) : Pos = new Pos(t,p.x,p.y,p.z)
   def apply(x: (Double, Double, Double, Double)) : Pos = Pos(x._1,x._2,x._3,x._4)
   def apply(x: (Double, Double, Double)) : Pos = Pos(x._1,x._2,x._3)
-  def apply(l: List[Double]): Pos = if (l.size == 4) new Pos(l(0), l(1), l(2),l(3)) else
-    if (l.size == 3) Pos(l(0), l(1), l(2),0) else
-    throw new Exception("Error: Pos could not be created from a list:"+l)
-  def apply(ar: Array[Double]): Pos =
-    if (ar.size == 4) Pos(ar(0),ar(1),ar(2),ar(3)) else
-    if (ar.size == 3) Pos(ar(0),ar(1),ar(2),0) else
-      throw new Exception("Error: Pos could not be created from a array:"+ar)
-  def apply(json: String): Pos = Pos.fromJSON(json)
 
-  def fromJSON(st:String) : Pos = {
-    implicit val formats = net.liftweb.json.DefaultFormats
-    Pos(parse(st).extract[List[Double]])
+  def apply(l: List[Double]): Pos = l.size match {
+    case 1 => throw new Exception("Not enough parameters supplied to make Pos: "+l)
+    case 2 => Pos.apply(l(0), l(1))
+    case 3 => Pos.apply(l(0), l(1), l(2))
+    case 4 => Pos.apply(l(0), l(1), l(2), l(3))
+    case 5 if l(4) == -1.0 => LQPos.apply(l(0), l(1), l(2), l(3))
+    case _ => throw new Exception("Could not create Pos from: "+l)
   }
+
+  def apply(ar: Array[Double]): Pos = apply(ar.toList)
+
+  def apply(json: String): Pos = ???
 
 }
 

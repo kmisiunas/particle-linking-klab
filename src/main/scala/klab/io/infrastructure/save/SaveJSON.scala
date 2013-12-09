@@ -21,7 +21,7 @@ object SaveJSON extends SaveType {
 
   /** Returns iterator that will be written to a file - a line for each string */
   def getWriter(that: Any, path: String): Iterator[String] = that match {
-    case x: ExportJSON => Iterator(x.toJSON)
+    case x: ExportJSON => x.toJsonIterator
     case _ => throw new UnsupportedOperationException("This version of SaveType can't handle this type")
   }
 

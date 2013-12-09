@@ -23,7 +23,7 @@ object Imports {
     "klab.track.geometry.{Channel}",
     "klab.track.geometry.position.{Pos}",
     "klab.track.analysis._",
-    "klab.track.analysis.{Diffusion,DiffusionLocal,Find,Proximity,Transition,DiffusionCorrelation}",
+    "klab.track.analysis.{Diffusion,DiffusionLocal,Find,Analyse,DiffusionCorrelation}",
     "klab.track.corrections._",
     "klab.track.corrections.{Filter,Correction,Assemble}",
     "com.misiunas.geoscala.vectors.Vec",

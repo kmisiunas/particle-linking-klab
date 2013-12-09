@@ -4,6 +4,7 @@ import klab.track.ParticleTrack
 import klab.track.geometry.position.Pos
 import klab.track.analysis.Find
 import scala.annotation.tailrec
+import scala._
 
 /**
  * == Set of operations on two particle tracks ==
@@ -54,13 +55,37 @@ object TwoTracks {
           //  - find all corresponding overlaps
           //  - if unique overlap - include
           //  - if not, only include if all other overlaps are far away
+          val overlaps = coexist.map( pairUpOverlaps(track, _) )
+          /** this method will be slow as it is repeating computations */
+          def isUnique(otherTrack: ParticleTrack, overlap: List[(Pos,Pos)], others: Set[List[(Pos,Pos)]]):
+          Option[PairInteraction] = {
+            def goThrough(left: List[(Pos,Pos)], acc: List[(Pos,Pos)]): List[(Pos,Pos)] = {
+              if (left.isEmpty) return acc.reverse
+              val t = left.head._1.t
+              val sameT = others.flatMap( _.find( _._1.t == t).toList ) //todo might break?
+                                .map( o => (left.head._1.distance(o._2) , left.head._2.distance(o._2)) ) // compute distances
+              if (sameT.isEmpty) goThrough( left.tail, left.head :: acc)
+              else if ( sameT.forall( d => (d._1 >= notCloserThan && d._2 >= notCloserThan) ) )
+                goThrough( left.tail, left.head :: acc)
+              else goThrough( left.tail, acc) // discard
+            }
+            val distinct = goThrough(overlap, Nil)
+            if (distinct.isEmpty) None
+            else Some( new PairInteraction(track, otherTrack, distinct) )
+          }
 
-
+          val overlapsSet = overlaps.toSet
+          findOverlaps( left.tail,
+            coexist.zip(overlaps)
+              .map( t => isUnique(t._1, t._2, overlapsSet -- Set(t._2) ) )
+              .filterNot( _.isEmpty )
+              .map( _.get)
+              .toList
+            ::: acc)
         }
       }
 
-      ???
-
+      findOverlaps(ta, Nil)
     }
 
 }

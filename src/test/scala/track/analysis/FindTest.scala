@@ -7,6 +7,7 @@ import klab.track.assemblies.TrackAssembly
 import klab.track.analysis.Find
 import com.misiunas.geoscala.volumes.BoxXY
 import com.misiunas.geoscala.Point
+import klab.track.operators.TwoTracks
 
 /**
  * User: karolis@misiunas.com
@@ -37,7 +38,7 @@ class FindTest extends FunSuite {
   }
 
   test("Find.alignTwoTracks( ParticleTrack, ParticleTrack )") {
-    assert(Find.alignTwoTracks(pt1,pt2) == List(Pos(12,1.2,1), Pos(13,1.1,1), Pos(14,2,2)).zip( List(Pos(12,2,3), Pos(13,1.3,1), Pos(14,1.2,1)) ) )
+    assert(TwoTracks.pairUpOverlaps(pt1,pt2) == List(Pos(12,1.2,1), Pos(13,1.1,1), Pos(14,2,2)).zip( List(Pos(12,2,3), Pos(13,1.3,1), Pos(14,1.2,1)) ) )
   }
 
   test("Find.enters") {

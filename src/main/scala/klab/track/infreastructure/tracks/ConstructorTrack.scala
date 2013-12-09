@@ -1,10 +1,10 @@
 package klab.track.infreastructure.tracks
 
 import klab.track.formating.{CompatibleWithJSON, ExportCSV}
-import net.liftweb.json._
-import net.liftweb.json.JsonDSL._
 import klab.track.geometry.position.Pos
 import klab.track.ParticleTrack
+import play.api.libs.json.{Json, JsValue}
+import klab.io.formating.ExportJSON
 
 
 /**
@@ -17,38 +17,46 @@ import klab.track.ParticleTrack
 trait ConstructorTrack [Self <: ConstructorTrack[Self]]
   extends MutableTrack[Self]
   with ExportCSV
-  with CompatibleWithJSON[Self]
+  with ExportJSON
 {
   this: Self =>
 
-
-  /** An map for converting this to JSON structure */
-  private def json =
-    ("ParticleTrack" ->
-      ("id" -> id) ~
-      ("experiment" -> experiment) ~
-      ("time" -> time) ~
-      ("comment" -> comment) ~
-      ("version" -> version) ~
-      ("units" -> units) ~
-      ("positions" ->list.map(_.list))
+  /** custom implementation - save additional information */
+  override def toJson: String = {
+    Json.prettyPrint(
+      Json.obj(
+        "ParticleTrack" -> Json.obj(
+          "id" -> id,
+          "experiment" -> experiment,
+          "time" -> time,
+          "comment" -> comment,
+          "version" -> version,
+          "units" -> units,
+          "positions" -> list.map(_.toJsonValue)
+        )
+      )
     )
+  }
 
-  def toJSON : String = pretty(render(json))
+  /** only save key information: id + positions */
+  def toJsonValue: JsValue = Json.obj(
+    "id" -> id,
+    "positions" -> list.map(_.toJsonValue)
+  )
 
-  def fromJSON(st: String): Self = {
-    implicit val formats = net.liftweb.json.DefaultFormats
-    val code = parse(st)
-    if((code \\ "version").extract[Int] != ParticleTrack.version)
-      throw new Exception("Warning: the ParticleTrack file is version "+(code \\ "version").extract[Int] +
-        ", while the current version is"+version)
-    return make(
-      id = (code \\ "id").extract[Int],
-      list = (code \\ "positions").extract[List[List[Double]]].map(Pos(_)),
-      units = (code \\ "units").extract[List[String]],
-      experiment = (code \\ "experiment").extract[String],
-      comment = (code \\ "comment").extract[String],
-      time = (code \\ "time").extract[Long] )
+  def fromJSON(st: String): Self = { ???
+//    implicit val formats = net.liftweb.json.DefaultFormats
+//    val code = parse(st)
+//    if((code \\ "version").extract[Int] != ParticleTrack.version)
+//      throw new Exception("Warning: the ParticleTrack file is version "+(code \\ "version").extract[Int] +
+//        ", while the current version is"+version)
+//    return make(
+//      id = (code \\ "id").extract[Int],
+//      list = (code \\ "positions").extract[List[List[Double]]].map(Pos(_)),
+//      units = (code \\ "units").extract[List[String]],
+//      experiment = (code \\ "experiment").extract[String],
+//      comment = (code \\ "comment").extract[String],
+//      time = (code \\ "time").extract[Long] )
   }
 
   /** Gives x-y coordinates for each frame */

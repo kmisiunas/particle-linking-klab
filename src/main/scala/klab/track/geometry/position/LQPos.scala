@@ -1,5 +1,7 @@
 package klab.track.geometry.position
 
+import play.api.libs.json.{Json, JsValue}
+
 /**
  * == low quality position ==
  *
@@ -14,6 +16,9 @@ class LQPos private
   extends Pos (t,x,y,z)  {
 
   override def toString = "LQPos("+t+", "+x+", "+y+", "+z+")"
+
+  /** the 5th element is set "-1.0" and indicates that it is LQPos */
+  override def toJsonValue: JsValue =  Json.arr(t, x, y, z, -1.0)
 
   def toPos: Pos = Pos(t,x,y,z)
 

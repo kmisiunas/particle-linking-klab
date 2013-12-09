@@ -1,6 +1,6 @@
 package klab.track
 
-import klab.track.assemblies.{TrackAssemblyM, TrackAssembly}
+import klab.track.assemblies.{TrackAssembly}
 
 /**
  * == Package Contains objects to modify the assemblies containing particle tracks ==
@@ -25,7 +25,6 @@ package object corrections {
         TrackAssembly(output, experiment = x.experiment, comment = x.comment, time = x.time)
           .asInstanceOf[A]
       }
-      case x:TrackAssemblyM => ???
       case x:List[ParticleTrack] => output.toList.asInstanceOf[A]
       case x:Seq[ParticleTrack] => output.toSeq.asInstanceOf[A]
       case x:Iterable[ParticleTrack] => output.toIterable.asInstanceOf[A]

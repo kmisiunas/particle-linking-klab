@@ -31,6 +31,7 @@ mergeStrategy in assembly <<= (mergeStrategy in assembly) { (old) =>
   case "META-INF/NOTICE.txt" => MergeStrategy.discard
   case "META-INF/NOTICE" => MergeStrategy.discard
   case "META-INF/LICENSE.txt" => MergeStrategy.discard
+  case "META-INF/LICENSE" => MergeStrategy.discard
   case PathList("org", "fusesource", xs @ _*) => MergeStrategy.last
   case PathList("META-INF", "native", xs @ _*)=> MergeStrategy.last
   case "rootdoc.txt" => MergeStrategy.first
@@ -38,6 +39,6 @@ mergeStrategy in assembly <<= (mergeStrategy in assembly) { (old) =>
   case PathList("com", "jgoodies", "forms", xs @ _*) => MergeStrategy.first
   case PathList("com", "keypoint", xs @ _*) => MergeStrategy.first
   case PathList("org", "jfree", xs @ _*) => MergeStrategy.first
-  case _ => MergeStrategy.deduplicate
+  case x => old(x)
 }
 }

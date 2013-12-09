@@ -1,10 +1,10 @@
 package klab.track.assemblies
 
-import net.liftweb.json.JsonAST.{JDouble, JField}
 import org.joda.time.DateTime
 import klab.track.ParticleTrack
-import scala.collection
 import klab.track.geometry.position.Pos
+import klab.io.formating.ImportJSON
+import play.api.libs.json.{JsValue, Json}
 
 /**
  * == Immutable Track Assembly ==
@@ -34,15 +34,10 @@ class TrackAssembly private (val listMap : Map[Int, ParticleTrack],
                              override val time: Long)
   extends Assembly(experiment, comment, time) {
 
-
-  def fromJSON(st: String): TrackAssembly = TrackAssembly.fromJSON(st)
-
   override def toString : String = "TrackAssembly("+size+ " tracks, "+ comment + ")"
 
   override lazy val size : Int = listMap.size
-  def toImmutable: TrackAssembly = this
-  def copy : TrackAssembly = this // immutable implementation - no need for a copy
-  def toMutable: TrackAssemblyM = TrackAssemblyM(collection.mutable.Map(listMap.toSeq: _*), experiment, comment, time)
+  def copy: TrackAssembly = this // immutable implementation - no need for a copy
   protected def updateMap(map: Map[Int, ParticleTrack]): TrackAssembly = TrackAssembly(map, experiment, comment, time)
 
   /** forall a function on all ParticleTracks - expensive, try to minimise calls to it */
@@ -72,25 +67,41 @@ class TrackAssembly private (val listMap : Map[Int, ParticleTrack],
 
   /** approximate size of this particle track assembly */
   lazy val memory: Double = listMap.foldLeft(0.0)( (sum:Double, el:(Int,ParticleTrack)) => sum + el._2.size  )
+
 }
 
 /**
  * Object for static function access
  */
-object TrackAssembly {
+object TrackAssembly extends ImportJSON[TrackAssembly] {
 
   def apply(listMap : Map[Int, ParticleTrack], experiment: String, comment: String, time: Long) : TrackAssembly=
     new TrackAssembly(listMap, experiment,comment,time)
+
   def apply(list: Iterable[ParticleTrack],
             experiment: String  = "Experiment_on_"+ DateTime.now().toLocalDate.toString,
             comment:String = "" ,
             time:Long = System.currentTimeMillis()) : TrackAssembly=
     TrackAssembly(list.toSeq.sortWith(_.id < _.id).map(pt => (pt.id, pt)).toMap, experiment, comment, time)
-  def apply(json: String) : TrackAssembly= fromJSON(json)
 
-  def fromJSON(st : String) : TrackAssembly = {
-    val list = Assembly.fromJSONprep(st)
-    return TrackAssembly(list, list.head.experiment, list.head.comment, list.head.time)
+  def apply(json: String): TrackAssembly= fromJson(json)
+
+  /** construct object form json string */
+  def fromJson(json: String): TrackAssembly = {
+    val jsValue = Json.parse(json)
+    val units: List[String] = (jsValue \ "TrackAssembly" \ "units").as[List[String]]
+    val experiment = (jsValue \ "TrackAssembly" \ "experiment").as[String]
+    val time: Long = (jsValue \ "TrackAssembly" \ "time").as[Long]
+    val tracks = (jsValue \ "TrackAssembly" \ "ParticleTrack").as[Seq[JsValue]]
+    val list = tracks.map( jv =>
+      ParticleTrack(  (jv \ "id").as[Int],
+                      (jv \ "positions").as[List[List[Double]]].map( Pos(_) ),
+                      units, experiment, "", time
+      )
+    )
+    apply( list, experiment,  (jsValue \ "TrackAssembly" \ "comment").as[String], time )
   }
+
+
 
 }

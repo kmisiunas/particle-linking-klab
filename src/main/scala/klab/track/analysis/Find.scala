@@ -8,7 +8,8 @@ import com.misiunas.geoscala.Point
 import klab.track.corrections.specialised.Confinement
 import Confinement.ResOverlap
 import klab.track.analysis.infrastructure.{JumpDirection, Proximity}
-import klab.track.analysis.infrastructure.JumpDirection.PairInteraction
+import klab.track.operators.TwoTracks
+import klab.track.operators.TwoTracks.PairInteraction
 
 /**
  * Find various properties in assemblies
@@ -84,6 +85,6 @@ object Find {
 
   /** Finds and aligns two particle interactions */
   def twoParticleInteractions: Iterable[ParticleTrack] => List[PairInteraction] =
-    JumpDirection.findTwoParticleInteractions()
+    TwoTracks.findTwoParticleInteractions()
 
 }

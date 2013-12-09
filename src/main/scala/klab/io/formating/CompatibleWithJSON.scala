@@ -1,6 +1,6 @@
 package klab.track.formating
 
-import klab.io.formating.ExportJSON
+import klab.io.formating.{ImportJSON, ExportJSON}
 
 /**
  * == to JSON and back! ==
@@ -11,7 +11,7 @@ import klab.io.formating.ExportJSON
  * Date: 17/07/2013
  * Time: 14:24
  */
-trait CompatibleWithJSON [Self <: CompatibleWithJSON[Self]] extends ExportJSON {
+trait CompatibleWithJSON [Self <: CompatibleWithJSON[Self]] extends ExportJSON with ImportJSON[Self] {
   this: Self =>
 
   /** constructs back the object from JSON string input. */

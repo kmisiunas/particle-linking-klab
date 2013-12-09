@@ -27,7 +27,8 @@ libraryDependencies  += "org.scalanlp" %% "breeze" % "0.5.2"
 resolvers ++= Seq(
   // other resolvers here
   "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/",
-  "Sonatype Releases" at "https://oss.sonatype.org/content/repositories/releases/"
+  "Sonatype Releases" at "https://oss.sonatype.org/content/repositories/releases/",
+  "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/"
 )
 
 // TEST - http://www.scalatest.org/
@@ -36,8 +37,9 @@ libraryDependencies += "org.scalatest" % "scalatest_2.10" % "2.0" % "test"
 // Joda time for scala - https://github.com/nscala-time/nscala-time
 libraryDependencies += "com.github.nscala-time" %% "nscala-time" % "0.6.0"
 
-// Json: https://github.com/lift/lift/tree/master/framework/lift-base/lift-json
-libraryDependencies += "net.liftweb" %% "lift-json" % "2.5.1"
+// Play JSON library: http://www.playframework.com/documentation/2.2.x/ScalaJson
+libraryDependencies += "com.typesafe.play" %% "play-json" % "2.2.1"
+
 
 // ------------------ GUI -----------------
 
@@ -50,10 +52,6 @@ libraryDependencies += "org.scala-lang" % "jline" % "2.10.3"
 
 // Adds compiler that is needed for REPL
 libraryDependencies +=  "org.scala-lang" % "scala-compiler" % "2.10.3"
-
-// JFreeChart for scala: https://github.com/wookietreiber/scala-chart
-// wrapped in scala: https://github.com/wookietreiber/scala-chart
-libraryDependencies += "com.github.wookietreiber" %% "scala-chart" % "latest.integration"
 
 // Breeze visualisation - https://github.com/scalanlp/breeze-viz
 libraryDependencies += "org.scalanlp" % "breeze-viz_2.10" % "0.5.2"
@@ -80,3 +78,10 @@ libraryDependencies += "org.scalanlp" % "breeze-viz_2.10" % "0.5.2"
 
 // ScalaInterpreterPane - a Way ti interact with KAnalysis: https://github.com/Sciss/ScalaInterpreterPane
 // libraryDependencies += "de.sciss" %% "scalainterpreterpane" % "1.4.+"
+
+// JFreeChart for scala: https://github.com/wookietreiber/scala-chart
+// wrapped in scala: https://github.com/wookietreiber/scala-chart
+// libraryDependencies += "com.github.wookietreiber" %% "scala-chart" % "latest.integration"
+
+// Json: https://github.com/lift/lift/tree/master/framework/lift-base/lift-json
+//libraryDependencies += "net.liftweb" %% "lift-json" % "2.5.1"

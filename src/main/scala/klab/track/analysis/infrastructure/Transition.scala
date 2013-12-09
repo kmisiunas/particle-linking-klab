@@ -7,6 +7,7 @@ import klab.track.geometry.Channel
 import klab.track.ParticleTrack
 import scala.annotation.tailrec
 import klab.track.geometry.position.Pos
+import klab.track.analysis.Find
 
 /**
  * == Class for analysing transition across the channel ==

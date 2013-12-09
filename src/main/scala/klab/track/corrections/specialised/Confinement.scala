@@ -10,6 +10,7 @@ import klab.track.corrections._
 import com.misiunas.geoscala.volumes.{Everywhere, Volume}
 import klab.gui.Print
 import klab.track.assemblies.TrackAssembly
+import klab.track.operators.TwoTracks
 
 /**
  * == Restrictions on particle motion ==
@@ -63,7 +64,7 @@ object Confinement {
     @tailrec
     def recursive(left: List[ParticleTrack], acc: List[ResOverlap] = Nil): List[ResOverlap] = {
       if (left.isEmpty) return acc.reverse
-      val aligned = Find.alignTwoTracks(track, left.head)
+      val aligned = TwoTracks.pairUpOverlaps(track, left.head)
       if (aligned.isEmpty) return recursive(left.tail, acc) // rare, but happens
       else {
         /** determine sign */

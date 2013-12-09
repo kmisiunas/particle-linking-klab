@@ -1,23 +1,23 @@
 package klab.track.assemblies
 
-import klab.track.formating.CompatibleWithJSON
-import net.liftweb.json._
-import net.liftweb.json.JsonDSL._
 import klab.track.ParticleTrack
 import klab.track.geometry.position.Pos
+import play.api.libs.json.{Json, JsValue}
+import klab.io.formating.ExportJSON
 
 
 /**
  * == An Assembly of tracks - trait infrastructure ==
  *
- *
+ *  Specification:
+ *   - units must be the same within an assembly
  *
  * User: karolis@misiunas.com
  * Date: 17/07/2013
  * Time: 20:36
  */
 abstract class Assembly (val experiment:String, val comment: String, val time: Long)
-  extends Iterable[ParticleTrack] with CompatibleWithJSON[Assembly]{
+  extends Iterable[ParticleTrack] with ExportJSON{
 
   // ---------------- Some abstract methods --------------
 
@@ -25,10 +25,6 @@ abstract class Assembly (val experiment:String, val comment: String, val time: L
   def size : Int
   /** the version of the class */
   def version = Assembly.version
-  /** convert to mutable */
-  def toMutable : TrackAssemblyM
-  /** convert to immutable */
-  def toImmutable : TrackAssembly
   /** access the map where the data is stored */
   def listMap : collection.Map[Int, ParticleTrack]
 
@@ -50,6 +46,8 @@ abstract class Assembly (val experiment:String, val comment: String, val time: L
 
   def contains(id: Int): Boolean = listMap.contains(id)
 
+  def units: List[String] = this.head.units
+
   /** Check is assembly conforms to desired specs */
   def qualityCheck : Boolean = {
     val l = toList // safe for mutable and parallel sets
@@ -57,23 +55,41 @@ abstract class Assembly (val experiment:String, val comment: String, val time: L
     l.forall(_.units == l.head.units)
   }
 
-  /** An map for converting this to JSON structure */
-  private def json =
-    ("TrackAssembly" ->
-      ("number" -> size) ~
-        ("experiment" -> experiment) ~
-        ("time" -> time) ~
-        ("comment" -> comment) ~
-        ("version" -> version) ~
-        ("array_format" -> List("time_stamp","x","y","z")) ~
-        ("units" -> this.head.units) ~
-        ("ParticleTrack" ->
-          this.map { pt =>
-            (("id" -> pt.id) ~
-              ("positions" -> pt.list.map(_.list)))
-          }))
+  def toJsonValue: JsValue = ??? // no need for this yet!
 
-  def toJSON : String = pretty(render(json))
+  override def toJson: String = toJsonIterator.mkString("\n")
+
+  /** custom implementation for very large data sets */
+  override def toJsonIterator: Iterator[String] = {
+    val woTracks = Json.prettyPrint(
+      Json.obj(
+        "TrackAssembly" -> Json.obj(
+          "number" -> size,
+          "experiment" -> experiment,
+          "time" -> time,
+          "comment" -> comment,
+          "version" -> version,
+          "array_format" -> List("time_stamp","x","y","z(optional)","param(optional)"),
+          "units" -> units,
+          "ParticleTrack" -> "insert_PT_here"
+        )
+      )
+    )
+    // break up string and add array annotation
+    val parts = woTracks.split("\"insert_PT_here\"")
+    parts(0) = parts(0) + "[\n"
+    parts(1) = "\n]" + parts(1)
+
+    val lastId = listMap.keys.toList.sorted.last
+
+    def evalJS(id: Int): String = {
+      Json.prettyPrint(apply(id).toJsonValue) + (if(id != lastId) "," else "")
+    }
+
+    listMap.keys.toList.sorted
+      .foldLeft(Iterator(parts(0)))( (sum, id) => sum ++ Iterator(evalJS(id)) ) ++ Iterator(parts(1))
+  }
+
 
   /** approximate size of this particle track assembly */
   def memory: Double
@@ -120,20 +136,5 @@ object Assembly {
   implicit def assemblyToList(ta: Assembly) = ta.toList
 
   val version = 2
-
-  /** general method for turning the JSON file into data - preparation as there is no constructors yet */
-  def fromJSONprep(st: String) : List[ParticleTrack] = {
-    implicit val formats = net.liftweb.json.DefaultFormats
-    val code = parse(st)
-    if((code \\ "version").extract[Int] > Assembly.version) throw new Exception("Warning: the ParticleTrack file is version "+(code \\ "version").extract[Int] + ", while the current version is"+version)
-    val experiment = (code \\ "experiment").extract[String]
-    val comment = (code \\ "comment").extract[String]
-    val time = (code \\ "time").extract[Long]
-    val units = (code \\ "units").extract[List[String]]
-    (code \\ "ParticleTrack").extract[List[JObject]].map( sub => ParticleTrack(
-      id = (sub \\ "id").extract[Int],
-      list = (sub \\ "positions").extract[List[List[Double]]].map(Pos(_)),
-      units, experiment, comment, time ) )
-  }
 
 }
