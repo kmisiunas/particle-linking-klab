@@ -1,12 +1,12 @@
 package klab
 
-import javax.swing.{JOptionPane, UIManager}
+import javax.swing.{JFrame, JOptionPane, UIManager}
 import com.alee.laf.WebLookAndFeel
 import klab.gui.repl.Terminal
 import klab.io.Path
 import com.alee.laf.optionpane.WebOptionPane
 import java.awt.datatransfer.{Clipboard, StringSelection}
-import java.awt.Toolkit
+import java.awt.{Component, Toolkit}
 
 /**
  * Main class
@@ -19,7 +19,19 @@ import java.awt.Toolkit
  * Date: 10/11/2013
  * Time: 00:39
  */
-object Main {
+object KLab {
+
+  val appName = "KLab"
+
+  val appVersion = "0.1.7"
+
+  lazy val guiOwner: Component = {
+    val frame = new JFrame(appName)
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
+    frame.getContentPane
+  }
+
+
 
   /** Main object */
   def main(args: Array[String]) {
@@ -29,7 +41,7 @@ object Main {
     if(args.isEmpty){
       //Terminal()
 
-      val file: String = Path(Main.getClass.getProtectionDomain().getCodeSource().getLocation().getPath())
+      val file: String = Path(KLab.getClass.getProtectionDomain().getCodeSource().getLocation().getPath())
       val command: String = "java -Xms1g -Xmx2g -jar " + file + " -t"
 
       val options: Array[AnyRef] = Array("Copy to clipboard", "Cancel")

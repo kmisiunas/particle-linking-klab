@@ -55,7 +55,7 @@ class Terminal extends ILoop {
   override def printWelcome() {
     echo(
       "\n" +
-      "Welcome to " + klab.appName + " app (v"+klab.appVersion+")\n"+
+      "Welcome to " + klab.KLab.appName + " app (v"+klab.KLab.appVersion+")\n"+
       "This is a Terminal version based on Scala. \n"+
       "Type :help for help and :quit to end the pain. \n"+
       "\n\n" +

@@ -4,7 +4,7 @@ assemblySettings
 
 // your assembly settings here
 
-//mainClass in assembly := Some("com.klab.package")
+//mainClass in assembly := Some("klab.KLab")
 
 jarName in assembly := "KLab.jar"
 

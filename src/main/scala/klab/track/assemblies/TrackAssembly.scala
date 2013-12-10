@@ -62,7 +62,7 @@ class TrackAssembly private (val listMap : Map[Int, ParticleTrack],
     val lastT: Double = this.maxBy(_.timeRange._2).timeRange._2
     val fdT: Pos => Pos = p => p ++ Pos(timeGap + lastT, 0,0,0)
     val shifted = list.map(_.changePositions(fdT)).toList
-    this.add(shifted.head.changePositions( p => p.toLQPos) :: shifted.tail)
+    this.add(shifted)
   }
 
   /** approximate size of this particle track assembly */

@@ -19,6 +19,7 @@ import klab.track.operators.TwoTracks
  *
  * Known problems:
  *  - algorithm does not fix massive jumps in position when two colloids are merged by tracking routine
+ *  - Seems to fail on large data set with complex tracks. See laser-channel5 data: 0-15
  *
  * User: karolis@misiunas.com
  * Date: 07/08/2013
@@ -101,7 +102,7 @@ object Confinement {
     * @param within only fix overlaps that happened within this volume
     * @param log ,if tru they will
     */
-  def fixOverlaps(along: Point => Double, within: Volume, log: Boolean): TrackAssembly => TrackAssembly =
+  def fixOverlaps(along: Point => Double, within: Volume, log: Boolean, tolerateErrors: Boolean = false): TrackAssembly => TrackAssembly =
   ta => {
     def println(s: => String): Unit = if(log) Print.log("overlaps", s) // printing override
     // new tracks must hve new ids:
@@ -140,7 +141,7 @@ object Confinement {
     val removeTracks = simpleSet ++ complexSet
     val correctedTracks = ta.toSet -- removeTracks ++ newTracks
     // final quality check - time waste, but necessary because unit testing might not get these!
-    if (!Find.overlaps(along)(correctedTracks).isEmpty) throw new RuntimeException("Track overlap algorithm failed to find correct unwinding")
+    if (!Find.overlaps(along)(correctedTracks).isEmpty && !tolerateErrors) throw new RuntimeException("Track overlap algorithm failed to find correct unwinding")
     if (correctedTracks.size != ta.size)  throw new RuntimeException("Unexpected change in number of tracks")
     returnSameType[TrackAssembly](ta)(correctedTracks)
   }

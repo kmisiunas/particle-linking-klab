@@ -1,7 +1,6 @@
 package klab.gui
 
 import klab.track.ParticleTrack
-import klab.track.analysis.PosHistogram
 import klab.gui.windows.ShowParticleTrack
 import klab.io.infrastructure.save.SaveType
 import klab.gui.infrastructure.show.{ShowHelp, ShowType}

@@ -19,6 +19,10 @@ import klab.io.formating.ExportJSON
 abstract class Assembly (val experiment:String, val comment: String, val time: Long)
   extends Iterable[ParticleTrack] with ExportJSON{
 
+  // todo
+
+  def range: (Pos, Pos) = ???
+
   // ---------------- Some abstract methods --------------
 
   /** number of tracks in this assembly */
@@ -49,7 +53,10 @@ abstract class Assembly (val experiment:String, val comment: String, val time: L
   def units: List[String] = this.head.units
 
   /** Check is assembly conforms to desired specs */
-  def qualityCheck : Boolean = {
+  @deprecated
+  def qualityCheck : Boolean = isQuality
+
+  def isQuality: Boolean = {
     val l = toList // safe for mutable and parallel sets
     // check for common units
     l.forall(_.units == l.head.units)
@@ -59,7 +66,9 @@ abstract class Assembly (val experiment:String, val comment: String, val time: L
 
   override def toJson: String = toJsonIterator.mkString("\n")
 
-  /** custom implementation for very large data sets */
+  /** Custom implementation for very large data sets.
+    * Does not work, because ++ operator gets stack overflow.
+    * Solution seems to be comming in 2.11 */
   override def toJsonIterator: Iterator[String] = {
     val woTracks = Json.prettyPrint(
       Json.obj(
@@ -86,8 +95,12 @@ abstract class Assembly (val experiment:String, val comment: String, val time: L
       Json.prettyPrint(apply(id).toJsonValue) + (if(id != lastId) "," else "")
     }
 
-    listMap.keys.toList.sorted
-      .foldLeft(Iterator(parts(0)))( (sum, id) => sum ++ Iterator(evalJS(id)) ) ++ Iterator(parts(1))
+    // not sequential! - loads entire thing into memory
+    Iterator(parts(0)) ++ listMap.keys.toList.sorted.map(evalJS(_)).toIterator ++ Iterator(parts(1))
+
+    // gives StackOverflowError as of 2.10.3
+    //listMap.keys.toList.sorted
+    //  .foldLeft(Iterator(parts(0)))( (sum, id) => sum ++ Iterator(evalJS(id)) ) ++ Iterator(parts(1))
   }
 
 
