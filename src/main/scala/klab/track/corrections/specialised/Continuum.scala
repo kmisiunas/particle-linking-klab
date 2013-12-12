@@ -97,23 +97,24 @@ object Continuum {
     */
   def addArtificialEnd(channel: Channel): ParticleTrack => ParticleTrack =
   pt => {
-    def findPlaceOutsideChannel(p: Pos): Point =
-      if (channel.line(p) > channel.line(channel.middle))
-        Point(channel.geometry.max.x +0.01) // only works along x, todo extend for general channel
-      else
-        Point(channel.geometry.min.x -0.01)
-
-    var list: List[Pos] = pt.list
-    if (channel.isWithin(pt.head)) { // add at the beginning
-      val pre = Pos(pt.head.t - 2, findPlaceOutsideChannel(pt.head)).toLQPos
-      list = pre :: list
-    } else if (channel.isWithin(pt.last)) { // add at the end
-      val post = Pos(pt.last.t + 2, findPlaceOutsideChannel(pt.last)).toLQPos
-      list = list :+ post
-    } else {
-      println("Continuum.addArtificialEnd : no end was missing.")
-    }
-    pt.appendComment("Added artificial ends").changePositions(list)
+//    def findPlaceOutsideChannel(p: Pos): Point =
+//      if (channel.along(p) > channel.along(channel.middle))
+//        Point(channel.geometry.max.x +0.01) // only works along x, todo extend for general channel
+//      else
+//        Point(channel.geometry.min.x -0.01)
+//
+//    var list: List[Pos] = pt.list
+//    if (channel.isWithin(pt.head)) { // add at the beginning
+//      val pre = Pos(pt.head.t - 2, findPlaceOutsideChannel(pt.head)).toLQPos
+//      list = pre :: list
+//    } else if (channel.isWithin(pt.last)) { // add at the end
+//      val post = Pos(pt.last.t + 2, findPlaceOutsideChannel(pt.last)).toLQPos
+//      list = list :+ post
+//    } else {
+//      println("Continuum.addArtificialEnd : no end was missing.")
+//    }
+//    pt.appendComment("Added artificial ends").changePositions(list)
+    ??? // todo: fix for new channel implementation
   }
 
   /** Adds artificial ends to all the tracks that are missing endings and comply to size requirements*/
@@ -197,7 +198,7 @@ object Continuum {
       /** this function determines weighting by which the matches are made */
       val fnSeparation : (ParticleTrack => Double) =
         if (experimentalMode) {
-          val D: Double = Diffusion.mean1D(line)(pt.list.takeRight(60)) // from pt
+          val D: Double = 1  // todo: replace! //Diffusion.mean1D(line)(pt.list.takeRight(60)) // from pt
           val spaceOverTime = 2 // the ratio between time and space displacements must be monitored
           ptThis => (line(ptThis.head) - line(pt.last)).abs + 2* Math.sqrt( D * ptThis.head.dT(pt.last).abs) /spaceOverTime
         } else {

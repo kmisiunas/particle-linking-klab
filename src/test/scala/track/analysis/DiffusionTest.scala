@@ -6,6 +6,7 @@ import klab.track.geometry.position.Pos
 import klab.track.assemblies.TrackAssembly
 import klab.track.analysis.{Diffusion, Find}
 import com.misiunas.geoscala.vectors.Vec
+import klab.track.operators.TimeOperator
 
 /**
  * Created with IntelliJ IDEA.
@@ -44,9 +45,10 @@ class DiffusionTest extends FunSuite {
       "t.size="+t.size +", pt2.size="+pt2.size +"\n size list=" + t.map(_.size))
     assert(t(0)(1).n == 3)
     assert(t(0)(0).msd == Vec(4,9,0))
-    assert(t(0)(1).msd == Vec(0.5,8,0), "msd = " + t(0)(1).msd +"\n pos= "+ t(0)(1).pos)
+    assert(t(0)(1).msd == Vec(2.5,12.5,0), "msd = " + t(0)(1).msd +"\n pos= "+ t(0)(1).pos)
     assert(t(0)(1).pos == Pos(2,3/3,-2.0/3,0))
   }
+
 
   test("Diffusion.naive_Di") {
     val di = Diffusion.naive_Di(pt2.list)
@@ -58,12 +60,18 @@ class DiffusionTest extends FunSuite {
 
   test("Diffusion.SavingAndDoyle_Di") {
     val di = Diffusion.savingAndDoyle_Di(pt2.list)
-    assert(di(0).Di == (Vec(0.5,8,0) - Vec(4,9,0)) * 0.5)
+    assert(di(0).Di == (Vec(2.5,12.5,0) - Vec(4,9,0)) * 0.5)
     assert(di(0).pos == Pos(2, 1, -2.0/3))
   }
+
 
   test("Diffusion.unitsOfDi ") {
     assert( Diffusion.unitsOfDi(pt2) == List("px_x^2 / frame", "px_y^2 / frame", "px_z^2 / frame") , Diffusion.unitsOfDi(pt2))
   }
+
+
+
+
+
 
 }

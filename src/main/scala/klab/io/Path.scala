@@ -18,6 +18,8 @@ import com.alee.laf.filechooser.WebFileChooser
  *  - path change tools: file name, extension, full name, dir, superDir...
  *  - Constructors based on object
  *  - store dirs with end "/"
+ *  - Format windows paths into unix ones
+ *  - operator / as automatic path addition
  *
  * User: karolis@misiunas.com
  * Date: 06/08/2013
@@ -55,6 +57,9 @@ class Path private (private val path: String) {
   def diff(p: Path): String = this.toString.diff(p.toString)
 
   // ---------- Manipulation Methods ----------
+
+  /** operator that allows to extend current Path with subfile or dir  */
+  def / (p: String) = Path(dir.toString + p)
 
   def dir: Path = Path( """^.*/""".r.findFirstIn(path).get )
 
@@ -145,7 +150,7 @@ object Path {
     val file: File = fileChooser.getSelectedFile()
     if (file == null) throw new RuntimeException("User canceled the operation")
     lastPath = Path(file.getAbsolutePath).dir
-    file.getAbsolutePath
+    Path(file.getAbsolutePath).toString
   }
 
   private var lastPath: String = Path.work

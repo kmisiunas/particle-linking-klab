@@ -14,6 +14,14 @@ Roadmap
  - [ ] universal id system
  - [x] JSON save LQPos points
 
+Self Comments
+-------------
+
+ - [x] Single particle left right jump probabilities
+ - [x] Mean Diffusion current
+ - Slices at fixed separation for Jump particle 1 VS Jump particle 2
+
+
 Starting
 --------
 Start app by  double clicking the 'KLab.jar' file, it will give an option to copy the command that should be pasted into

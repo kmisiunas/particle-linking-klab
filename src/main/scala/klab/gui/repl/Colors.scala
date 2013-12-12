@@ -45,7 +45,7 @@ object Colors {
 
   /** Color map for the system */
   lazy val colors:  Map[String,String] =
-    if(System.getProperty("os.name").toLowerCase.contains("windows")) neutral else unix
+    if(util.Properties.isWin) neutral else unix
 
   /** Unix compatible color codes (works with PowerShell) */
   val unix: Map[String,String] = Map(

@@ -1,4 +1,4 @@
-package klab.track.analysis.infrastructure
+package klab.track.analysis.specialised
 
 import klab.track.ParticleTrack
 import klab.track.geometry.position.Pos

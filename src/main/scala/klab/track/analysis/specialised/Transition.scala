@@ -1,4 +1,4 @@
-package klab.track.analysis.infrastructure
+package klab.track.analysis.specialised
 
 import klab.track.formating.{ExportCSV, CompatibleWithJSON}
 import org.joda.time.DateTime
@@ -8,6 +8,7 @@ import klab.track.ParticleTrack
 import scala.annotation.tailrec
 import klab.track.geometry.position.Pos
 import klab.track.analysis.Find
+import klab.io.formating.ExportJSON
 
 /**
  * == Class for analysing transition across the channel ==
@@ -22,11 +23,9 @@ import klab.track.analysis.Find
  * Date: 25/07/2013
  * Time: 21:35
  */
-class Transition private (val list : List[Transition.ResTransition],
-                          val experiment: String,
-                          val channel: Channel,
-                          val analysisParam: String)
-  extends ExportCSV{
+class Transition private (val track: ParticleTrack,                // track that was analysed
+                          val timeInterval: (Double, Double) )      // time range within the channel)
+  extends ExportCSV {
 
   lazy val csvHeader = {
     val timeUnit = list.head.track.units(0)
@@ -41,7 +40,7 @@ class Transition private (val list : List[Transition.ResTransition],
     "---\n" +
     "Experiment: " + experiment + "\n" +
     "Analysis Time: " + DateTime.now.toString("H:m Y-M-d")+ "\n" +
-    "Channel: " + channel.mkString + "\n" +
+    "Channel: " + channel.toString + "\n" +
     "Units: " + list.head.track.units.mkString(", ") + "\n" +
     "Analysis parameters: " + analysisParam + "\n" +
     "Analysis summary:\n" +
@@ -73,24 +72,27 @@ class Transition private (val list : List[Transition.ResTransition],
 object Transition {
 
   /** special class for storing the different types of events that can happen */
-  class ResTransitionType(val identification: Int,
+  class TransitionType(val identification: Int,
                           val description: String,
                           val shortName: String )
 
-  final val listResultTypes: List[ResTransitionType] = List(
-    new ResTransitionType(-2, "Backward Transitions", "BT"),
-    new ResTransitionType(-1, "Backward Returns", "BR"),
-    new ResTransitionType( 0, "Incomplete tracks", "I"),
-    new ResTransitionType( 1, "Forward Returns", "FR"),
-    new ResTransitionType( 2, "Forward Transitions", "FT")
+  final val listResultTypes: List[TransitionType] = List(
+    new TransitionType(-2, "Backward Transitions", "BT"),
+    new TransitionType(-1, "Backward Returns", "BR"),
+    new TransitionType( 0, "Incomplete tracks", "I"),
+    new TransitionType( 1, "Forward Returns", "FR"),
+    new TransitionType( 2, "Forward Transitions", "FT")
   )
+
+
+
 
   /** The result of transition is stored as a special object */
   class ResTransition (val track: ParticleTrack,                // track that was analysed
-                       val transition: ResTransitionType,       // type of the event
+                       val transition: TransitionType,       // type of the event
                        val timeInChannel: Double,               // time spent in the channel
                        val timeInterval: (Double, Double))      // time range within the channel
-    extends ExportCSV{
+    extends ExportCSV {
 
     def toCSV: String = track.id + csvSeparator + transition.identification + csvSeparator +
       transition.shortName + csvSeparator + timeInChannel + csvSeparator  +
@@ -108,16 +110,17 @@ object Transition {
         map(seg => new ResTransition(pa, classify(seg), seg.last.t - seg.head.t, (seg.head.t, seg.last.t) ) )
 
     /** classifies track transition */
-    def classify(list: List[Pos]): ResTransitionType = {
-      val beginning = list.head
-      val end = list.last
-      (ch.isInBeginning(beginning), ch.isInEnding(beginning), ch.isInBeginning(end), ch.isInEnding(end)) match {
-        case (false,true,true,false) => listResultTypes(0)
-        case (false,true,false,true) => listResultTypes(1)
-        case (true,false,true,false) => listResultTypes(3)
-        case (true,false,false,true) => listResultTypes(4)
-        case _ => listResultTypes(2)
-      }
+    def classify(list: List[Pos]): TransitionType = {
+//      val beginning = list.head
+//      val end = list.last
+//      (ch.isInBeginning(beginning), ch.isInEnding(beginning), ch.isInBeginning(end), ch.isInEnding(end)) match {
+//        case (false,true,true,false) => listResultTypes(0)
+//        case (false,true,false,true) => listResultTypes(1)
+//        case (true,false,true,false) => listResultTypes(3)
+//        case (true,false,false,true) => listResultTypes(4)
+//        case _ => listResultTypes(2)
+//      }
+      ??? // fix for new channel implementation
     }
 
     @tailrec

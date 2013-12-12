@@ -2,6 +2,7 @@ package klab.gui.repl
 
 import scala.tools.nsc.interpreter.{ReplReporter, ILoop}
 import klab.gui.{Print, Imports}
+import klab.KLab
 
 /**
  * == GUI based on terminal ==
@@ -56,7 +57,8 @@ class Terminal extends ILoop {
     echo(
       "\n" +
       "Welcome to " + klab.KLab.appName + " app (v"+klab.KLab.appVersion+")\n"+
-      "This is a Terminal version based on Scala. \n"+
+      "This is a Terminal version based on Scala "+ util.Properties.versionString.drop(7).trim +"\n"+
+      "Running on java "+ util.Properties.javaVersion + " with "+ Runtime.getRuntime().maxMemory()/1000000 + " MB memory\n" +
       "Type :help for help and :quit to end the pain. \n"+
       "\n\n" +
       "         \\,,,/\n" +
@@ -82,8 +84,10 @@ class Terminal extends ILoop {
   }
 
   // not very important - help for the user
-  override def commands: List[LoopCommand] = super.commands ++
-    List(LoopCommand.nullary("error", "show the suppressed java error/Exception", errorCommand))
+  override def commands: List[LoopCommand] = super.commands.filterNot(_.name == "quit") ++
+    List( LoopCommand.nullary("error", "show the suppressed java error/Exception", errorCommand),
+          LoopCommand.nullary("exit", "End this " + KLab.appName + " session", exitCommand),
+          LoopCommand.nullary("quit", "End this " + KLab.appName + " session", exitCommand))
 
 
   /** executes with :error */
@@ -92,6 +96,12 @@ class Terminal extends ILoop {
       case None => "Can't find any cached errors."
       case Some(err) => "Full error message: \n" + err
     }
+  }
+
+  /** exit klab command */
+  def exitCommand(): Result = {
+    sys.exit() // todo fancy setting saving and so on?
+    Result(false, None) // not really needed
   }
 
 

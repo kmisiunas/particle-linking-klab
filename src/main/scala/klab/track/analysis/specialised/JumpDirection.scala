@@ -1,4 +1,4 @@
-package klab.track.analysis.infrastructure
+package klab.track.analysis.specialised
 
 import com.misiunas.geoscala.Point
 import klab.track.ParticleTrack
@@ -7,6 +7,7 @@ import klab.track.analysis.Find
 import klab.track.geometry.position.Pos
 import klab.track.operators.{TwoTracks, Bin}
 import klab.track.operators.TwoTracks.PairInteraction
+import klab.track.assemblies.TrackAssembly
 
 /**
  * == Finds the jum direction relative to another jump ==
@@ -21,7 +22,7 @@ import klab.track.operators.TwoTracks.PairInteraction
  */
 object JumpDirection {
 
-  def matrixForm(along: Point => Double, binSize: Double = 1.0): Iterable[ParticleTrack] => Map[String,DenseVector[Double]] =
+  def twoParticles(along: Point => Double, binSize: Double = 1.0): Iterable[ParticleTrack] => Map[String,DenseVector[Double]] =
   ta =>{
 
     val interactions = TwoTracks.findTwoParticleInteractions()(ta)
@@ -62,6 +63,40 @@ object JumpDirection {
         "P(same)" -> pSame,
         "P(opposite)" -> pOpposite,
         "n" -> n)
+  }
+
+
+  /** one particle jump direction analysis */
+  def oneParticle(along: Point => Double, binSize: Double = 1.0): TrackAssembly => Map[String,DenseVector[Double]] =
+  ta => {
+
+    // result explained: (Position, 1 for jump forward and 0 for backward jump)
+    // skip no jums
+    def recursive(list: List[Pos], last: Pos, acc: List[(Double, Double)]): List[(Double, Double)] = {
+      if (list.isEmpty) return acc
+      if (!list.head.isAccurate || !last.isAccurate) return recursive(list.tail, list.head, acc)
+      (along(list.head) - along(last)) match {
+        case x if x>0.0 => recursive(list.tail, list.head, (along(list.head), 1.0) :: acc ) // forward
+        case x if x<0.0 => recursive(list.tail, list.head, (along(list.head), 0.0) :: acc ) // backward
+        case x if x==0.0 => recursive(list.tail, list.head, acc )
+      }
+    }
+
+    val jumps = ta.toList.flatMap( t => recursive(t.list.tail, t.list.head, Nil))
+
+    val binNumber = ((along(ta.range._2) - along(ta.range._1)) / binSize).abs.ceil.toInt
+    val bins = breeze.linalg.linspace(along(ta.range._1), binNumber*binSize, binNumber)
+
+    val forward = Bin(bins, jumps)
+    val total = Bin(bins, jumps.map(v => (v._1, 1.0)) )
+    val backward = total - forward
+
+    Map("n" -> total,
+        "forward" -> forward,
+        "backward" -> backward,
+        "P(forward)" -> (forward / total),
+        "P(backward)" -> (backward / total)
+    )
   }
 
 }

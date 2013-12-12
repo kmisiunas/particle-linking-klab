@@ -2,69 +2,102 @@ package klab.track.geometry
 
 import com.misiunas.geoscala.volumes.{Volume, BoxXY}
 import com.misiunas.geoscala.Point
+import klab.io.formating.{ImportJSON, ExportJSON}
+import play.api.libs.json.{Json, JsValue}
+import klab.KLab
+import com.misiunas.geoscala.vectors.Vec
+import klab.track.geometry.infrastructure.RectangleChannel
 
 /**
- * == Representation of a channel ==
+ * == Semi 1D Channel  ==
  *
- * Currently designed for channels along X. Should be generalised. Ugly implementation!
+ * Specification:
+ *  - Expect to have Length and Width
+ *  - Might be at an angle to XY axes
+ *  - Contain 3 regions: inlet, channel, outlet
+ *  - Description of the channel (optional)
  *
+ * Constraints:
+ *  - inlet and inside volumes must share an edge
+ *  - outlet and inside must share an edge
+ *  - 
+ *
+ * Features:
+ *  - Determine channel angle to X by considering distribution of particles
+ *  - Can be saves and loaded in JSON
+ *  - Mark tracks that leave channel through the walls as LQPos
+ *  -
+ *
+ * Version: 0.1.7
  * User: karolis@misiunas.com
  * Date: 25/07/2013
- * Time: 21:38
  */
-class Channel private (val name: String, // the name of the channel (id)
-                       val geometry: BoxXY, // the channel shape
-                       val line: (Point=>Double),// the direction of the channel
-                       val binX : Double, // the size of the bins along x
-                       val binY: Double,  // same along y
-                       val units: List[String])
-  extends Volume {
+abstract class Channel(val name: String, // the name of the channel (id)
+                       val direction: Vec,
+                       val middle: Point,
+                       val size: Vec, // assuming aligned along x. y - width and z - height
+                       val inletLength: Double,
+                       val outletLength: Double
+  ) extends Volume with ExportJSON {
 
-  /** returns true if the particle is in the beginning of the channel (2/10th of the length) */
-  def isInBeginning(p: Point): Boolean =
-    (line(p) >= middle.x - length/2) && (line(p) <= middle.x - length*(3/10))
+  // ===  Properties of the channel == 
+  val inlet: Volume
+  val outlet: Volume
+  val volume: Volume
 
-  /** returns true if the particle is in the beginning of the channel (2/10th of the length) */
-  def isInEnding(p: Point): Boolean =
-    (line(p) >= middle.x + length*(3/10)) && (line(p) <= middle.x + length/2)
+  def width: Double = size.y
+  def length: Double = size.x
 
-  /** evaluates the beginning of the channel - only works for channels along x */
-  lazy val chBeginning = BoxXY(geometry.min, geometry.range.x/10, geometry.range.y)
-  lazy val chEnding = BoxXY(Point(geometry.max.x, geometry.min.y), - geometry.range.x/10, geometry.range.y)
+  val along: Point => Double = direction.toEq
 
-  def isWithin(p: Point): Boolean = geometry.isWithin(p)
-  def distance(p: Point): Double = geometry.distance(p)
+  // === Volume properties ===
 
-  def gridX : List[Double] = ???
+  def isWithin(p: Point): Boolean = volume.isWithin(p)
+  def distance(p: Point): Double = volume.distance(p)
 
-  lazy val length: Double = geometry.range.x
-
-  /** returns middle of the channel (should this be a function of geometry?) */
-  lazy val middle: Point = geometry.min + Point( geometry.range.x/2, geometry.range.y/2)
-
+  // === Other Methods ===
 
   override def toString: String = "Channel("+name+")"
 
-  def mkString: String = "Channel from " + geometry.min.x + units(0) +" to " + geometry.max.x + units(0)
+  def toJsonValue: JsValue = {
+    Json.obj( "Channel" -> Json.obj(
+      "name" -> name,
+      "direction" -> direction.toList,
+      "middle" -> middle.toList,
+      "size" -> size.toList,
+      "inletLength" -> inletLength,
+      "outletLength" -> outletLength,
+      "for_reference" -> Json.obj(
+        "KLab version" -> KLab.appVersion
+    )))
+  }
+
 }
 
-object Channel {
+object Channel extends ImportJSON[Channel] {
 
-  /** creates a 1 dimenssional channel along z dirrection
-    * @param beginAt channel begins at this position
-    * @param endAt channel ends at this position
-    */
-  def simpleAlongX(beginAt: Double, endAt: Double,
-                  name: String = "1D channel along X",
-                  units: List[String] = List("px_x","px_y", "px_y")): Channel = {
+  def apply(name: String, direction: Vec, middle: Point, size: Vec,
+            inletLength: Double, outletLength: Double): Channel =
+    RectangleChannel(name, direction, middle, size, inletLength, outletLength)
 
-    val chLength = endAt - beginAt
-    val width = 4 * chLength // really wide
-    return new Channel(name,
-                       BoxXY(Point(beginAt, -width/2), chLength, width),
-                       p => p.x,
-                       chLength / 10,
-                       chLength / 10,
-                       units )
+  /** simple, wide channel along X axis */
+  def alongX(name: String, startAt: Double, length: Double, entranceRatio: Double = 0.1): Channel =
+    Channel(name,
+      direction = Vec.x,
+      middle = Point(startAt + length/2, 0 , 0),
+      size = Vec(length, length*2, length*2),
+      inletLength = length*entranceRatio,
+      outletLength = length*entranceRatio)
+
+  def fromJson(json: String): Channel = {
+    val j = Json.parse(json)
+    apply(
+      name = (j \ "Channel" \ "name").as[String],
+      direction = Vec( (j \ "Channel" \ "direction").as[List[Double]] ),
+      middle = Vec( (j \ "Channel" \ "middle").as[List[Double]] ),
+      size = Vec( (j \ "Channel" \ "size").as[List[Double]] ),
+      inletLength = (j \ "Channel" \ "inletLength").as[Double],
+      outletLength = (j \ "Channel" \ "outletLength").as[Double]
+    )
   }
 }

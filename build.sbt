@@ -16,10 +16,7 @@ scalaVersion := "2.10.3"
 // ----------- Main ----------------
 
 // GeoScala
-libraryDependencies += "com.misiunas" %% "geoscala" % "0.1.2"
-
-// For Breeze
-// libraryDependencies  += "com.github.fommil.netlib" % "all" % "1.1.1" pomOnly()
+libraryDependencies += "com.misiunas" %% "geoscala" % "0.1.3"
 
 // BREEZE - https://github.com/scalanlp/breeze/
 libraryDependencies  += "org.scalanlp" %% "breeze" % "0.5.2"
@@ -58,6 +55,9 @@ libraryDependencies += "org.scalanlp" % "breeze-viz_2.10" % "0.5.2"
 
 
 // ------------- Unnessasary ---------------
+
+// For Breeze
+// libraryDependencies  += "com.github.fommil.netlib" % "all" % "1.1.1" pomOnly()
 
 // Breeze visualization - https://github.com/scalanlp/breeze-viz
 //libraryDependencies += "org.scalanlp" % "breeze-viz_2.10" % "0.5.2"

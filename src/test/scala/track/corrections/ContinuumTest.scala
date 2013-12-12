@@ -26,17 +26,17 @@ class ContinuumTest extends FunSuite {
 
   val ta = TrackAssembly( List(pt1,pt2,pt3,pt4,pt5), "Test Experiment")
 
-  val channel = Channel.simpleAlongX(2,8)
+  val channel = Channel.alongX("test", 2,8)
 
-  test("Continuum.pairUp") {
+  ignore("Continuum.pairUp") {
     assert(true)
   }
 
-  test("Continuum.qualityCheck(ta: Assembly)") {
+  ignore("Continuum.qualityCheck(ta: Assembly)") {
     assert(true)
   }
 
-  test("Continuum.find(withinChannel: GeoVolume)") {
+  ignore("Continuum.find(withinChannel: GeoVolume)") {
     assert( Continuum.find(channel)(ta) == (Set(pt2,pt3), Set(pt5), Set(pt1)))
   }
 

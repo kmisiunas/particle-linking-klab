@@ -3,6 +3,7 @@ package klab.track.analysis
 import klab.track.geometry.position.Pos
 import com.misiunas.geoscala.vectors.Vec
 import klab.track.ParticleTrack
+import klab.track.operators.TimeOperator
 
 /**
  * == Estimate the diffusion coefficient ==
@@ -10,6 +11,9 @@ import klab.track.ParticleTrack
  * Methods implemented:
  *  - naive - takes first point in MSD to estimate diffusion coefficient
  *  - savingAndDoyle - uses first two points of MSD to get slope and estimates from it.
+ *
+ * Specification:
+ *  - Tolerance to short sequences passed as an input.
  *
  * This object is of CRYTICAL importance!
  *
@@ -25,26 +29,11 @@ object Diffusion {
   def Local = DiffusionLocal
 
 
-  /** Low Quality diffusion estimator for simple problems */
-  @deprecated
-  def mean1D(line: Pos => Double): Iterable[Pos] => Double =
-  list => {
-    // TODO: method obsolete?
-    // primitive method, todo: update and remove?!
-    def sq(x:Double): Double = x*x
-    val packed = list.foldLeft( (Pos(0,0).toLQPos: Pos, 0: Double, 0: Int) )( (pack, thisPos) => {
-      // pack._1 is last Pos; pack._2 is accumulator, pack._3 is nu of elements
-      val (lastPos, sum, noOfElements) = pack
-      if (lastPos.quality && thisPos.quality) {
-        val dT = thisPos.dT(lastPos)
-        val dX = sq(line(thisPos) - line(lastPos))
-        (thisPos, sum + dX/(2*dT), noOfElements + 1)
-      } else { // there is LQPos - skip
-        (thisPos, sum, noOfElements)
-      }
-    })
-    packed._2 / packed._3 // compute mean
-  }
+  /** Diffusion coefficient  packed with the position it was measured at.
+    * @param Di vector containing cartesian coordinates of the estimated diffusion coeficint
+    * @param pos mean position the coefficient was measured at
+    */
+  class Diffusion( val Di: Vec, val pos: Pos ) { override def toString = "Diffusion( Di="+Di+" at "+pos }
 
 
 
@@ -55,6 +44,7 @@ object Diffusion {
     * @param n - the number of frames over which the MSD point was estimated
     */
   class MSD(val msd: Vec, val pos: Pos, val n: Int) { override def toString = "MSD("+msd+" at "+pos+" with n="+n+")"}
+
 
 
   /** Estimates MSDi for a Particle Track
@@ -75,20 +65,23 @@ object Diffusion {
     def estimatePoint(list: List[Pos]): List[MSD] = {
       /** Evaluates MSD from short sequence */
       def evaluate(short: List[Pos]): MSD = {
-        val length = short.length
-        // MSD calculation => MSD_i(k,n) = (x((k+n)T) - x((k)T)^2 ...
-        val d = short.last - short.head
-        val msd = Vec(d.x*d.x, d.y*d.y, d.z*d.z) * (1.0/(length-1))
-        val meanPos: Pos =  short.tail.foldRight( short.head )( (p:Pos, acc:Pos) => acc ++ p ) ** (1.0/length)
-        new MSD(msd, meanPos, length)
+        val nn = short.length - 1
+        // MSD calculation => MSD_i(k,n) = Sum_k: (x((k+n)T) - x((k)T)^2 /nn = Sum_k: (x(k) - x0)^2 /nn
+        val x0 = short.head
+        val dSquared = short.tail.map( _ - x0 )
+                                 .map(d => Vec(d.x*d.x, d.y*d.y, d.z*d.z))
+        val msd = dSquared.fold(Vec(0,0))( (sum,el) => sum + el ) * (1.0/nn)
+        val meanPos: Pos =  short.tail.foldRight( short.head )( (p:Pos, acc:Pos) => acc ++ p ) ** (1.0/(nn+1))
+        new MSD(msd, meanPos, nn+1)
       }
       def iterator( left: List[Pos], acc: List[MSD]): List[MSD] = {
         if (left.tail.isEmpty) acc
-        else iterator(left.tail, evaluate(left) :: acc)
+        else iterator(left.dropRight(1), evaluate(left) :: acc)
       }
-      val performOn = list.take(n+1).reverse   // inverse order for performance
-      if (!performOn.forall(_.isAccurate)) return Nil    // there inaccurate (LQPos) position -> drop sequence
-      iterator( performOn, Nil ).sortBy(_.n)
+      val performOn = list.take(n+1)
+      if (!performOn.forall(_.isAccurate)) return Nil         // there inaccurate (LQPos) position -> drop sequence
+      if (!TimeOperator.isContinuous(performOn)) return Nil   // if there is frame missing -> drop sequence
+      iterator( performOn, Nil ).sortBy(_.n)         // inverse order for performance
     }
 
     def iterator(left: List[Pos], acc: List[List[MSD]]): List[List[MSD]] = {
@@ -100,13 +93,6 @@ object Diffusion {
   }
 
 
-  /** Diffusion coefficient  packed with the position it was measured at.
-    * @param Di vector containing cartesian coordinates of the estimated diffusion coeficint
-    * @param pos mean position the coefficient was measured at
-    */
-  class Diffusion( val Di: Vec, val pos: Pos ) { override def toString = "Diffusion( Di="+Di+" at "+pos }
-
-  
   /** Get diffusion coefficients using the best algorithm */
   def di: Iterable[Pos] => List[Diffusion] = savingAndDoyle_Di
 

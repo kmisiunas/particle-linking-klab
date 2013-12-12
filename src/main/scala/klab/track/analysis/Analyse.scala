@@ -3,7 +3,7 @@ package klab.track.analysis
 import com.misiunas.geoscala.Point
 import klab.track.ParticleTrack
 import breeze.linalg.DenseVector
-import klab.track.analysis.infrastructure.JumpDirection
+import klab.track.analysis.specialised.JumpDirection
 
 /**
  * == Easy Access class for analysis methods ==
@@ -12,6 +12,8 @@ import klab.track.analysis.infrastructure.JumpDirection
  */
 object Analyse {
 
-  def jumpDirection(along: Point => Double, binSize: Double = 1.0) = JumpDirection.matrixForm(along, binSize)
+  def JumpDirection = klab.track.analysis.specialised.JumpDirection
+
+  def DiffusionRate = klab.track.analysis.specialised.DiffusionRate
 
 }

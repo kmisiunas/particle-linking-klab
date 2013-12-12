@@ -38,8 +38,7 @@ object Imports {
 
   val user: List[String] = List(
     "klab.gui.{Show,Print,TimeIt}",
-    "klab.gui.Print.println",
-    "sys.exit"
+    "klab.gui.Print.println"
   )
 
 

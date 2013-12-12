@@ -7,7 +7,7 @@ import klab.io.formating.ExportJSON
 
 
 /**
- * == An Assembly of tracks - trait infrastructure ==
+ * == An Assembly of tracks - trait specialised ==
  *
  *  Specification:
  *   - units must be the same within an assembly

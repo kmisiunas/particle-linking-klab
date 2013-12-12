@@ -27,6 +27,6 @@ object Correction {
 
   /** Removes the overlaps form the track in specified channel */
   def overlaps(channel: Channel): TrackAssembly => TrackAssembly =
-    Confinement.fixOverlaps(channel.line, channel.geometry, true)
+    Confinement.fixOverlaps(channel.along, channel, true)
 
 }

@@ -3,7 +3,7 @@ package klab.track.corrections
 import klab.track.ParticleTrack
 import com.misiunas.geoscala.volumes.{Everywhere, Volume}
 import klab.track.corrections.specialised.Continuum
-import klab.track.analysis.infrastructure.Proximity
+import klab.track.analysis.specialised.Proximity
 
 /**
  * == Custom filters for track assemblies ==

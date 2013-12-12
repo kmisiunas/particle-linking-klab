@@ -1,4 +1,4 @@
-package klab.track.analysis.infrastructure
+package klab.track.analysis.specialised
 
 import klab.track.assemblies.Assembly
 import klab.track.geometry.position.Pos
@@ -68,8 +68,8 @@ object PosHistogram {
     return new PosHistogram(array.toList, sliceAt, path, pt.experiment)
   }
 
-  def apply(pt: Assembly, ch: Channel) : PosHistogram =
-    PosHistogram(pt, ch.gridX, ch.line)
+//  def apply(pt: Assembly, ch: Channel) : PosHistogram =
+//    PosHistogram(pt, ch.gridX, ch.line)
 
 
 }

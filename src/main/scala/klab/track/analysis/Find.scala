@@ -7,7 +7,7 @@ import com.misiunas.geoscala.volumes.Volume
 import com.misiunas.geoscala.Point
 import klab.track.corrections.specialised.Confinement
 import Confinement.ResOverlap
-import klab.track.analysis.infrastructure.{JumpDirection, Proximity}
+import klab.track.analysis.specialised.{JumpDirection, Proximity}
 import klab.track.operators.TwoTracks
 import klab.track.operators.TwoTracks.PairInteraction
 
