@@ -1,7 +1,7 @@
 
 name := "KLab"
 
-version := "0.1.6"
+version := "0.1.7"
 
 scalaVersion := "2.10.3"
 
@@ -9,6 +9,22 @@ scalaVersion := "2.10.3"
 // Use: assembly
 // Use: assembly-package-dependency
 // Use: assemblyPackageDependency
+
+// --------- Pack plugin config -----
+// https://github.com/xerial/sbt-pack
+
+packSettings
+
+// [Optional: Mappings from a program name to the corresponding Main class ]
+packMain := Map("KLab" -> "klab.KLab")
+
+// [Optional] JVM options of scripts (program name -> Seq(JVM option, ...))
+packJvmOpts := Map("KLab" -> Seq("-Xms1g","-Xmx2G") )
+
+packGenerateWindowsBatFile := false
+
+// crucial for pack to be runnable - unknown error otherwise
+packPreserveOriginalJarName := true
 
 
 // ----------- Libraries ---------------

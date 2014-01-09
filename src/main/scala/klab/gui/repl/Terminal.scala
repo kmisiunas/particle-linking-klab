@@ -27,7 +27,7 @@ object Terminal {
     // essential!
     val settings = new scala.tools.nsc.Settings
     settings.usejavacp.value = true // outside sbt
-    //settings.embeddedDefaults[Main.type] // inside sbt - not wery useful
+    settings.embeddedDefaults[KLab.type] // inside sbt - not very useful
     settings.deprecation.value = true
     settings.withErrorFn(m => println(Colors.error + m + Colors.end)) // not sure what it does!
 

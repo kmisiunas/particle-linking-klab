@@ -16,4 +16,6 @@ object Analyse {
 
   def DiffusionRate = klab.track.analysis.specialised.DiffusionRate
 
+  def Jumps = klab.track.analysis.specialised.Jumps
+
 }

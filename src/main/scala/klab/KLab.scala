@@ -4,9 +4,9 @@ import javax.swing.{JFrame, JOptionPane, UIManager}
 import com.alee.laf.WebLookAndFeel
 import klab.gui.repl.Terminal
 import klab.io.Path
-import com.alee.laf.optionpane.WebOptionPane
 import java.awt.datatransfer.{Clipboard, StringSelection}
-import java.awt.{Component, Toolkit}
+import java.awt.{Image, Component, Toolkit}
+import com.apple.eawt.Application
 
 /**
  * Main class
@@ -38,7 +38,8 @@ object KLab {
 
     UIManager.setLookAndFeel ( new WebLookAndFeel() ); // Swing L&F
 
-    if(args.isEmpty){
+    if (util.Properties.isMac) runTerminalWithDecorations() // to be runnable with pack
+    else if(args.isEmpty){
       //Terminal()
 
       val file: String = Path(KLab.getClass.getProtectionDomain().getCodeSource().getLocation().getPath())
@@ -59,9 +60,24 @@ object KLab {
     }
     else
       args.head match {
-        case "terminal" | "t" | "console" | "-t" => Terminal()
+        case "terminal" | "t" | "console" | "-t" => runTerminalWithDecorations()
         case _ => println("Unrecognised statement")
       }
+
+
+    def runTerminalWithDecorations(): Unit = {
+      // Custom terminal for Mac OS X
+      // Get image
+      val application: Application = Application.getApplication()
+      val image: Image = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icon.png"))
+      application.setDockIconImage(image)
+      // change name - does not work!
+      System.setProperty("apple.laf.useScreenMenuBar", "true")
+      //System.setProperty("com.apple.mrj.application.apple.menu.about.name", "KLab in Background")
+      // Start terminal
+      Terminal()
+    }
+
   }
 
 }

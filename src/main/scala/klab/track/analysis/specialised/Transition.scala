@@ -23,46 +23,46 @@ import klab.io.formating.ExportJSON
  * Date: 25/07/2013
  * Time: 21:35
  */
-class Transition private (val track: ParticleTrack,                // track that was analysed
+abstract class Transition private (val track: ParticleTrack,                // track that was analysed
                           val timeInterval: (Double, Double) )      // time range within the channel)
   extends ExportCSV {
 
-  lazy val csvHeader = {
-    val timeUnit = list.head.track.units(0)
-    "Track_id" + csvSeparator + "Transition_type_no" + csvSeparator +
-      "Transition_type_name"+ csvSeparator + "Time_in_channel_("+ timeUnit +")" + csvSeparator  +
-      "Time_entered_channel_("+ timeUnit +")" + csvSeparator + "Time_left_channel_("+ timeUnit +")" + csvSeparator
-  }
+//  lazy val csvHeader = {
+//    val timeUnit = list.head.track.units(0)
+//    "Track_id" + csvSeparator + "Transition_type_no" + csvSeparator +
+//      "Transition_type_name"+ csvSeparator + "Time_in_channel_("+ timeUnit +")" + csvSeparator  +
+//      "Time_entered_channel_("+ timeUnit +")" + csvSeparator + "Time_left_channel_("+ timeUnit +")" + csvSeparator
+//  }
 
-  /** generate analysis statement */
-  lazy val analysisStatement: String = {
-    "Channel Transition analysis report \n" +
-    "---\n" +
-    "Experiment: " + experiment + "\n" +
-    "Analysis Time: " + DateTime.now.toString("H:m Y-M-d")+ "\n" +
-    "Channel: " + channel.toString + "\n" +
-    "Units: " + list.head.track.units.mkString(", ") + "\n" +
-    "Analysis parameters: " + analysisParam + "\n" +
-    "Analysis summary:\n" +
-    Transition.listResultTypes.map(resType => {
-      val events = list.filter(_.transition eq resType)
-      formatStatement(resType.description +"("+resType.shortName+")",
-                      events.size,  // number of events of given type
-                      events.map(_.timeInChannel).sum / events.size) // mean time in channel
-    }).mkString
-  }
+//  /** generate analysis statement */
+//  lazy val analysisStatement: String = {
+//    "Channel Transition analysis report \n" +
+//    "---\n" +
+//    "Experiment: " + experiment + "\n" +
+//    "Analysis Time: " + DateTime.now.toString("H:m Y-M-d")+ "\n" +
+//    "Channel: " + channel.toString + "\n" +
+//    "Units: " + list.head.track.units.mkString(", ") + "\n" +
+//    "Analysis parameters: " + analysisParam + "\n" +
+//    "Analysis summary:\n" +
+//    Transition.listResultTypes.map(resType => {
+//      val events = list.filter(_.transition eq resType)
+//      formatStatement(resType.description +"("+resType.shortName+")",
+//                      events.size,  // number of events of given type
+//                      events.map(_.timeInChannel).sum / events.size) // mean time in channel
+//    }).mkString
+//  }
+//
+//  private def formatStatement(name: String, tr: Int, dt: => Double): String =
+//    name + ": count="+tr + (if(tr>0) (", mean time="+dt+"\n") else "\n")
+//
+//
+//  override def toString: String = "Transition#analysis(size=" + size + ")"
+//
+//  def size = list.size
+//
+//  def toCSV: String = csvHeader + "\n" + list.map(_.toCSV).mkString("\n")
 
-  private def formatStatement(name: String, tr: Int, dt: => Double): String =
-    name + ": count="+tr + (if(tr>0) (", mean time="+dt+"\n") else "\n")
-
-
-  override def toString: String = "Transition#analysis(size=" + size + ")"
-
-  def size = list.size
-
-  def toCSV: String = csvHeader + "\n" + list.map(_.toCSV).mkString("\n")
-
-  def mkString: String = analysisStatement
+//  def mkString: String = analysisStatement
 
 }
 
@@ -128,7 +128,8 @@ object Transition {
       if (ta.isEmpty) return acc.sortBy(_.track.id)
       else iterate( ta.tail, analyseTrack(ta.head) ::: acc )
 
-    new Transition( iterate(ta.toList), ta.experiment, ch,
-      "segmented analysis; tracks smaller that size=" + minSize + " were discarded from Transition an." )
+//    new Transition( iterate(ta.toList), ta.experiment, ch,
+//      "segmented analysis; tracks smaller that size=" + minSize + " were discarded from Transition an." )
+    ???
   }
 }

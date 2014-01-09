@@ -28,16 +28,23 @@ class RectangleChannel(override val name: String, // the name of the channel (id
   }
 
   lazy val outlet: Volume = {
+    val size = this.size.copy(x = this.size.x - outletLength - inletLength)
+    BoxXY( size * (-0.5), size * 0.5 )
+      .rotateAroundZ( Vec.x.angle(direction) )
+      .transform( _ + middle)
+  }
+
+  lazy val volume: Volume = BoxXY( size * (-0.5), size * 0.5 )
+                              .rotateAroundZ( Vec.x.angle(direction) )
+                              .transform( _ + middle)
+
+  lazy val innerVolume: Volume = {
     val size = this.size.copy(x = outletLength)
     val offset = -direction * ( (outletLength - length) / 2 )
     BoxXY( size * (-0.5), size * 0.5 )
       .rotateAroundZ( Vec.x.angle(direction) )
       .transform( _ + middle + offset)
   }
-
-  lazy val volume: Volume = BoxXY( size * (-0.5), size * 0.5 )
-                              .rotateAroundZ( Vec.x.angle(direction) )
-                              .transform( _ + middle)
 }
 
 

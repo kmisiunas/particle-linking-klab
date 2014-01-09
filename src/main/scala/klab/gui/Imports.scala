@@ -19,7 +19,7 @@ object Imports {
     "klab.track._",             // add default imports
     "klab.track.{ParticleTrack}",             // add default imports
     "klab.track.assemblies.{TrackAssembly}",             // add default imports
-    "klab.io.{Load,Save,Path,Import}" ,            // add default imports
+    "klab.io.{Load,Save,Path,Import,MatLab}" ,            // add default imports
     "klab.track.geometry.{Channel}",
     "klab.track.geometry.position.{Pos}",
     "klab.track.analysis._",

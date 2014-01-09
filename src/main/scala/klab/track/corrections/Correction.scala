@@ -4,7 +4,7 @@ import klab.track.geometry.Channel
 import com.misiunas.geoscala.Point
 import klab.track.ParticleTrack
 import com.misiunas.geoscala.volumes.{Everywhere, Volume}
-import klab.track.corrections.specialised.Confinement
+import klab.track.corrections.specialised.{Continuum, Confinement}
 import klab.track.assemblies.TrackAssembly
 
 /**
@@ -28,5 +28,8 @@ object Correction {
   /** Removes the overlaps form the track in specified channel */
   def overlaps(channel: Channel): TrackAssembly => TrackAssembly =
     Confinement.fixOverlaps(channel.along, channel, true)
+
+  def continuum(channel: Channel, dT: Double = 0): TrackAssembly => TrackAssembly =
+    Continuum.pairUp(channel, dT)
 
 }

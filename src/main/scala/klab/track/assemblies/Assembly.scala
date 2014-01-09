@@ -19,9 +19,11 @@ import klab.io.formating.ExportJSON
 abstract class Assembly (val experiment:String, val comment: String, val time: Long)
   extends Iterable[ParticleTrack] with ExportJSON{
 
-  // todo
-
-  def range: (Pos, Pos) = ???
+  def range: (Pos, Pos) = {
+    val max = foldLeft(head.max)( (m, t) => m.max(t.max) )
+    val min = foldLeft(head.min)( (m, t) => m.min(t.max) )
+    (min, max)
+  }
 
   // ---------------- Some abstract methods --------------
 

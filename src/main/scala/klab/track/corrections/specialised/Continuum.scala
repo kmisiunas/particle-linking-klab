@@ -55,18 +55,28 @@ object Continuum {
    * Automatically finds discontinuous tracks and joins them up.
    * Also removes the tracks that could not be made continuous and small sub-tracks that are likely to be noise
    */
-  def pairUp(withinChannel: Volume,
+  def pairUp[A <: Iterable[ParticleTrack]]
+            (withinChannel_ : Volume,
              dT_ : Double = 0,  // the tolerance in time search, 0 for automatic
-             messages: Boolean = true) : PTFilter =
+             messages: Boolean = true): A => A =
   assembly => {
     def println(s:String): Unit = if(messages) System.out.println(s) // printing override
     println("Straiting Continuum.pairUp for Assembly with " + assembly.size + " tracks")
     val ta = Filter.bySize(filterSizeMin)(assembly) // filter out small elements
     println(" - found "+ta.size+" tracks after applying a Filter.bySize(>="+ filterSizeMin + ")")
-    val dT = if(dT_ > 0) dT_ else {
-      val l = ta.map(t => (t.timeRange._2-t.timeRange._1)/(t.size-1))
-      l.sum / l.size * 21
+
+    val withinChannel = withinChannel_ match {
+      case ch: Channel => ch.innerVolume
+      case v: Volume => v
     }
+    val dT = dT_ match {
+      case dT: Double if dT > 0 => dT
+      case _ => {
+        val l = ta.map(t => (t.timeRange._2-t.timeRange._1)/(t.size-1))
+        l.sum / l.size * 21
+      }
+    }
+
     println(" - time separation filter was set to dT=" + dT.toString.take(5))
     val (tracksWB, tracksWBE, tracksWE) = Continuum.find(withinChannel)(ta)
     println(" - with Continuum.find found "+(tracksWB ++ tracksWBE ++ tracksWE).size +" non-continuous tracks:")
@@ -80,7 +90,9 @@ object Continuum {
     println(" - there were " + unusedTracks.size + " tracks that could no be matched")
     //((tracksWB ++ tracksWBE ++ tracksWE) &~ usefulJoints.flatten.toSet).toList.sortBy(_.id).foreach( p => println(p.toString) )
     val usedTracks = ((tracksWB ++ tracksWBE ++ tracksWE) & joints.flatten.toSet)
-    Continuum.qualityCheck((ta.toSet &~ usedTracks).toList ::: newTracks.reverse)  // returns the new list
+    returnSameType(assembly)(
+      Continuum.qualityCheck((ta.toSet &~ usedTracks).toList ::: newTracks.reverse)  // returns the new list
+    )
   }
 
 
@@ -191,8 +203,8 @@ object Continuum {
     def findMatchFor(needsEnd: List[ParticleTrack],
                      needsBeginning: Set[ParticleTrack],
                      acc: List[List[ParticleTrack]]) : List[List[ParticleTrack]] = {
-      if(needsEnd.isEmpty) return acc.reverse // todo: reverse might be unnecessary here
-      if(needsBeginning.isEmpty)
+      if (needsEnd.isEmpty) return acc.reverse // todo: reverse might be unnecessary here
+      if (needsBeginning.isEmpty)
         throw new Exception("Warning: Set contains elements that still need beginning, but there is no ends to match them with")
       val pt : ParticleTrack = needsEnd.head
       /** this function determines weighting by which the matches are made */
@@ -214,6 +226,7 @@ object Continuum {
         needsBeginning &~ contTrack.toSet,
         (pt :: contTrack) :: acc)
     }
+
     return sortJoints(
       findMatchFor(
         setWE.toList.sortBy(-_.size), // recover long tracks first - they are more valuable!

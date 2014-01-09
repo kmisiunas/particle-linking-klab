@@ -15,7 +15,7 @@ object ImportTrackAssembly {
   val trackExtension = "txt"
 
   val filterTitlesWith = List("filter", "frame", "length", "comment", "info", "parameter", "overlap",
-    "info", "description", "json", "track")
+    "info", "description", "json")
 
   /** scans provided dir and creates track assembly out of it */
   def fromTable(dir: String, experiment: String): TrackAssembly = {
@@ -25,7 +25,7 @@ object ImportTrackAssembly {
       inDir.listFiles
         .filter(_.extension == trackExtension) // extension must be correct
         .filter( f => filterTitlesWith.forall( !f.name.contains(_) ) )
-        .foreach(f => build.append( ImportParticleTrack.fromTable(f, experiment, comment = f.diff(Path(dir))) ))
+        .map(f => build.append( ImportParticleTrack.fromTable(f, experiment, comment = f.diff(Path(dir))) ))
       inDir.listDirs.foreach( addFilesInDir(_) ) // explore subdirectories
     }
     addFilesInDir(Path(dir))

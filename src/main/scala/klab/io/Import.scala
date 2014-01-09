@@ -2,6 +2,8 @@ package klab.io
 
 import klab.track.assemblies.TrackAssembly
 import klab.io.infrastructure.load.ImportTrackAssembly
+import klab.track.geometry.position.Pos
+import klab.io.infrastructure.load.stefanos.ImportStefanosRawTracking
 
 /**
  * == Import objects into KLab ==
@@ -11,8 +13,6 @@ import klab.io.infrastructure.load.ImportTrackAssembly
  * Time: 15:38
  */
 object Import {
-
-  def apply(kind: String, path: String): Any = ???
 
   /** Imports multiple track files in specified dir and makes a track assembly
     * @param dir path to directory where the single track files are
@@ -24,6 +24,10 @@ object Import {
 
   /** Imports TrackAssembly from a JSON file */
   def jsonToAssembly(file: String = Path.find()): TrackAssembly = TrackAssembly(Load(file))
+
+
+  /** Import a dir with files from raw Stefanos input */
+  def dirToListPos(dir: String = Path.find()): List[Pos] = ImportStefanosRawTracking.apply(Path(dir))
 
 
 }

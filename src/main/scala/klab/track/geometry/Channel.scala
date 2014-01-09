@@ -44,6 +44,7 @@ abstract class Channel(val name: String, // the name of the channel (id)
   val inlet: Volume
   val outlet: Volume
   val volume: Volume
+  val innerVolume: Volume
 
   def width: Double = size.y
   def length: Double = size.x

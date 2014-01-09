@@ -75,6 +75,9 @@ class Path private (private val path: String) {
 
   def listDirs: List[Path] = list.filter( _.isDir )
 
+  /** lists all files here and in sub-dirs */
+  def listDeepFiles: List[Path] = listFiles ::: listDirs.flatMap(_.listDeepFiles)
+
   def cd(s: String): Path = Path( dir.toString + s )
 
   // ---------- Methods dealing with files and dirs ----------

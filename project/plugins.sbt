@@ -7,3 +7,6 @@
 // comman: appbundle
 
 addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.10.1")
+
+// https://github.com/xerial/sbt-pack
+addSbtPlugin("org.xerial.sbt" % "sbt-pack" % "0.4.0")

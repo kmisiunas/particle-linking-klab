@@ -1,6 +1,7 @@
 package klab.io.infrastructure.save
 
 import breeze.linalg.{DenseVector, DenseMatrix}
+import scala.annotation.tailrec
 
 /**
  * ## Saves arrays in form of vector or matrix in CSV
@@ -37,11 +38,12 @@ object SaveArrayAnyVal extends SaveType {
 
   /** Creates iterator from a 1D array. Interprets neighbours as columns */
   def fromArrayToIteratorC[B<:AnyVal](data: Array[B], columns: Int, rows: Int): Iterator[String] = {
+    @tailrec
     def loopTheRows(row: Int, acc: Iterator[String]): Iterator[String] = {
       if (row >= rows) return acc
-      return {
+      else {
         val rowIdx = Range(row, rows*columns, rows)
-        loopTheRows(row + 1, acc ++ Iterator( ( for (i <- rowIdx) yield data(i) ).mkString("", ",", ",")))
+        return loopTheRows(row + 1, acc ++ Iterator( ( for (i <- rowIdx) yield data(i) ).mkString("", ",", ",")) )
       }
     }
     loopTheRows(0, Iterator())
