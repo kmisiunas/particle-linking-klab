@@ -17,10 +17,6 @@ Roadmap
 Self Comments
 -------------
 
- - [x] Single particle left right jump probabilities
- - [x] Mean Diffusion current
- - Slices at fixed separation for Jump particle 1 VS Jump particle 2
-
 
 Starting
 --------
@@ -38,7 +34,7 @@ Useful SBT compiler commands
 ----------------------------
  - 'compile' compiles the code
  - 'assembly' generate KLab.jar runnable file
- - 'assemblyPackageDependency' generates separate .jar file for the libraries used
+ - 'pack' a quick way of packing klab, where libraries are left unchanged
  - 'gen-idea' generates library bindings with intellij IDEA
  - 'doc' generate scaladocs
  - 'clean' helps to remove sbt compilation artifacts
@@ -47,10 +43,10 @@ Requirements
 ------------
  - JVM 1.6 or 1.7
  - Recommended to have BLAS or LAPACK installed
- - Scala 2.10 (for compilation)
+ - Scala 2.10.3 (for compilation)
  - SBT 0.13 (for compilation)
 
 Authors
 -------
 Karolis Misiunas
-km558@cam.ac.uk or k.misiunas@gmail.com
+k.misiunas@gmail.com

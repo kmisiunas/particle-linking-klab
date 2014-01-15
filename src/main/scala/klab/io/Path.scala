@@ -3,6 +3,7 @@ package klab.io
 import java.io.File
 import java.net.URI
 import com.alee.laf.filechooser.WebFileChooser
+import klab.KLab
 
 /**
  * == Tool for quick navigation between the files and folders ==
@@ -137,6 +138,9 @@ object Path {
 
   /** current working folder */
   var work: Path = user
+
+  /** the path to this program */
+  val klab: Path = Path(KLab.getClass.getProtectionDomain().getCodeSource().getLocation().getPath())
 
   /** checks formatting of provided path provided. Fixes it if it does not conform to expected norm */
   def checkPath(file: String): String = {

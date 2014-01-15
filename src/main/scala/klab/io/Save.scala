@@ -43,6 +43,7 @@ object Save {
     findFirstHandler(knowHandlers)
   }
 
+
   /** A function for optimising file paths for the user automatically */
   private def formatFilePath(file: String, saveType: SaveType) : String = {
     // check if the file name was provided. if not create one
@@ -58,6 +59,7 @@ object Save {
 
     f + fileName + fileExt
   }
+
 
   private def write(st: Iterator[String], file: String): Unit = {
     if (st.isEmpty) return ()

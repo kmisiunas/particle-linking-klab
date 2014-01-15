@@ -52,8 +52,18 @@ trait OrderedTrack extends Track {
     else Option( apply(idx) )
   }
 
-  def atTime(tMin: Double, tMax:Double): List[Pos] = list.slice(atTimeIdx(tMin), atTimeIdx(tMax))
+  def atTime(tMin: Double, tMax:Double): List[Pos] = list.slice(atTimeIdx(tMin), atTimeIdx(tMax)+1)
   def atTime(tRange: TimeRange): List[Pos] = atTime(tRange._1, tRange._1)
+
+  /** returns a Pos that is one frame after this one
+    * assuming: that time is in frames */
+  def nextFame(p: Pos): Option[Pos] = atTime(p.t + 1)
+
+  /** checks if next frame is good quality - move into helper class */
+  def hasNextQualityFrame(p: Pos): Boolean = nextFame(p) match {
+    case Some(x) => x.isAccurate
+    case _ => false
+  }
 
   // --------- Implemented Methods --------------
 

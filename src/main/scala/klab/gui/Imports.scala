@@ -1,5 +1,6 @@
 package klab.gui
 
+
 /**
  * ## Auto importer for REPL
  *
@@ -28,7 +29,7 @@ object Imports {
     "klab.track.corrections.{Filter,Correction,Assemble}",
     "com.misiunas.geoscala.vectors.Vec",
     "com.misiunas.geoscala.Point"
-  ) ::: breeze ::: user
+  ) ::: breeze ::: user ::: operators
 
   /** imports of Breeze libraries for REPL */
   val breeze: List[String] = List(
@@ -39,6 +40,12 @@ object Imports {
   val user: List[String] = List(
     "klab.gui.{Show,Print,TimeIt}",
     "klab.gui.Print.println"
+  )
+
+  val operators: List[String] = List(
+    "klab.track.operators.OneTrack",
+    "klab.track.operators.TwoTracks",
+    "klab.track.operators.TimeOperator"
   )
 
 
