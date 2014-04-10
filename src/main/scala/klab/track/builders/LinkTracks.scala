@@ -1,8 +1,11 @@
 package klab.track.builders
 
-import klab.track.geometry.position.Pos
+import klab.track.geometry.position.{LQPos, Pos}
 import klab.track.Track
 import breeze.linalg.{DenseVector, DenseMatrix}
+import scala.xml.dtd.ContentModel._labelT
+import scala.collection.mutable
+import klab.math.optimise.HungarianAlgorithm
 
 /**
  * == Links Tracks that are discontinuous ==
@@ -25,52 +28,40 @@ object LinkTracks {
     * This algorithm only attempts linking when it is certain that they belong together
     *
     * Method:
-    *  - Use fragments method to manipulate the lists
-    *  - use matrix to map out joint fitness
+    *  - construct a matrix with a cost function linking all the Tracks
+    *  - use hungarian algorithm to minimise the costs
     *
-    * Fitness function:
-    *  - 0 value is never joined
-    *  - higher values better
-    *
-    *  ToDo:
-    *   - maximise overall fitness
     *
     * @param maxSeparation - gives max separation specs for each coordinate
     */
-  def simple[A <: Iterable[Track]](maxSeparation: Pos): A => A =
+  def hungarian[A <: Iterable[Track]](maxSeparation: Pos): A => A =
   ta => {
     // step 1: create fragment encapsulation
-    val fragments: Map[Int,Fragment] = ta.map( Fragment(_) ).zipWithIndex
-                                         .map(el => (el._2,el._1)).toMap
+    val map: Map[Int,Track] = ta.zipWithIndex.map(_.swap).toMap
     // step 2: define fitness fn, the higher the better
-    def fitnessFun(f1: Fragment, f2: Fragment): Double = {
-      (f1.head -- f2.end) match {
+    def costFun(f1: Track, f2: Track): Double = {
+      (f1.head -- f2.last) match {
         case d if d.t < 0 => 0.0
         case d if d.t > maxSeparation.t => 0.0
-        case d if d.x > maxSeparation.x => 0.0
-        case d if d.y > maxSeparation.y => 0.0
-        case d if d.z > maxSeparation.z => 0.0
-        case d => 1 / (d.t + d.vectorLength)
+        case d if d.x.abs > maxSeparation.x => 0.0
+        case d if d.y.abs > maxSeparation.y => 0.0
+        case d if d.z.abs > maxSeparation.z => 0.0
+        case d => - 1000 + ( d.t + d.vectorLength) // todo: improve fitness function!
         case _ => 0.0
       }
     }
     // step 3: create network
-    val network: DenseMatrix[Double] = DenseMatrix.zeros(fragments.size, fragments.size)
-    for (y <- 0 until fragments.size)
-      for (x <- 0 until fragments.size)
-        network(x,y) = fitnessFun(fragments(x), fragments(y))
-    // step 4: cherry picking : rows with only one possibility or highest value
-    for (x <- 0 until fragments.size){
-      val possible = network(::,x).findAll(_ > 0.0).size
-      if (possible >= 1) {
-        val maxIdx   = maxIdx( network(::,x) )
-        uniteFragments(fragments, x, maxIdx)
-        network(::,x) :*= 0.0 // remove the elements - no more joints here
-      }
-    }
-    // step 5: clean up: new ids repack and send away
+    val cost: DenseMatrix[Double] = DenseMatrix.zeros(map.size, map.size)
+    for (y <- 0 until map.size ; x <- 0 until map.size)
+      cost(x,y) = costFun(map(x), map(y))
+    // step 5: Hungarian algorithm
+    val links = HungarianAlgorithm( cost )._1.zipWithIndex
+    val goodLinks = links.filter( p => cost(p._1,p._2) < 0.0).filter(p => p._1!=p._2)
+    // step 6: link tracks
+    val newTracks = linkSelectedTracks(map, goodLinks)
+    // step 7: clean up: new ids repack and send away
     klab.track.corrections.
-      returnSameType(ta)( assignNewIds( fragments.values.map(_.toTrack).toSet, ta ) )
+      returnSameType(ta)( assignNewIds( newTracks, ta ) )
   }
 
 
@@ -82,12 +73,30 @@ object LinkTracks {
   def linkTwoTracks(t1: Track, t2: Track): Track = {
     val from = t1.last
     val to = t2.head
+    if (from.t >= to.t) throw new Exception("could not link two tracks because times overlap")
     val linker = if (to.t - from.t == 1.0) Nil else chainLinkLQPos(from, to)
-    t1.copy(id = -1, list = t2.list ::: linker ::: t1.list)
+    t1.copy(id = -1, list = t1.list ::: linker ::: t2.list)
+  }
+
+  /** function for joining the indicated tracks */
+  def linkSelectedTracks(rawTracks: Map[Int,Track] ,links:Seq[(Int,Int)]): List[Track] = {
+    val linkMap = links.toMap
+    val linkMapRev = linkMap.map(_.swap)
+    def findFirst(el: Int): Int = if (linkMapRev.contains(el)) findFirst(linkMapRev(el)) else el
+    val uniquePaths = links.map( p => findFirst(p._1) ).toSet
+    def chainConnect(beginning: Int, accTrack: Track): Track = {
+      if (!linkMap.contains(beginning)) return accTrack
+      chainConnect(linkMap(beginning) , linkTwoTracks(accTrack, rawTracks(linkMap(beginning))) )
+    }
+    val newTracks = uniquePaths.map( st => chainConnect(st, rawTracks(st) ) )
+    val unusedTracks =
+      ((0 until rawTracks.size).toSet -- (links.map(_._1).toSet ++ links.map(_._2).toSet))
+      .map( rawTracks(_) )
+    (unusedTracks ++ newTracks).toList
   }
 
   /** method for giving new ids to tracks that need it */
-  private def assignNewIds(list: Iterable[Track], oldIds:Iterable[Track]): List[Track] = {
+  def assignNewIds(list: Iterable[Track], oldIds:Iterable[Track]): List[Track] = {
     var lastId = oldIds.map(_.id).max
     def getNextId(): Int = { lastId = lastId +1; lastId }
 
@@ -101,32 +110,11 @@ object LinkTracks {
     iterate(list, Nil)
   }
 
-  /** function unites two fragments and stores them in the map */
-  private def uniteFragments(map: Map[Int,Fragment], i1: Int, i2: Int): Unit = ???
-
-  private def maxIdx(v: DenseVector[Double]): Int = {
-    var (max, idx) = (v(0), 0)
-    for (i <- 1 until v.length)
-      if (v(i) > max)
-        (max, idx) = (v(i), i)
-    return idx
-  }
-
-  /** class for navigating between track beginnings/ends easily */
-  private object Fragment{ def apply(track: Track): Fragment = new Fragment(track) }
-  private class Fragment(var track: Track) {
-    lazy val head = track.head
-    lazy val end = track.last
-    def canFollow(that: Fragment): Boolean = this.head.t > that.end.t
-    def difference(that: Fragment): Pos = this.head -- that.end
-    def toTrack: Track = ???
-  }
-
   /** linker chain creator for every frame */
-  private def chainLinkLQPos(from: Pos, to: Pos): List[Pos] = {
+  def chainLinkLQPos(from: Pos, to: Pos): List[Pos] = {
     val frames = (to.t - from.t).toInt
     val step = (to - from) * (1.0 / frames)
-    (1 to (frames-1)).map( i => Pos(from.t + i ,from + (step * i)) ).reverse.toList
+    (1 to (frames-1)).map( i => Pos(from.t + i ,from + (step * i)).toLQPos ).toList
   }
 
 }
