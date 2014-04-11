@@ -10,8 +10,9 @@ import track.TestTracks
 
 class LinkTracksTest extends FlatSpec with Matchers {
 
-  "linkTwoTracks()" should "connect two tracks with LQPos connectors" in {
+  "linkTwoTracks()" should "connect two tracks" in {
     val t = LinkTracks.linkTwoTracks(TestTracks.t1 , TestTracks.t2)
+    t.isTimeOrdered should be (true)
     t.head.t should be (1)
     t.last.t should be (611)
 
@@ -20,12 +21,20 @@ class LinkTracksTest extends FlatSpec with Matchers {
     t(309).t should be (310)
     t(310).t should be (311)
 
-    t.atTime(300).get.isAccurate should be (true)
+    t.atTime(300).nonEmpty should be (true)
     t.atTime(301).nonEmpty should be (true)
-    t.atTime(301).get.isAccurate should be (false)
     t.atTime(310).nonEmpty should be (true)
+    t.atTime(311).nonEmpty should be (true)
+  }
+
+  it should "use LQPos connectors for new path" in {
+    val t = LinkTracks.linkTwoTracks(TestTracks.t1 , TestTracks.t2)
+    t.atTime(300).get.isAccurate should be (true)
+    t.atTime(301).get.isAccurate should be (false)
     t.atTime(310).get.isAccurate should be (false)
     t.atTime(311).get.isAccurate should be (true)
   }
+
+
 
 }

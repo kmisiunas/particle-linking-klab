@@ -47,7 +47,6 @@ object LinkTracks {
         case d if d.y.abs > maxSeparation.y => 0.0
         case d if d.z.abs > maxSeparation.z => 0.0
         case d => - 1000 + ( d.t + d.vectorLength) // todo: improve fitness function!
-        case _ => 0.0
       }
     }
     // step 3: create network
@@ -79,7 +78,7 @@ object LinkTracks {
   }
 
   /** function for joining the indicated tracks */
-  def linkSelectedTracks(rawTracks: Map[Int,Track] ,links:Seq[(Int,Int)]): List[Track] = {
+  private def linkSelectedTracks(rawTracks: Map[Int,Track] ,links:Seq[(Int,Int)]): List[Track] = {
     val linkMap = links.toMap
     val linkMapRev = linkMap.map(_.swap)
     def findFirst(el: Int): Int = if (linkMapRev.contains(el)) findFirst(linkMapRev(el)) else el
@@ -111,7 +110,7 @@ object LinkTracks {
   }
 
   /** linker chain creator for every frame */
-  def chainLinkLQPos(from: Pos, to: Pos): List[Pos] = {
+  private def chainLinkLQPos(from: Pos, to: Pos): List[Pos] = {
     val frames = (to.t - from.t).toInt
     val step = (to - from) * (1.0 / frames)
     (1 to (frames-1)).map( i => Pos(from.t + i ,from + (step * i)).toLQPos ).toList
