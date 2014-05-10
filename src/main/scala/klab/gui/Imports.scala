@@ -29,7 +29,8 @@ object Imports {
     "klab.track.corrections.{Filter,Correction,Assemble}",
     "com.misiunas.geoscala.vectors.Vec",
     "com.misiunas.geoscala.Point",
-    "klab.track.builders.LinkTracks"
+    "klab.track.builders.{LinkTracks,BuildTracks}",
+    "klab.track.operators.TransformTrack"
   ) ::: breeze ::: user ::: operators
 
   /** imports of Breeze libraries for REPL */

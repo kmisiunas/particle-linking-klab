@@ -37,7 +37,7 @@ object Jumps {
                     dt: Int = 1 // Frame diffrence
                    ): Iterable[Track] => ResData = ta => {
     // todo: find out what does this do!!
-    val minDistance = math.max( at + 10.0 , at*2 )  // note: arbitrary choice
+    val minDistance = math.max( at + 20.0 , at*4 )  // minimum distance to the third particle
 
     val interactions: List[PairInteraction] = TwoTracks.findTwoParticleInteractions(minDistance)(ta)
 

@@ -2,9 +2,7 @@ package klab.track.builders
 
 import klab.track.geometry.position.{LQPos, Pos}
 import klab.track.Track
-import breeze.linalg.{DenseVector, DenseMatrix}
-import scala.xml.dtd.ContentModel._labelT
-import scala.collection.mutable
+import breeze.linalg.{DenseMatrix}
 import klab.math.optimise.HungarianAlgorithm
 
 /**
@@ -41,7 +39,7 @@ object LinkTracks {
     // step 2: define fitness fn, the higher the better
     def costFun(f1: Track, f2: Track): Double = {
       (f1.head -- f2.last) match {
-        case d if d.t < 0 => 0.0
+        case d if d.t <= 0 => 0.0
         case d if d.t > maxSeparation.t => 0.0
         case d if d.x.abs > maxSeparation.x => 0.0
         case d if d.y.abs > maxSeparation.y => 0.0
@@ -85,7 +83,7 @@ object LinkTracks {
     val uniquePaths = links.map( p => findFirst(p._1) ).toSet
     def chainConnect(beginning: Int, accTrack: Track): Track = {
       if (!linkMap.contains(beginning)) return accTrack
-      chainConnect(linkMap(beginning) , linkTwoTracks(accTrack, rawTracks(linkMap(beginning))) )
+      chainConnect(linkMap(beginning) , linkTwoTracks(rawTracks(linkMap(beginning)), accTrack) )
     }
     val newTracks = uniquePaths.map( st => chainConnect(st, rawTracks(st) ) )
     val unusedTracks =

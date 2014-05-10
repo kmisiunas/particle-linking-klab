@@ -60,51 +60,43 @@ object BuildTracks {
 
 
   /** finds simple connections and makes tracks out of them */
-  private def simple(safeDistance: Double): Seq[Pos] => List[Track] =
+  def simple(safeDistance: Double): Seq[Pos] => List[Track] =
   pos => {
-    // ##
     val atT = segmentWithT(pos)
     val t0 = atT.keys.min
     val tFinal = atT.keys.max
+    val range1: Double = safeDistance
+    val range2: Double = range1 * 2
 
-    def analyseFrame(t: Int, tm1: List[List[Pos]], acc: List[List[Pos]]): List[List[Pos]] = {
-      if (t > tFinal) return tm1 ::: acc
-      if (!atT.contains(t)) return analyseFrame(t+1, Nil, tm1 ::: acc )
-      if (tm1.isEmpty) return analyseFrame(t+1, atT(t).map(p=>List(p)), tm1 ::: acc )
-      val distances: DenseMatrix[Double] = distancesMatrix(tm1, atT(t))
-      // what to keep what to send firther
-      var continued: List[List[Pos]] = Nil
-      var ended: List[List[Pos]] = Nil
+    def analyseFrame(t: Int, tm1: Iterable[List[Pos]], acc: List[List[Pos]]): List[List[Pos]] = {
+      if (t > tFinal) return tm1.toList ::: acc
+      if (!atT.contains(t)) return analyseFrame(t+1, Nil, tm1.toList ::: acc ) // missing frame - end tracks
+      if (tm1.isEmpty) return analyseFrame(t+1, atT(t).map(p=>List(p)),  acc ) // nothing from the past - next
 
-      // wrong
-      def satisfiesConditions(r: Int, c:Int): Boolean = {
-        distances(::, c).findAll(_ <= safeDistance).size == 1 &&
-        distances(::, c).findAll(_ <= 3*safeDistance).size == 1 &&
-        distances(r, ::).t.findAll(_ <= safeDistance).size == 1 &&
-        distances(r, ::).t.findAll(_ <= 3*safeDistance).size == 1
+      val loose = atT(t).toSet
+
+      // if tm1(i) has one track in close proximity and all proximity
+      //    AND corresponding track only has it in all proximity
+      //    => connect
+      def goThroughRows(tm1:Iterable[List[Pos]],
+                        tLeft: Set[Pos],
+                        connect: Set[List[Pos]],
+                        end: Set[List[Pos]]): (Set[List[Pos]] , Set[List[Pos]]) = {
+        if (tm1.isEmpty) return (tLeft.map(List(_)) ++ connect , end)
+        val distances = tLeft.map( p => p -> p.distance(tm1.head.head))
+                             .filter(_._2 <= range2)
+        if (distances.size == 1) { // just one, check if for other places
+          if (tm1.tail.forall( l => l.head.distance( distances.head._1 ) > range2 )) // no alternative connection
+            if ( (loose-distances.head._1).forall( p => p.distance(distances.head._1) > range2) ) // no close points
+              return goThroughRows(tm1.tail,
+                                 tLeft - distances.head._1,
+                                 connect + ( distances.head._1 :: tm1.head ),
+                                 end )
+        } // more than one track in large surroundings
+        goThroughRows(tm1.tail, tLeft, connect, end + tm1.head )
       }
-
-      // ugly - go through rows and columns to check whch overlap
-      for (r <- 0 until distances.rows){ // rows for t-1
-        val cs = 0 until distances.cols
-        val toLink = cs.map(c => satisfiesConditions(r,c))
-        toLink.count(x=>x) match {
-          case 0 => ended = tm1(r) :: ended
-          case 1 => continued = (atT(t)(toLink.indexWhere(b=>b)) :: tm1(r)) :: continued
-          case _ => ended = tm1(r) :: ended
-        }
-      }
-      for (c <- 0 until distances.cols){ // columns for t0
-        val rs = 0 until distances.rows
-        val toLink = rs.map(r => satisfiesConditions(r,c))
-        toLink.count(x=>x) match {
-          case 0 => ended = List(atT(t)(c)) :: continued
-          case 1 => ; // already accounted for
-          case _ => ended = List(atT(t)(c)) :: ended // too comlex for this algorithm
-        }
-      }
-
-      analyseFrame(t+1, continued, ended ::: acc)
+      val (continue, end) = goThroughRows(tm1, loose, Set(), Set())
+      analyseFrame( t+1, continue, end.toList ::: acc)
     }
 
     makeTracks( analyseFrame(t0, Nil, Nil) )

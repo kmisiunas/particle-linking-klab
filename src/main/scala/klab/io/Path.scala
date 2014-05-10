@@ -145,6 +145,7 @@ object Path {
 
   /** current working folder */
   var work: Path = user
+  def work_=(dir: String): Path = {work = Path(dir).dir; work}
 
   /** the path to this program */
   val klab: Path = Path(KLab.getClass.getProtectionDomain().getCodeSource().getLocation().getPath())

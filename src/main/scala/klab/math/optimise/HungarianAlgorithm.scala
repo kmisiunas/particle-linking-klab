@@ -8,6 +8,12 @@ import breeze.linalg.DenseMatrix
  *
  * https://en.wikipedia.org/wiki/Hungarian_algorithm
  *
+ *
+ * for sparse matrices:
+ * http://link.springer.com/article/10.1007%2FBF02247938
+ * https://github.com/zarrabeitia/munkres_sparse
+ * http://csclab.murraystate.edu/bob.pilgrim/445/munkres.html
+ *
  * todo: fully use Breeze in the future
  *
  * Created by kmisiunas on 08/04/2014.

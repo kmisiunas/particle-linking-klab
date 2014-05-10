@@ -116,7 +116,7 @@ abstract class Assembly (val experiment:String, val comment: String, val time: L
   def changeEach(f : (Track => Track)) : Assembly
 
   /** Make a copy of this Assembly */
-  def copy : Assembly
+  //def copy : Assembly
 
   /** removes specified tracks from the assembly */
   def remove(s: Iterable[Track]): Assembly
@@ -129,7 +129,7 @@ abstract class Assembly (val experiment:String, val comment: String, val time: L
   def apply(f : List[Track] => List[Track] ) : Assembly
 
   /** Method for appending another TrackAssembly with time frames where other have left off */
-  def append(list: Iterable[Track], timeGap: Double = 0.0): Assembly
+  def append(list: Iterable[Track], timeGap: Double = 1.0): Assembly
 
   // ------------------ Id management ---------------
 

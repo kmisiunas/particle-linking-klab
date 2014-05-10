@@ -37,7 +37,14 @@ class TrackAssembly private (val listMap : Map[Int, Track],
   override def toString : String = "TrackAssembly("+size+ " tracks, "+ comment + ")"
 
   override lazy val size : Int = listMap.size
-  def copy: TrackAssembly = this // immutable implementation - no need for a copy
+
+  // makes a copy with specified changes
+  def copy( list: Iterable[Track] = this.toList,
+            experiment: String = this.experiment,
+            comment: String = this.comment,
+            time: Long = this.time): TrackAssembly = TrackAssembly(list, experiment, comment, time)
+
+  // todo: remove?
   protected def updateMap(map: Map[Int, Track]): TrackAssembly = TrackAssembly(map, experiment, comment, time)
 
   /** forall a function on all ParticleTracks - expensive, try to minimise calls to it */
@@ -58,10 +65,14 @@ class TrackAssembly private (val listMap : Map[Int, Track],
     TrackAssembly(f( this.toList ), experiment, comment, time)
 
   /** Method for appending another TrackAssembly with time frames where other have left off */
-  def append(list: Iterable[Track], timeGap: Double): TrackAssembly = {
-    val lastT: Double = this.maxBy(_.timeRange._2).timeRange._2
+  def append(list: Iterable[Track], timeGap: Double = 10): TrackAssembly = {
+    val lastT: Double = this.range._2.t
     val fdT: Pos => Pos = p => p ++ Pos(timeGap + lastT, 0,0,0)
-    val shifted = list.map(_.changePositions(fdT)).toList
+    var lastId = listMap.keys.max
+    def nextId(): Int = {lastId = lastId +1; lastId}
+    val shifted = list.toList
+                      .map(_.changePositions(fdT))
+                      .map(_.changeId(nextId)) // todo improve implementations
     this.add(shifted)
   }
 
