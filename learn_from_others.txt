@@ -1,0 +1,40 @@
+
+
+INTRESTING SOFTWARE:
+
+--- short term ---
+
+- ScalaSwingContrib (https://github.com/benhutchison/ScalaSwingContrib) for Swing Layout
+- RSyntaxTextArea (http://fifesoft.com/rsyntaxtextarea/) for Syntax Highlighting and Code Completion within the Script Editor
+- Scalariform (https://github.com/mdr/scalariform/) for Code Formatting within the Script Editor
+
+--- long term ---
+
+- JLaTeXMath (http://forge.scilab.org/index.php/p/jlatexmath/) to display LaTeX commands
+- The H2 Database Engine (http://www.h2database.com) for storing history
+- JTS Topology Suite (http://tsusiatsoftware.net/jts/main.html) for geometry and Collision Detection
+- Docking Frames (http://dock.javaforge.com/) for providing multiple, dockable windows
+
+--- Terminal alternatives ---
+http://software.jessies.org/terminator/
+https://github.com/traff/jediterm#jediterm
+http://www.jcraft.com/jcterm/
+https://github.com/kmisiunas/DragonConsole <- highly independent from std methods, thus hard to integrate with REPL
+http://wiki.netbeans.org/TerminalEmulator
+http://help.eclipse.org/indigo/index.jsp?topic=/org.eclipse.platform.doc.isv/reference/api/org/eclipse/jface/text/source/SourceViewer.html
+
+--- Unsorted ---
+
+// Write good code: http://basis.reify.it/
+
+// Database interaction: http://slick.typesafe.com/
+
+// Automatic serialization to JSON: https://github.com/scala/pickling
+
+//Graph database https://github.com/twitter/flockdb
+
+// argument phrasing: https://github.com/Rogach/scallop
+
+// command line options parsing: https://github.com/scopt/scopt
+
+
