@@ -1,7 +1,7 @@
 package klab.gui.windows
 
 import processing.core._
-import klab.track.ParticleTrack
+import klab.track.Track
 import klab.track
 import klab.track.geometry.position.Pos
 import com.misiunas.geoscala.Point
@@ -12,7 +12,7 @@ import com.misiunas.geoscala.Point
  * Time: 21:12
  */
 
-class ShowParticleTrack (val listPT: Array[ParticleTrack]) extends ProcessingWindow{
+class ShowParticleTrack (val listPT: Array[Track]) extends ProcessingWindow{
 
   val range : track.STRange = {
     val min = Pos(
@@ -54,7 +54,7 @@ class ShowParticleTrack (val listPT: Array[ParticleTrack]) extends ProcessingWin
     rect(-usefulWidth/2, -usefulHeight/2, usefulWidth, usefulHeight)
   }
 
-  private def drawTrack(pt: ParticleTrack): Unit = {
+  private def drawTrack(pt: Track): Unit = {
     val typicalDeltaT = (range._2.t - range._1.t) / pt.size
     /** brush under the line */
     def prepBrushBG(): Unit = {
@@ -129,8 +129,8 @@ class ShowParticleTrack (val listPT: Array[ParticleTrack]) extends ProcessingWin
 object ShowParticleTrack {
 
   // TODO: separate thread!
-  def show(pt: ParticleTrack) = (new ShowParticleTrackFrame).show(new ShowParticleTrack(Array(pt)))
+  def show(pt: Track) = (new ShowParticleTrackFrame).show(new ShowParticleTrack(Array(pt)))
 
-  def show(list: Iterable[ParticleTrack]) = (new ShowParticleTrackFrame).show(new ShowParticleTrack(list.toArray))
+  def show(list: Iterable[Track]) = (new ShowParticleTrackFrame).show(new ShowParticleTrack(list.toArray))
 
 }

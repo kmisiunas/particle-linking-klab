@@ -64,7 +64,7 @@ trait MutableTrack [Self <: MutableTrack[Self]] extends OrderedTrack with TrackI
   /** orders the Pos list according to their time  - should not be needed if everything was prepared correctly */
   def timeOrder: Self = changePositions(list.sortWith(_.t < _.t))
 
-  /** Update the structure of the ParticleTrack to indicate the quality   */
+  /** Update the structure of the Track to indicate the quality   */
   def qualityCheck: Self = {
     // time separation - could be better!
     val expectedDT: Double = (timeRange._2 - timeRange._1)/(size-1) * 1.1

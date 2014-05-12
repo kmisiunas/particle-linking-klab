@@ -22,7 +22,7 @@ object SaveArrayAnyVal extends SaveType {
 
   /** Returns iterator that will be written to a file - a line for each string */
   def getWriter(that: Any, path: String): Iterator[String] = that match {
-    case x: Array[AnyVal] => fromArrayToIterator(x, 1, x.length)
+    case x: Array[AnyVal] => x.map(_.toString).toIterator // fix: instead of fromArrayToIterator
     case _ => throw new UnsupportedOperationException("SaveArrayAnyVal can't handle this type")
   }
 

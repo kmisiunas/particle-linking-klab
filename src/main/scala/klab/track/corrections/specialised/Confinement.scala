@@ -1,7 +1,7 @@
 package klab.track.corrections.specialised
 
 import klab.track.geometry.Channel
-import klab.track.ParticleTrack
+import klab.track.Track
 import klab.track.analysis.Find
 import klab.track.geometry.position.Pos
 import scala.annotation.tailrec
@@ -28,8 +28,8 @@ import klab.track.operators.TwoTracks
 object Confinement {
 
   /** Class for storing findOverlaps results */
-  class ResOverlap (val thisTrack: ParticleTrack,
-                    val thatTrack: ParticleTrack,
+  class ResOverlap (val thisTrack: Track,
+                    val thatTrack: Track,
                     val atTime: Double) {
     override def toString: String = "Track " + thisTrack + " overlaps with " + thatTrack +" at time " + atTime
     override def equals(a: Any): Boolean = a match {
@@ -39,7 +39,7 @@ object Confinement {
     def _1 = thisTrack
     def _2 = thatTrack
     def atPoint: Point = (thisTrack.atTime(atTime).get + thatTrack.atTime(atTime).get) * 0.5
-    def toSet: Set[ParticleTrack] = Set(thisTrack, thatTrack)
+    def toSet: Set[Track] = Set(thisTrack, thatTrack)
   }
 
 
@@ -48,11 +48,11 @@ object Confinement {
     * Time o(n^2^) and o(n_pos^1^).
     * @param line line along which the overlaps are not allowed
     */
-  def findOverlaps(line: Point => Double): Iterable[ParticleTrack] => List[ResOverlap] =
+  def findOverlaps(line: Point => Double): Iterable[Track] => List[ResOverlap] =
   ta => {
     /** recursive method for scanning the each track for overlaps */
     @tailrec
-    def recursive(list: List[ParticleTrack], acc: List[ResOverlap] = Nil): List[ResOverlap] = {
+    def recursive(list: List[Track], acc: List[ResOverlap] = Nil): List[ResOverlap] = {
       if (list.isEmpty) return acc
       recursive(list.tail, acc ::: findOverlapsForTrack(list.head, list.tail, line))
     }
@@ -61,9 +61,9 @@ object Confinement {
 
 
   /** iterator for finding overlaps with 'track' */
-  private def findOverlapsForTrack(track: ParticleTrack, list: List[ParticleTrack], line: (Point => Double)): List[ResOverlap] = {
+  private def findOverlapsForTrack(track: Track, list: List[Track], line: (Point => Double)): List[ResOverlap] = {
     @tailrec
-    def recursive(left: List[ParticleTrack], acc: List[ResOverlap] = Nil): List[ResOverlap] = {
+    def recursive(left: List[Track], acc: List[ResOverlap] = Nil): List[ResOverlap] = {
       if (left.isEmpty) return acc.reverse
       val aligned = TwoTracks.pairUpOverlaps(track, left.head)
       if (aligned.isEmpty) return recursive(left.tail, acc) // rare, but happens
@@ -126,7 +126,7 @@ object Confinement {
     // lets assume there is only one correct way to unwind the tracks
     val complexOverlaps = overlapComplexity.filter(_._2 > 0).map(_._1)
     val complexSet = complexOverlaps.flatMap(_.toSet).toSet
-    def unwindOneByOne(current: Set[ParticleTrack]): Set[ParticleTrack] = {
+    def unwindOneByOne(current: Set[Track]): Set[Track] = {
       // find one overlap, fix it and see if any overlaps are left
       findFirstOverlapWithin(along, within)(current) match {
         case None => return current
@@ -146,7 +146,7 @@ object Confinement {
     returnSameType[TrackAssembly](ta)(correctedTracks)
   }
 
-  private def changeInOrder(swaps: List[ResOverlap], currentSet: Set[ParticleTrack]): Set[ParticleTrack] = {
+  private def changeInOrder(swaps: List[ResOverlap], currentSet: Set[Track]): Set[Track] = {
     if (swaps.isEmpty) return currentSet
     val ids = swaps.head.toSet.map(_.id)
     val swapThese = currentSet.filter( t => ids.contains(t.id) )
@@ -157,7 +157,7 @@ object Confinement {
 
   /** Cuts and joins two tracks at specified times.
     * No LQPos introduced here */
-  def swapAtOverlap(r: ResOverlap): List[ParticleTrack] = {
+  def swapAtOverlap(r: ResOverlap): List[Track] = {
     val idx1 = r._1.atTimeIdx(r.atTime)
     val idx2 = r._2.atTimeIdx(r.atTime)
     List(
@@ -167,9 +167,9 @@ object Confinement {
   }
 
   /** Finds first overlap within a volume */
-  def findFirstOverlapWithin(line: Point => Double, within: Volume): Iterable[ParticleTrack] => Option[ResOverlap] =
+  def findFirstOverlapWithin(line: Point => Double, within: Volume): Iterable[Track] => Option[ResOverlap] =
     ta => {
-      def recursive(list: List[ParticleTrack]): Option[ResOverlap] = {
+      def recursive(list: List[Track]): Option[ResOverlap] = {
         if (list.isEmpty) return None
         val trackOverlaps = findOverlapsForTrack(list.head, list.tail, line).filter(r => within.isWithin( r.atPoint ))
         if (trackOverlaps.isEmpty) return recursive(list.tail)

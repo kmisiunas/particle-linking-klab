@@ -4,6 +4,7 @@ import java.io.File
 import java.net.URI
 import com.alee.laf.filechooser.WebFileChooser
 import klab.KLab
+import klab.gui.Print
 
 /**
  * == Tool for quick navigation between the files and folders ==
@@ -26,7 +27,7 @@ import klab.KLab
  * Date: 06/08/2013
  * Time: 12:01
  */
-class Path private (private val path: String) {
+class Path private (private val path: String) extends Ordered[Path] {
 
   // ---------- return properties -------------
 
@@ -118,6 +119,12 @@ class Path private (private val path: String) {
 
   /** sets current dir as the working directory */
   def setWork(): Path = { Path.work = dir; Path.work }
+
+  override def compare(x: Path): Int = path.compare( x.toString )
+
+  // ----------- Graphical --------------
+
+  def ls: Unit = this.list.sorted.foreach( Print.apply(_) )
 }
 
 object Path {
@@ -138,15 +145,19 @@ object Path {
 
   /** current working folder */
   var work: Path = user
+  def work_=(dir: String): Path = {work = Path(dir).dir; work}
 
   /** the path to this program */
   val klab: Path = Path(KLab.getClass.getProtectionDomain().getCodeSource().getLocation().getPath())
 
   /** checks formatting of provided path provided. Fixes it if it does not conform to expected norm */
   def checkPath(file: String): String = {
-    val f = file.trim.replace('\\', separator)
-    val fO = (new File(f)) // not very fast?
-    if (fO.isDirectory && f != separator) fO.getAbsolutePath + separator else fO.getAbsolutePath
+    val f = file.trim match {
+      case s if s.startsWith("~" + File.separator) => System.getProperty("user.home") + file.trim.drop(1)
+      case s => s
+    }
+    val fO = new File(f)
+    fO.getAbsolutePath.replace('\\', separator) + (if(fO.isFile || f == separator) "" else separator)
   }
 
   /** Find the path using GUI interface */

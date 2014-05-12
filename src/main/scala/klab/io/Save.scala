@@ -2,7 +2,7 @@ package klab.io
 
 import java.io.File
 import klab.track.assemblies.{Assembly, TrackAssembly}
-import klab.track.ParticleTrack
+import klab.track.Track
 import klab.track.formating.CompatibleWithJSON
 import scala.collection.GenTraversableOnce
 import klab.io.formating.ExportJSON

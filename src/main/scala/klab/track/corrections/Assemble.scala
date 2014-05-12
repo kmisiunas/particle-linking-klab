@@ -1,7 +1,7 @@
 package klab.track.corrections
 
 import klab.track.assemblies.TrackAssembly
-import klab.track.ParticleTrack
+import klab.track.Track
 
 /**
  * == Function collection for creating track assemblies form different initial objects ==
@@ -11,7 +11,7 @@ import klab.track.ParticleTrack
  */
 object Assemble {
 
-  def fromList(list: Iterable[ParticleTrack]): TrackAssembly = TrackAssembly(list)
+  def fromList(list: Iterable[Track]): TrackAssembly = TrackAssembly(list)
 
   /** Makes new Assembly from other assemblies that have overlapping time stamps
     *

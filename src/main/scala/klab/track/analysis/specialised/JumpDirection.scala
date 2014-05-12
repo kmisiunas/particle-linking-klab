@@ -1,7 +1,7 @@
 package klab.track.analysis.specialised
 
 import com.misiunas.geoscala.Point
-import klab.track.ParticleTrack
+import klab.track.Track
 import breeze.linalg.DenseVector
 import klab.track.analysis.Find
 import klab.track.geometry.position.Pos
@@ -22,7 +22,7 @@ import klab.track.assemblies.TrackAssembly
  */
 object JumpDirection {
 
-  def twoParticles(along: Point => Double, binSize: Double = 1.0): Iterable[ParticleTrack] => Map[String,DenseVector[Double]] =
+  def twoParticles(along: Point => Double, binSize: Double = 1.0): Iterable[Track] => Map[String,DenseVector[Double]] =
   ta =>{
 
     val interactions = TwoTracks.findTwoParticleInteractions()(ta)

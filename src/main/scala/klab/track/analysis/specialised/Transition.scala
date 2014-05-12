@@ -4,7 +4,7 @@ import klab.track.formating.{ExportCSV, CompatibleWithJSON}
 import org.joda.time.DateTime
 import klab.track.assemblies.Assembly
 import klab.track.geometry.Channel
-import klab.track.ParticleTrack
+import klab.track.Track
 import scala.annotation.tailrec
 import klab.track.geometry.position.Pos
 import klab.track.analysis.Find
@@ -23,7 +23,7 @@ import klab.io.formating.ExportJSON
  * Date: 25/07/2013
  * Time: 21:35
  */
-abstract class Transition private (val track: ParticleTrack,                // track that was analysed
+abstract class Transition private (val track: Track,                // track that was analysed
                           val timeInterval: (Double, Double) )      // time range within the channel)
   extends ExportCSV {
 
@@ -88,7 +88,7 @@ object Transition {
 
 
   /** The result of transition is stored as a special object */
-  class ResTransition (val track: ParticleTrack,                // track that was analysed
+  class ResTransition (val track: Track,                // track that was analysed
                        val transition: TransitionType,       // type of the event
                        val timeInChannel: Double,               // time spent in the channel
                        val timeInterval: (Double, Double))      // time range within the channel
@@ -104,7 +104,7 @@ object Transition {
     */
   def apply(ta: Assembly, ch: Channel, minSize: Int = 10): Transition = {
 
-    def analyseTrack(pa: ParticleTrack): List[ResTransition] =
+    def analyseTrack(pa: Track): List[ResTransition] =
       Find.segmentsWithin(ch)(pa).
         filter( _.size >= minSize ).
         map(seg => new ResTransition(pa, classify(seg), seg.last.t - seg.head.t, (seg.head.t, seg.last.t) ) )
@@ -124,7 +124,7 @@ object Transition {
     }
 
     @tailrec
-    def iterate(ta: List[ParticleTrack], acc: List[ResTransition] = Nil) : List[ResTransition] =
+    def iterate(ta: List[Track], acc: List[ResTransition] = Nil) : List[ResTransition] =
       if (ta.isEmpty) return acc.sortBy(_.track.id)
       else iterate( ta.tail, analyseTrack(ta.head) ::: acc )
 

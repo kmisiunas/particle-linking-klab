@@ -9,7 +9,7 @@ class TrackAssemblyTest extends FunSuite {
 
 
   ignore("ParticleAssembly: to JSON and back") {
-//    val pt1 = new ParticleTrack(5)
+//    val pt1 = new Track(5)
 //    pt1.positions = List( List(0,1.1,0.1,0),
 //      List(1,1.5,0.3,0),
 //      List(2,0.9,-0.3,0),
@@ -17,7 +17,7 @@ class TrackAssemblyTest extends FunSuite {
 //      List(4,1.7,0.1,0),
 //      List(5,2.2,-0.1,0))
 //
-//    val pt2 = new ParticleTrack(4)
+//    val pt2 = new Track(4)
 //    pt2.positions = List( List(5,4,3,2) )
 //
 //    val ta = new TrackAssembly

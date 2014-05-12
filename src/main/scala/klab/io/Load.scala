@@ -1,6 +1,6 @@
 package klab.io
 
-import klab.track.ParticleTrack
+import klab.track.Track
 import java.nio.charset.{StandardCharsets, Charset}
 import java.nio.file.{Paths, Files}
 import java.nio.ByteBuffer

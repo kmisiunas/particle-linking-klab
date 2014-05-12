@@ -1,7 +1,7 @@
 package klab.track.analysis
 
 import com.misiunas.geoscala.Point
-import klab.track.ParticleTrack
+import klab.track.Track
 import breeze.linalg.DenseVector
 import klab.track.analysis.specialised.JumpDirection
 

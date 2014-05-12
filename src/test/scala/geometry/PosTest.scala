@@ -1,7 +1,7 @@
 package geometry
 
 import klab.track.geometry.position.Pos
-import klab.track.ParticleTrack
+import klab.track.Track
 import org.scalatest.FunSuite
 
 /**

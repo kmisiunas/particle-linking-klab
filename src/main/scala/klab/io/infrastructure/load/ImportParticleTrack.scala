@@ -1,6 +1,6 @@
 package klab.io.infrastructure.load
 
-import klab.track.{TrackBuilder, ParticleTrack}
+import klab.track.{TrackBuilder, Track}
 import klab.io.Load
 import klab.track.geometry.position.Pos
 
@@ -11,7 +11,7 @@ import klab.track.geometry.position.Pos
  */
 object ImportParticleTrack {
 
-  def fromTable(file: String, experiment: String, comment: String = "") : ParticleTrack = {
+  def fromTable(file: String, experiment: String, comment: String = "") : Track = {
     // todo try getting id from name
     val build = TrackBuilder()
 

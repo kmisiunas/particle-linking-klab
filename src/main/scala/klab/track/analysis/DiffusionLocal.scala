@@ -1,6 +1,6 @@
 package klab.track.analysis
 
-import klab.track.ParticleTrack
+import klab.track.Track
 import breeze.linalg.DenseMatrix
 import com.misiunas.geoscala.vectors.Vec
 import klab.track.geometry.position.Pos
@@ -25,7 +25,7 @@ object DiffusionLocal {
     * @return map containing x, dx, dy, dz, stdx, stdy, stdz in a dorm of Dense matrices
     */
   def matrixForm(spacing: Vec, r0: Point = Point(0), method: Iterable[Pos] => List[Interest] = standardDiffusion):
-    Iterable[ParticleTrack] => Map[String, DenseMatrix[Double]] =  ta => {
+    Iterable[Track] => Map[String, DenseMatrix[Double]] =  ta => {
     val d = ta.flatMap( t => method(t.list) )
     val max: Pos = d.foldRight( Pos(Integer.MIN_VALUE, r0) )( (n,o) => n.pos.max(o) )
     val size: (Int, Int) = ( ((max - r0).x / spacing.x).floor.toInt + 1 , ((max - r0).y / spacing.y).floor.toInt + 1 )

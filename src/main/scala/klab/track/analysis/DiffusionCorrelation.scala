@@ -1,6 +1,6 @@
 package klab.track.analysis
 
-import klab.track.ParticleTrack
+import klab.track.Track
 import breeze.linalg.{DenseVector}
 import klab.track.geometry.position.Pos
 import klab.track.operators.{Bin, TwoTracks}
@@ -29,7 +29,7 @@ object DiffusionCorrelation {
     * @param distanceFn function to use for estimating distance between two points. Default is just vector distance.
     */
   def matrixForm2(spacing: Double, distanceFn: (Pos, Pos) => Double = _.distance(_)):
-    Iterable[ParticleTrack] => Map[String, DenseVector[Double]] =
+    Iterable[Track] => Map[String, DenseVector[Double]] =
     ta => {
       val interactions = TwoTracks.findTwoParticleInteractions()(ta)
 

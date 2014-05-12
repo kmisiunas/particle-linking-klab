@@ -1,6 +1,6 @@
 package klab.track.assemblies
 
-import klab.track.ParticleTrack
+import klab.track.Track
 import klab.track.geometry.position.Pos
 import play.api.libs.json.{Json, JsValue}
 import klab.io.formating.ExportJSON
@@ -17,7 +17,7 @@ import klab.io.formating.ExportJSON
  * Time: 20:36
  */
 abstract class Assembly (val experiment:String, val comment: String, val time: Long)
-  extends Iterable[ParticleTrack] with ExportJSON{
+  extends Iterable[Track] with ExportJSON{
 
   def range: (Pos, Pos) = {
     val max = foldLeft(head.max)( (m, t) => m.max(t.max) )
@@ -32,23 +32,23 @@ abstract class Assembly (val experiment:String, val comment: String, val time: L
   /** the version of the class */
   def version = Assembly.version
   /** access the map where the data is stored */
-  def listMap : collection.Map[Int, ParticleTrack]
+  def listMap : collection.Map[Int, Track]
 
 
   // ---------------- General implemented methods --------
 
   /** insanely important for Assembly to perform as collection */
-  def iterator: Iterator[ParticleTrack] = listMap.valuesIterator
+  def iterator: Iterator[Track] = listMap.valuesIterator
 
-  /** access the ParticleTrack with specific ID */
-  def apply(id : Int) : ParticleTrack = listMap(id)
+  /** access the Track with specific ID */
+  def apply(id : Int) : Track = listMap(id)
 
   /** get multiple tracks as a list */
-  def apply(first: Int, other: Int* ): List[ParticleTrack] =
+  def apply(first: Int, other: Int* ): List[Track] =
     apply(first) :: other.toList.map(apply(_))
 
   /** will give particles in specified range, non existing tracks are skipped */
-  def apply(range: Range): List[ParticleTrack] = range.toList.filter(contains(_)).map(apply(_))
+  def apply(range: Range): List[Track] = range.toList.filter(contains(_)).map(apply(_))
 
   def contains(id: Int): Boolean = listMap.contains(id)
 
@@ -82,7 +82,7 @@ abstract class Assembly (val experiment:String, val comment: String, val time: L
           "version" -> version,
           "array_format" -> List("time_stamp","x","y","z(optional)","param(optional)"),
           "units" -> units,
-          "ParticleTrack" -> "insert_PT_here"
+          "Track" -> "insert_PT_here"
         )
       )
     )
@@ -113,23 +113,23 @@ abstract class Assembly (val experiment:String, val comment: String, val time: L
   // ---------------- Manipulate methods --------------
 
   /** forall a function on all ParticleTracks - expensive, try to minimise calls to it */
-  def changeEach(f : (ParticleTrack => ParticleTrack)) : Assembly
+  def changeEach(f : (Track => Track)) : Assembly
 
   /** Make a copy of this Assembly */
-  def copy : Assembly
+  //def copy : Assembly
 
   /** removes specified tracks from the assembly */
-  def remove(s: Iterable[ParticleTrack]): Assembly
+  def remove(s: Iterable[Track]): Assembly
 
   /** adds particles to the assembly */
-  def add(s :Iterable[ParticleTrack]): Assembly
+  def add(s :Iterable[Track]): Assembly
   /** adds new list of tracks that was generated form current list */
-  def add(f: (List[ParticleTrack]) => List[ParticleTrack]): Assembly
+  def add(f: (List[Track]) => List[Track]): Assembly
 
-  def apply(f : List[ParticleTrack] => List[ParticleTrack] ) : Assembly
+  def apply(f : List[Track] => List[Track] ) : Assembly
 
   /** Method for appending another TrackAssembly with time frames where other have left off */
-  def append(list: Iterable[ParticleTrack], timeGap: Double = 0.0): Assembly
+  def append(list: Iterable[Track], timeGap: Double = 1.0): Assembly
 
   // ------------------ Id management ---------------
 

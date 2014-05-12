@@ -5,14 +5,14 @@ Project aimed at analysing diffusion experiment data using Scala/Java.
 Roadmap
 -------
  - [x] Develop import code from external video trackers
- - [ ] Create sophisticated track reconstruction algorithm
- - [ ] Provide all essential analysis tools
- - [ ] Full integration with breeze and universality of analysis results
+ - [ ] Create sophisticated track reconstruction algorithm (urgent!)
+ - [x] Full integration with breeze and universality of analysis results
  - [x] JSON as iterator
  - [ ] Automatic buffering Assembly for very large data sets
  - [ ] Redesign Assembly
  - [ ] universal id system
  - [x] JSON save LQPos points
+ - [ ] Integration with Mathematica for general analysis - use Mathematica's plotting
 
 Self Comments
 -------------

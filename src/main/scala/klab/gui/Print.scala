@@ -22,7 +22,13 @@ object Print {
 
   def simple(a: Any) = print(a.toString)
 
-  def log(key: String, msg: String) = println("[" + key + "] " + msg)
+  def log(key: String, msg: String) = key match {
+    case "info" => println("[" + key + "] " + msg)
+    case "error" => error("[" + key + "] " + msg)
+    case "warning" => error("[" + key + "] " + msg)
+    case "help" => help("[" + key + "] " + msg)
+    case _ => println("[" + key + "] " + msg)
+  }
 
   // todo: auto logging?
   /** System warning for error */

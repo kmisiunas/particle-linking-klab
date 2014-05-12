@@ -37,7 +37,6 @@ object SaveType {
     SaveBreeze,
     SaveArrayAnyVal,
     SaveString,
-    SaveFigure,
     SaveJSON,
     SaveMapStringToBreeze
   )

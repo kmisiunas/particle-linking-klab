@@ -1,6 +1,6 @@
 package klab.track
 
-import klab.track.infreastructure.tracks.{Track, TrackInfo}
+import klab.track.infreastructure.tracks.{TrackInfo}
 import scala.collection.mutable.ListBuffer
 import klab.track.geometry.position.Pos
 
@@ -10,7 +10,7 @@ import klab.track.geometry.position.Pos
  * A special builder for ParticleTracks that can buffer an incoming stream and interpret it.
  *
  * Versions:
- *  - v3 - initial release, compatible with ParticleTrack v3
+ *  - v3 - initial release, compatible with Track v3
  *
  * User: karolis@misiunas.com
  * Date: 20/08/2013
@@ -21,7 +21,7 @@ class TrackBuilder private (var id: Int,
                             var units: List[String] = List("frame","px_x", "px_y", "px_z"),
                             var experiment: String = "",
                             var comment: String = "",
-                            var time: Long = 0) extends Track with TrackInfo {
+                            var time: Long = 0) extends klab.track.infreastructure.tracks.TrackBase with TrackInfo {
 
   // --------- Inherited Implementations ----------------
 
@@ -42,10 +42,10 @@ class TrackBuilder private (var id: Int,
   }
 
 
-  def toParticleTrack: ParticleTrack = {
+  def toParticleTrack: Track = {
     if (experiment.isEmpty) throw new RuntimeException("Please label the experiment with buffer.experiment_=\"name\"")
     if (time == 0) time = System.currentTimeMillis()
-    ParticleTrack(id, list, units, experiment, comment, time)
+    Track(id, list, units, experiment, comment, time)
   }
 
   // -------- Helper Methods ---------

@@ -1,7 +1,7 @@
 package klab.track.assemblies
 
 import org.joda.time.DateTime
-import klab.track.ParticleTrack
+import klab.track.Track
 import klab.track.geometry.position.Pos
 import klab.io.formating.ImportJSON
 import play.api.libs.json.{JsValue, Json}
@@ -28,7 +28,7 @@ import play.api.libs.json.{JsValue, Json}
  * Date: 12/07/2013
  * Time: 15:50
  */
-class TrackAssembly private (val listMap : Map[Int, ParticleTrack],
+class TrackAssembly private (val listMap : Map[Int, Track],
                              override val experiment:String,
                              override val comment: String,
                              override val time: Long)
@@ -37,36 +37,47 @@ class TrackAssembly private (val listMap : Map[Int, ParticleTrack],
   override def toString : String = "TrackAssembly("+size+ " tracks, "+ comment + ")"
 
   override lazy val size : Int = listMap.size
-  def copy: TrackAssembly = this // immutable implementation - no need for a copy
-  protected def updateMap(map: Map[Int, ParticleTrack]): TrackAssembly = TrackAssembly(map, experiment, comment, time)
+
+  // makes a copy with specified changes
+  def copy( list: Iterable[Track] = this.toList,
+            experiment: String = this.experiment,
+            comment: String = this.comment,
+            time: Long = this.time): TrackAssembly = TrackAssembly(list, experiment, comment, time)
+
+  // todo: remove?
+  protected def updateMap(map: Map[Int, Track]): TrackAssembly = TrackAssembly(map, experiment, comment, time)
 
   /** forall a function on all ParticleTracks - expensive, try to minimise calls to it */
-  def changeEach(f: (ParticleTrack) => ParticleTrack) : TrackAssembly  =
+  def changeEach(f: (Track) => Track) : TrackAssembly  =
     updateMap( listMap.map( m =>  (m._1, f(m._2))).toMap )
 
-  def remove(s: Iterable[ParticleTrack]): TrackAssembly  = {
+  def remove(s: Iterable[Track]): TrackAssembly  = {
     val set = s.map(_.id).toSet
     return TrackAssembly(listMap.filterNot(m => set(m._1)) , experiment, comment, time)
   }
 
-  def add(list: Iterable[ParticleTrack]): TrackAssembly =
+  def add(list: Iterable[Track]): TrackAssembly =
     TrackAssembly(listMap ++ (list.map(pt => (pt.id, pt)).toMap) , experiment, comment, time)
 
-  def add(f: (List[ParticleTrack]) => List[ParticleTrack]): TrackAssembly = add(f(this))
+  def add(f: (List[Track]) => List[Track]): TrackAssembly = add(f(this))
 
-  def apply(f: (List[ParticleTrack]) => List[ParticleTrack]): TrackAssembly =
+  def apply(f: (List[Track]) => List[Track]): TrackAssembly =
     TrackAssembly(f( this.toList ), experiment, comment, time)
 
   /** Method for appending another TrackAssembly with time frames where other have left off */
-  def append(list: Iterable[ParticleTrack], timeGap: Double): TrackAssembly = {
-    val lastT: Double = this.maxBy(_.timeRange._2).timeRange._2
+  def append(list: Iterable[Track], timeGap: Double = 10): TrackAssembly = {
+    val lastT: Double = this.range._2.t
     val fdT: Pos => Pos = p => p ++ Pos(timeGap + lastT, 0,0,0)
-    val shifted = list.map(_.changePositions(fdT)).toList
+    var lastId = listMap.keys.max
+    def nextId(): Int = {lastId = lastId +1; lastId}
+    val shifted = list.toList
+                      .map(_.changePositions(fdT))
+                      .map(_.changeId(nextId)) // todo improve implementations
     this.add(shifted)
   }
 
   /** approximate size of this particle track assembly */
-  lazy val memory: Double = listMap.foldLeft(0.0)( (sum:Double, el:(Int,ParticleTrack)) => sum + el._2.size  )
+  lazy val memory: Double = listMap.foldLeft(0.0)( (sum:Double, el:(Int,Track)) => sum + el._2.size  )
 
 }
 
@@ -75,10 +86,10 @@ class TrackAssembly private (val listMap : Map[Int, ParticleTrack],
  */
 object TrackAssembly extends ImportJSON[TrackAssembly] {
 
-  def apply(listMap : Map[Int, ParticleTrack], experiment: String, comment: String, time: Long) : TrackAssembly=
+  def apply(listMap : Map[Int, Track], experiment: String, comment: String, time: Long) : TrackAssembly=
     new TrackAssembly(listMap, experiment,comment,time)
 
-  def apply(list: Iterable[ParticleTrack],
+  def apply(list: Iterable[Track],
             experiment: String  = "Experiment_on_"+ DateTime.now().toLocalDate.toString,
             comment:String = "" ,
             time:Long = System.currentTimeMillis()) : TrackAssembly=
@@ -92,9 +103,9 @@ object TrackAssembly extends ImportJSON[TrackAssembly] {
     val units: List[String] = (jsValue \ "TrackAssembly" \ "units").as[List[String]]
     val experiment = (jsValue \ "TrackAssembly" \ "experiment").as[String]
     val time: Long = (jsValue \ "TrackAssembly" \ "time").as[Long]
-    val tracks = (jsValue \ "TrackAssembly" \ "ParticleTrack").as[Seq[JsValue]]
+    val tracks = (jsValue \ "TrackAssembly" \ "Track").as[Seq[JsValue]]
     val list = tracks.map( jv =>
-      ParticleTrack(  (jv \ "id").as[Int],
+      Track(  (jv \ "id").as[Int],
                       (jv \ "positions").as[List[List[Double]]].map( Pos(_) ),
                       units, experiment, "", time
       )

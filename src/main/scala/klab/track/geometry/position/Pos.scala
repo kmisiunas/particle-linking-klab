@@ -3,6 +3,7 @@ package klab.track.geometry.position
 import com.misiunas.geoscala.Point
 import klab.io.formating.ExportJSON
 import play.api.libs.json.{Json, JsValue}
+import com.misiunas.geoscala.vectors.Vec
 
 /**
  *  == Representation of single physical position in time and space ==
@@ -38,7 +39,7 @@ class Pos protected (val t: Double, override val x:Double, override val y:Double
   //TODO: implement latter when we know what we want
 
   /** Modifies the value the position for specified component */
-  def set(comp: Any, value: Double) : Pos = comp match {
+  def set(comp: Any, value: Double): Pos = comp match {
     case 0 | "t" | "time" | 't' => Pos(value,x,y,z)
     case 1 | "x" | "pos_x" | 'x' => Pos(t,value,y,z)
     case 2 | "y" | "pos_y" | 'y' => Pos(t,x,value,z)
@@ -48,6 +49,8 @@ class Pos protected (val t: Double, override val x:Double, override val y:Double
 
   /** get the same position with Low Quality mark */
   def toLQPos: LQPos = LQPos(t,x,y,z)
+
+  def copy(vec: Vec): Pos = Pos(this.t, vec)
 
   // ------------------  Other Methods ---------------
 
@@ -71,6 +74,8 @@ class Pos protected (val t: Double, override val x:Double, override val y:Double
 
   /** Adds all elements including time */
   def ++ (p: Pos): Pos = Pos(p.t + t, p.x + x, p.y + y, p.z + z)
+  /** Subtracts all elements including time */
+  def -- (p: Pos): Pos = Pos(t - p.t , x - p.x, y - p.y, z - p.z)
   /** Multiples all the elements in Pos vector */
   def ** (d: Double): Pos = Pos(t*d, x*d, y*d, z*d)
 

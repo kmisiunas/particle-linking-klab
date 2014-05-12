@@ -23,7 +23,7 @@ object KLab {
 
   val appName = "KLab"
 
-  val appVersion = "0.1.7"
+  val appVersion = "0.1.8"
 
   lazy val guiOwner: Component = {
     val frame = new JFrame(appName)

@@ -126,7 +126,7 @@ public class ShowParticleTrackFrame {
 
     public void show(ShowParticleTrack s) {
         this.spt = s;
-        JFrame frame = new JFrame("Show( ParticleTrack )");
+        JFrame frame = new JFrame("Show( Track )");
         frame.setContentPane(this.panel1);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.pack();

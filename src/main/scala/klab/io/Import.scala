@@ -1,7 +1,7 @@
 package klab.io
 
 import klab.track.assemblies.TrackAssembly
-import klab.io.infrastructure.load.ImportTrackAssembly
+import klab.io.infrastructure.load.{ImportCSVRawTracking, ImportTrackAssembly}
 import klab.track.geometry.position.Pos
 import klab.io.infrastructure.load.stefanos.ImportStefanosRawTracking
 
@@ -29,5 +29,7 @@ object Import {
   /** Import a dir with files from raw Stefanos input */
   def dirToListPos(dir: String = Path.find()): List[Pos] = ImportStefanosRawTracking.apply(Path(dir))
 
+  /** Import a raw csv file from video tracker */
+  def csvToListPos(dir: String = Path.find()): List[Pos] = ImportCSVRawTracking.apply(Path(dir))
 
 }

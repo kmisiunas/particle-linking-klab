@@ -2,7 +2,7 @@ package klab.track.infreastructure.tracks
 
 import klab.track.formating.{CompatibleWithJSON, ExportCSV}
 import klab.track.geometry.position.Pos
-import klab.track.ParticleTrack
+import klab.track.Track
 import play.api.libs.json.{Json, JsValue}
 import klab.io.formating.ExportJSON
 
@@ -25,7 +25,7 @@ trait ConstructorTrack [Self <: ConstructorTrack[Self]]
   override def toJson: String = {
     Json.prettyPrint(
       Json.obj(
-        "ParticleTrack" -> Json.obj(
+        "Track" -> Json.obj(
           "id" -> id,
           "experiment" -> experiment,
           "time" -> time,
@@ -47,8 +47,8 @@ trait ConstructorTrack [Self <: ConstructorTrack[Self]]
   def fromJSON(st: String): Self = { ???
 //    implicit val formats = net.liftweb.json.DefaultFormats
 //    val code = parse(st)
-//    if((code \\ "version").extract[Int] != ParticleTrack.version)
-//      throw new Exception("Warning: the ParticleTrack file is version "+(code \\ "version").extract[Int] +
+//    if((code \\ "version").extract[Int] != Track.version)
+//      throw new Exception("Warning: the Track file is version "+(code \\ "version").extract[Int] +
 //        ", while the current version is"+version)
 //    return make(
 //      id = (code \\ "id").extract[Int],

@@ -2,8 +2,9 @@ package klab.track.analysis
 
 import klab.track.geometry.position.Pos
 import com.misiunas.geoscala.vectors.Vec
-import klab.track.ParticleTrack
+import klab.track.Track
 import klab.track.operators.TimeOperator
+import klab.track.analysis.specialised.MeanDiffusion
 
 /**
  * == Estimate the diffusion coefficient ==
@@ -27,6 +28,8 @@ object Diffusion {
 
   /** Easy access to DiffusionLocal object */
   def Local = DiffusionLocal
+
+  def Mean = MeanDiffusion
 
 
   /** Diffusion coefficient  packed with the position it was measured at.
@@ -130,6 +133,6 @@ object Diffusion {
   }
 
   /** Get units of diffusion (Ugly implementation) */
-  def unitsOfDi(pt: ParticleTrack): List[String] = pt.units.tail.map(unit => unit + "^2 / " + pt.units.head)
+  def unitsOfDi(pt: Track): List[String] = pt.units.tail.map(unit => unit + "^2 / " + pt.units.head)
 
 }

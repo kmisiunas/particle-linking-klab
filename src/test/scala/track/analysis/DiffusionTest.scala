@@ -1,7 +1,7 @@
 package track.analysis
 
 import org.scalatest.FunSuite
-import klab.track.ParticleTrack
+import klab.track.Track
 import klab.track.geometry.position.Pos
 import klab.track.assemblies.TrackAssembly
 import klab.track.analysis.{Diffusion, Find}
@@ -17,8 +17,8 @@ import klab.track.operators.TimeOperator
  */
 class DiffusionTest extends FunSuite {
 
-  val pt1 = ParticleTrack(1, List( Pos(1,2,1), Pos(2,0,0), Pos(3,1,1), Pos(5,0,0),   Pos(6,1,1) )).qualityCheck
-  val pt2 = ParticleTrack(2, List( Pos(1,2,-3), Pos(2,0,0), Pos(3,1,1), Pos(4,0,0),   Pos(5,1,1), Pos(6,0,0),
+  val pt1 = Track(1, List( Pos(1,2,1), Pos(2,0,0), Pos(3,1,1), Pos(5,0,0),   Pos(6,1,1) )).qualityCheck
+  val pt2 = Track(2, List( Pos(1,2,-3), Pos(2,0,0), Pos(3,1,1), Pos(4,0,0),   Pos(5,1,1), Pos(6,0,0),
                                     Pos(7,1,1), Pos(8,2,2),   Pos(9,3,3))).qualityCheck
 
   test("Diffusion.msd(1) #1") {

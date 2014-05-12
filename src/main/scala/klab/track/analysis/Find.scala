@@ -23,7 +23,7 @@ import klab.track.operators.TwoTracks.PairInteraction
  */
 object Find {
 
-  type PTFind = Iterable[ParticleTrack] => Set[ParticleTrack]
+  type PTFind = Iterable[Track] => Set[Track]
 
   /** Find tracks that exist at a specified time */
   def atTime(t: Double): PTFind =
@@ -40,7 +40,7 @@ object Find {
 
   type TrackSegment = List[Pos]
   /** Find segments of a track that are within specified volume */
-  def segmentsWithin(within: Volume): ParticleTrack => List[TrackSegment] =
+  def segmentsWithin(within: Volume): Track => List[TrackSegment] =
   pt => {
     @tailrec
     def findSegments(left: List[Pos], acc: List[TrackSegment] = Nil): List[TrackSegment] = {
@@ -62,7 +62,7 @@ object Find {
   }
 
   /** Find track overlaps along certain axis */
-  def overlaps(line: Point => Double): Iterable[ParticleTrack] => List[ResOverlap] = Confinement.findOverlaps(line)
+  def overlaps(line: Point => Double): Iterable[Track] => List[ResOverlap] = Confinement.findOverlaps(line)
 
   /** Finds tracks that entered the volume at some point */
   def enters(volume: Volume): PTFind =
@@ -73,18 +73,18 @@ object Find {
     ta => ta.filter( _.list.forall( volume.isWithin(_) ) ).toSet
 
   /** Find tracks that coexist with a given track */
-  def coexist(t: ParticleTrack): PTFind = Proximity.find(t)
+  def coexist(t: Track): PTFind = Proximity.find(t)
 
 
   /** Find the time stamps at which two tracks overlap
     *
     * Note: Excluded LQPos from the overlaps */
-   def timeOverlapBetween(t1: ParticleTrack, t2: ParticleTrack): List[Double] = {
+   def timeOverlapBetween(t1: Track, t2: Track): List[Double] = {
     ??? // do we really want this method?
   }
 
   /** Finds and aligns two particle interactions */
-  def twoParticleInteractions: Iterable[ParticleTrack] => List[PairInteraction] =
+  def twoParticleInteractions: Iterable[Track] => List[PairInteraction] =
     TwoTracks.findTwoParticleInteractions()
 
 }

@@ -15,6 +15,7 @@ object TableInterpreter {
     line.split("\\t| |;|,").map(_.trim).filterNot(_.isEmpty) // scala magic
 
 
+
   def identifyLines(st: String): List[String] =
     throw new Exception("use \"string\".lines instead")
 }

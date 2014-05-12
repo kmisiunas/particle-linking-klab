@@ -1,6 +1,6 @@
 package klab.track.operators
 
-import klab.track.ParticleTrack
+import klab.track.Track
 import klab.track.geometry.position.Pos
 import klab.track.analysis.Find
 
@@ -9,7 +9,7 @@ import klab.track.analysis.Find
  */
 object OneTrack {
 
-  class IndividualTrack(val _1: ParticleTrack, val atTime: List[Pos]){
+  class IndividualTrack(val _1: Track, val atTime: List[Pos]){
     def copy(newTimeList:  List[Pos]): IndividualTrack = new IndividualTrack(_1, newTimeList)
     def map(f: List[Pos] => List[Pos] ) = copy( f(atTime) )
     def track = _1
@@ -17,12 +17,12 @@ object OneTrack {
 
 
   /** Finding the tracks that are at least a minimum separation from other tracks */
-  def findInIsolation( minSeparation: Double = 20): Iterable[ParticleTrack] => List[IndividualTrack] =
+  def findInIsolation( minSeparation: Double = 20): Iterable[Track] => List[IndividualTrack] =
   ta => {
 
-    def findWhenTrackIsAlone(thisTrack: ParticleTrack): Option[IndividualTrack] = {
+    def findWhenTrackIsAlone(thisTrack: Track): Option[IndividualTrack] = {
       /* find list of pos where it is away from other tracks */
-      def isAway(from: List[ParticleTrack]): List[Pos] = {
+      def isAway(from: List[Track]): List[Pos] = {
         def iterate(mainTrack: List[Pos], others: Vector[List[Pos]], acc: List[Pos]): List[Pos] = {
           if (mainTrack.isEmpty || others.isEmpty) return acc
           val t = mainTrack.head.t

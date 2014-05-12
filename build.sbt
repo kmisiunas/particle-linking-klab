@@ -3,7 +3,7 @@ name := "KLab"
 
 version := "0.1.7"
 
-scalaVersion := "2.10.3"
+scalaVersion := "2.10.4"
 
 // -------- Assembly Config ---------
 // Use: assembly
@@ -24,8 +24,8 @@ packJvmOpts := Map("KLab" -> Seq("-Xms1g","-Xmx2G") )
 packGenerateWindowsBatFile := false
 
 // crucial for pack to be runnable - unknown error otherwise
-packPreserveOriginalJarName := true
-
+// packPreserveOriginalJarName := true
+packJarNameConvention := "original"
 
 // ----------- Libraries ---------------
 
@@ -35,7 +35,11 @@ packPreserveOriginalJarName := true
 libraryDependencies += "com.misiunas" %% "geoscala" % "0.1.3"
 
 // BREEZE - https://github.com/scalanlp/breeze/
-libraryDependencies  += "org.scalanlp" %% "breeze" % "0.5.2"
+libraryDependencies ++= Seq(// other dependencies here
+        "org.scalanlp" % "breeze_2.10" % "0.7",
+        // native libraries are not included by default. add this if you want them (as of 0.7-SNAPSHOT)
+        // native libraries greatly improve performance, but increase jar sizes.
+        "org.scalanlp" % "breeze-natives_2.10" % "0.7" )
 
 resolvers ++= Seq(
   // other resolvers here
@@ -45,13 +49,18 @@ resolvers ++= Seq(
 )
 
 // TEST - http://www.scalatest.org/
-libraryDependencies += "org.scalatest" % "scalatest_2.10" % "2.0" % "test"
+libraryDependencies += "org.scalatest" %% "scalatest" % "2.1.3" % "test"
 
 // Joda time for scala - https://github.com/nscala-time/nscala-time
-libraryDependencies += "com.github.nscala-time" %% "nscala-time" % "0.6.0"
+libraryDependencies += "com.github.nscala-time" %% "nscala-time" % "1.0.0"
 
 // Play JSON library: http://www.playframework.com/documentation/2.2.x/ScalaJson
 libraryDependencies += "com.typesafe.play" %% "play-json" % "2.2.1"
+
+// -------------- Use these -------------
+
+// logging https://github.com/typesafehub/scala-logging
+//libraryDependencies += "com.typesafe.scala-logging"  %% "scala-logging-slf4j" % "2.0.4"
 
 
 // ------------------ GUI -----------------
@@ -61,13 +70,13 @@ libraryDependencies += "com.intellij" % "javac2" % "7.0.3"
 
 // allows interaction with terminal? -> does not work
 //libraryDependencies <+= scalaVersion { "org.scala-lang" % "jline" % _ }
-libraryDependencies += "org.scala-lang" % "jline" % "2.10.3"
+libraryDependencies += "org.scala-lang" % "jline" % "2.10.4"
 
 // Adds compiler that is needed for REPL
-libraryDependencies +=  "org.scala-lang" % "scala-compiler" % "2.10.3"
+libraryDependencies +=  "org.scala-lang" % "scala-compiler" % "2.10.4"
 
 // Breeze visualisation - https://github.com/scalanlp/breeze-viz
-libraryDependencies += "org.scalanlp" % "breeze-viz_2.10" % "0.5.2"
+// libraryDependencies += "org.scalanlp" % "breeze-viz_2.10" % "0.5.2"
 
 
 // ------------- Unnessasary ---------------

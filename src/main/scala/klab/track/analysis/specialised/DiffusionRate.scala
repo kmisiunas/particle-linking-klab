@@ -1,7 +1,7 @@
 package klab.track.analysis.specialised
 
 import com.misiunas.geoscala.Point
-import klab.track.ParticleTrack
+import klab.track.Track
 import klab.track.geometry.position.Pos
 import klab.track.operators.TimeOperator
 import klab.track.assemblies.TrackAssembly
@@ -20,7 +20,7 @@ object DiffusionRate {
   /** Method determines transition rate at specified point along specified line
     *
     * Note: uses LQPos to have consistency */
-  def across(along: Point => Double, at: Double): Iterable[ParticleTrack] => Map[String,Double] =
+  def across(along: Point => Double, at: Double): Iterable[Track] => Map[String,Double] =
     ta => {
 
       def recursive(list: List[Pos], last: Pos, forward: Long, total: Long): (Long, Long) = {

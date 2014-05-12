@@ -1,6 +1,6 @@
 package klab.track.operators
 
-import klab.track.ParticleTrack
+import klab.track.Track
 import klab.track.geometry.position.Pos
 import klab.track.analysis.Find
 import scala.annotation.tailrec
@@ -19,7 +19,7 @@ object TwoTracks {
     * Time o(n_pos)
     * Note: LQPos points are excluded!
     * Note: Used to be under Find.alignTwoTracks */
-  def pairUpOverlaps(t1: ParticleTrack, t2: ParticleTrack): List[(Pos, Pos)] = {
+  def pairUpOverlaps(t1: Track, t2: Track): List[(Pos, Pos)] = {
     @tailrec
     def findNext(l1: List[Pos], l2: List[Pos], acc: List[(Pos,Pos)]): List[(Pos,Pos)] = {
       if (l1.isEmpty || l2.isEmpty) acc.reverse
@@ -36,7 +36,7 @@ object TwoTracks {
 
   /** Special class for storing two particle interaction data
     * The interact aligned list is time ordered*/
-  class PairInteraction(val _1: ParticleTrack, val _2: ParticleTrack, val interact: List[(Pos, Pos)]) {
+  class PairInteraction(val _1: Track, val _2: Track, val interact: List[(Pos, Pos)]) {
     def copy(interactNew:  List[(Pos, Pos)]): PairInteraction =
       new PairInteraction(_1, _2, interactNew)
     def map(f: List[(Pos, Pos)] => List[(Pos, Pos)] ) = copy( f(interact) )
@@ -49,16 +49,16 @@ object TwoTracks {
   //   throw new Exception("time does not match!!")
 
   /** Function for finding only two particle interactions */
-  def findTwoParticleInteractions(notCloserThan: Double = 20): Iterable[ParticleTrack] => List[PairInteraction] =
+  def findTwoParticleInteractions(notCloserThan: Double = 20): Iterable[Track] => List[PairInteraction] =
     ta => {
       if (ta.size < 2) throw new RuntimeException("JumpDirection.findTwoParticleInteractions must provide at least 2 tracks")
 
-      def findOverlaps(left: Iterable[ParticleTrack], acc:List[PairInteraction] = Nil): List[PairInteraction] = {
+      def findOverlaps(left: Iterable[Track], acc:List[PairInteraction] = Nil): List[PairInteraction] = {
         if(left.tail.isEmpty) return acc
         val track = left.head
 
         /** this method will be slow as it is repeating computations */
-        def isUnique(otherTrack: ParticleTrack,
+        def isUnique(otherTrack: Track,
                      overlap: List[(Pos,Pos)],
                      others: Set[List[(Pos,Pos)]]): Option[PairInteraction] = {
           def goThrough(left: List[(Pos,Pos)], acc: List[(Pos,Pos)]): List[(Pos,Pos)] = {
@@ -76,7 +76,7 @@ object TwoTracks {
           else Some( new PairInteraction(track, otherTrack, distinct) )
         }
 
-        val coexist: Set[ParticleTrack] = Find.coexist(track)(left.tail)
+        val coexist: Set[Track] = Find.coexist(track)(left.tail)
 
         coexist.size match {
           case 0 => findOverlaps( left.tail, acc )

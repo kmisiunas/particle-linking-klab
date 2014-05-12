@@ -1,6 +1,6 @@
 package klab.track.operators
 
-import klab.track.ParticleTrack
+import klab.track.Track
 
 /**
  *
@@ -8,6 +8,7 @@ import klab.track.ParticleTrack
  * Date: 11/12/2013
  */
 object PositionOperator {
+
 
 
 }

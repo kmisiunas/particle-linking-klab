@@ -2,7 +2,7 @@ package klab.io.infrastructure.load
 
 import klab.track.assemblies.TrackAssembly
 import scala.collection.mutable.ListBuffer
-import klab.track.ParticleTrack
+import klab.track.Track
 import klab.io.Path
 
 /**
@@ -19,7 +19,7 @@ object ImportTrackAssembly {
 
   /** scans provided dir and creates track assembly out of it */
   def fromTable(dir: String, experiment: String): TrackAssembly = {
-    val build: ListBuffer[ParticleTrack] = ListBuffer()
+    val build: ListBuffer[Track] = ListBuffer()
     /** recursive function to add files in the dir */
     def addFilesInDir(inDir: Path): Unit = {
       inDir.listFiles

@@ -15,7 +15,7 @@ import com.misiunas.geoscala.vectors.Vec
 class ChannelTest extends FunSuite {
 
 
-  test("Channel.alongX") {
+  ignore("Channel.alongX") {
     val channel = Channel.alongX("test",2,6)
     assert(channel.length == 6)
     assert(channel.isWithin(Pos(0,2)))
@@ -27,7 +27,7 @@ class ChannelTest extends FunSuite {
   }
 
 
-  test("Channel.alongX #2") {
+  ignore("Channel.alongX #2") {
     val channel = Channel.alongX("test",0,100)
     assert(channel.direction == Vec.x)
     assert(channel.length == 100)
@@ -40,7 +40,7 @@ class ChannelTest extends FunSuite {
     assert(channel.outlet == o)
   }
 
-  test("Channel.apply - channel at an angle!") {
+  ignore("Channel.apply - channel at an angle!") {
     val channel = Channel.alongX("test",0,100)
     assert(channel.direction == Vec.x)
     assert(channel.length == 100)

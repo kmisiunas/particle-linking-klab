@@ -18,9 +18,9 @@ object Imports {
   def main: List[String] = List(
     "klab._",
     "klab.track._",             // add default imports
-    "klab.track.{ParticleTrack}",             // add default imports
+    "klab.track.{Track}",             // add default imports
     "klab.track.assemblies.{TrackAssembly}",             // add default imports
-    "klab.io.{Load,Save,Path,Import,MatLab}" ,            // add default imports
+    "klab.io.{Load,Save,Path,Import,MatLab,Mathematica}" ,            // add default imports
     "klab.track.geometry.{Channel}",
     "klab.track.geometry.position.{Pos}",
     "klab.track.analysis._",
@@ -28,13 +28,14 @@ object Imports {
     "klab.track.corrections._",
     "klab.track.corrections.{Filter,Correction,Assemble}",
     "com.misiunas.geoscala.vectors.Vec",
-    "com.misiunas.geoscala.Point"
+    "com.misiunas.geoscala.Point",
+    "klab.track.builders.{LinkTracks,BuildTracks}",
+    "klab.track.operators.TransformTrack"
   ) ::: breeze ::: user ::: operators
 
   /** imports of Breeze libraries for REPL */
   val breeze: List[String] = List(
-    "breeze.linalg.{DenseVector,DenseMatrix}",
-    "breeze.plot.Figure"
+    "breeze.linalg.{DenseVector,DenseMatrix}"
   )
 
   val user: List[String] = List(
