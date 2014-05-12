@@ -17,6 +17,11 @@ Roadmap
 Self Comments
 -------------
 
+On transition to scala 2.11:
+It seems REPL got major changes - a lot of the code was reduced. It is not clear how to cleanly integrate it
+with KLab. Biggest problem is that auto-complete does not pick up objects from context. Only if the variable
+type is known.
+
 
 Starting
 --------

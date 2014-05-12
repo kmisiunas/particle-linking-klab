@@ -1,7 +1,7 @@
 
 name := "KLab"
 
-version := "0.1.7"
+version := "0.2.0"
 
 scalaVersion := "2.10.4"
 
@@ -32,7 +32,7 @@ packJarNameConvention := "original"
 // ----------- Main ----------------
 
 // GeoScala
-libraryDependencies += "com.misiunas" %% "geoscala" % "0.1.3"
+libraryDependencies += "com.misiunas" % "geoscala_2.10" % "0.1.3"
 
 // BREEZE - https://github.com/scalanlp/breeze/
 libraryDependencies ++= Seq(// other dependencies here
@@ -55,7 +55,7 @@ libraryDependencies += "org.scalatest" %% "scalatest" % "2.1.3" % "test"
 libraryDependencies += "com.github.nscala-time" %% "nscala-time" % "1.0.0"
 
 // Play JSON library: http://www.playframework.com/documentation/2.2.x/ScalaJson
-libraryDependencies += "com.typesafe.play" %% "play-json" % "2.2.1"
+libraryDependencies += "com.typesafe.play" % "play-json_2.10" % "2.2.1"
 
 // -------------- Use these -------------
 
@@ -68,9 +68,9 @@ libraryDependencies += "com.typesafe.play" %% "play-json" % "2.2.1"
 // library for GUI designer in Intellij - needed if one does not get attached by intellij ieda
 libraryDependencies += "com.intellij" % "javac2" % "7.0.3"
 
-// allows interaction with terminal? -> does not work
-//libraryDependencies <+= scalaVersion { "org.scala-lang" % "jline" % _ }
+// allows interaction with terminal? fixes bug where tabs and other commands did not work
 libraryDependencies += "org.scala-lang" % "jline" % "2.10.4"
+//libraryDependencies += "jline" % "jline" % "2.11" //scala 2.11
 
 // Adds compiler that is needed for REPL
 libraryDependencies +=  "org.scala-lang" % "scala-compiler" % "2.10.4"

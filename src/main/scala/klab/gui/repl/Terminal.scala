@@ -56,14 +56,16 @@ class Terminal extends ILoop {
   override def printWelcome() {
     echo(
       "\n" +
-      "Welcome to " + klab.KLab.appName + " app (v"+klab.KLab.appVersion+")\n"+
-      "This is a Terminal version based on Scala "+ util.Properties.versionString.drop(7).trim +"\n"+
-      "Running on java "+ util.Properties.javaVersion + " with "+ Runtime.getRuntime().maxMemory()/1000000 + " MB memory\n" +
-      "Type :help for help and :quit to end the pain. \n"+
-      "\n\n" +
-      "         \\,,,/\n" +
-      "         (o o)\n" +
-      "-----oOOo-(_)-oOOo-----")
+        "Welcome to " + klab.KLab.appName + " app (v"+klab.KLab.appVersion+")\n"+
+        "This is a Terminal version based on Scala "+ util.Properties.versionString.drop(7).trim +"\n"+
+        "Running on java "+ util.Properties.javaVersion + " with "+ Runtime.getRuntime().maxMemory()/1000000 + " MB memory\n" +
+        "Type :help for help and :quit to end the pain. \n"+
+        "\n" +
+        """
+       ___    ,----------------------------.
+      '/_\    |  How can KLab help you?    |
+      (o o)   _)---------------------------'
+--ooO--(_)--Ooo-------------------------------""")
   }
 
   /** special command input for suppressing result printing if command ends with ; */
