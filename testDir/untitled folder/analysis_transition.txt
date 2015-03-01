@@ -1,0 +1,13 @@
+Channel Transition analysis report 
+---
+Experiment: \\sf3.bss.phy.private.cam.ac.uk\space\sp608\Stefano\Diffusion\2013\04_April\24_Lines\4-7\Tracks\channel2\video_7
+Analysis Time: 17:7 2013-8-13
+Channel: Channel from 5.0px_x to 95.0px_x
+Units: frame, px_x, px_y, px_z
+Analysis parameters: segmented analysis; tracks smaller that size=3 were discarded from Transition an.
+Analysis summary:
+Backward Transitions(BT): count=26, mean time=897.0384615384615
+Backward Returns(BR): count=140, mean time=75.17142857142858
+Incomplete tracks(I): count=0
+Forward Returns(FR): count=864, mean time=60.95601851851852
+Forward Transitions(FT): count=25, mean time=1314.8

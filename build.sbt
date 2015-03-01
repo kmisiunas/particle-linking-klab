@@ -1,7 +1,16 @@
+import com.typesafe.sbt.SbtNativePackager
+
+//import AssemblyKeys._
+
+//import NativePackagerKeys._
+
+//packageArchetype.java_application
+
+enablePlugins(JavaAppPackaging)
 
 name := "KLab"
 
-version := "0.2.0"
+version := "0.2.1"
 
 scalaVersion := "2.10.4"
 
@@ -9,23 +18,36 @@ scalaVersion := "2.10.4"
 // Use: assembly
 // Use: assembly-package-dependency
 // Use: assemblyPackageDependency
-
-// --------- Pack plugin config -----
-// https://github.com/xerial/sbt-pack
-
-packSettings
-
-// [Optional: Mappings from a program name to the corresponding Main class ]
-packMain := Map("KLab" -> "klab.KLab")
-
-// [Optional] JVM options of scripts (program name -> Seq(JVM option, ...))
-packJvmOpts := Map("KLab" -> Seq("-Xms1g","-Xmx2G") )
-
-packGenerateWindowsBatFile := false
-
-// crucial for pack to be runnable - unknown error otherwise
-// packPreserveOriginalJarName := true
-packJarNameConvention := "original"
+//
+//lazy val buildSettings = Seq(
+//  version := "0.2",
+//  organization := "klab",
+//  scalaVersion := "2.10.2"
+//)
+//
+//val app = (project in file("app")).
+//  settings(buildSettings: _*).
+//  settings(assemblySettings: _*).
+//  settings(
+//    // your settings here
+//  )
+//
+//// --------- Pack plugin config -----
+//// https://github.com/xerial/sbt-pack
+//
+//packSettings
+//
+//// [Optional: Mappings from a program name to the corresponding Main class ]
+//packMain := Map("KLab" -> "klab.KLab")
+//
+//// [Optional] JVM options of scripts (program name -> Seq(JVM option, ...))
+//packJvmOpts := Map("KLab" -> Seq("-Xms1g","-Xmx2G") )
+//
+//packGenerateWindowsBatFile := false
+//
+//// crucial for pack to be runnable - unknown error otherwise
+//// packPreserveOriginalJarName := true
+//packJarNameConvention := "original"
 
 // ----------- Libraries ---------------
 
@@ -36,10 +58,10 @@ libraryDependencies += "com.misiunas" % "geoscala_2.10" % "0.1.3"
 
 // BREEZE - https://github.com/scalanlp/breeze/
 libraryDependencies ++= Seq(// other dependencies here
-        "org.scalanlp" % "breeze_2.10" % "0.7",
+        "org.scalanlp" % "breeze_2.10" % "0.10",
         // native libraries are not included by default. add this if you want them (as of 0.7-SNAPSHOT)
         // native libraries greatly improve performance, but increase jar sizes.
-        "org.scalanlp" % "breeze-natives_2.10" % "0.7" )
+        "org.scalanlp" % "breeze-natives_2.10" % "0.10" )
 
 resolvers ++= Seq(
   // other resolvers here
@@ -52,10 +74,14 @@ resolvers ++= Seq(
 libraryDependencies += "org.scalatest" %% "scalatest" % "2.1.3" % "test"
 
 // Joda time for scala - https://github.com/nscala-time/nscala-time
-libraryDependencies += "com.github.nscala-time" %% "nscala-time" % "1.0.0"
+libraryDependencies += "com.github.nscala-time" %% "nscala-time" % "1.8.0"
 
 // Play JSON library: http://www.playframework.com/documentation/2.2.x/ScalaJson
 libraryDependencies += "com.typesafe.play" % "play-json_2.10" % "2.2.1"
+
+// prepeackedged open CV - http://java.dzone.com/articles/using-javacv-scala-and-sbt
+//libraryDependencies += "org.bytedeco" % "javacv" % "0.8"
+//added manually from https://github.com/bytedeco/javacv
 
 // -------------- Use these -------------
 
