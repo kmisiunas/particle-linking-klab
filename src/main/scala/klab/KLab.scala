@@ -51,7 +51,7 @@ object KLab {
       // copy command to clipboard
       if (options(res) == "Copy to clipboard") {
         val  stringSelection: StringSelection = new StringSelection (command);
-        val clpbrd: Clipboard = Toolkit.getDefaultToolkit ().getSystemClipboard ();
+        val clpbrd: Clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         clpbrd.setContents (stringSelection, null);
       }
       println("To run Klab run this: " )
@@ -60,19 +60,20 @@ object KLab {
     }
     else
       args.head match {
-        case "terminal" | "t" | "console" | "-t" => runTerminalWithDecorations()
+        case "terminal" | "t" | "console" | "-t" => Terminal()
         case _ => println("Unrecognised statement")
       }
 
 
+    // removed since 0.2.1 -> useless for terminal application
     def runTerminalWithDecorations(): Unit = {
       // Custom terminal for Mac OS X
       // Get image
-      val application: Application = Application.getApplication()
-      val image: Image = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icon.png"))
-      application.setDockIconImage(image)
+      // val application: Application = Application.getApplication()
+      // val image: Image = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icon.png"))
+      // application.setDockIconImage(image)
       // change name - does not work!
-      System.setProperty("apple.laf.useScreenMenuBar", "true")
+      // System.setProperty("apple.laf.useScreenMenuBar", "true")
       //System.setProperty("com.apple.mrj.application.apple.menu.about.name", "KLab in Background")
       // Start terminal
       Terminal()
