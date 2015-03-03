@@ -5,7 +5,7 @@ import org.joda.time.DateTime
 import com.misiunas.geoscala.Point
 
 /**
- * == A general processing window for displaying tracks or assemblies of tracks ==\
+ * == A general processing window for displaying tracks or assemblies of tracks ==
  *
  * Functionality:
  *  - zoom in/out buttons on left bottom coroner

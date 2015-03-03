@@ -10,7 +10,7 @@ enablePlugins(JavaAppPackaging)
 
 name := "KLab"
 
-version := "0.2.1"
+version := "0.3.0"
 
 scalaVersion := "2.10.4"
 
@@ -90,6 +90,10 @@ libraryDependencies += "com.typesafe.play" % "play-json_2.10" % "2.2.1"
 
 
 // ------------------ GUI -----------------
+
+// Phraser for comand line
+libraryDependencies += "com.github.scopt" %% "scopt" % "3.3.0"
+
 
 // library for GUI designer in Intellij - needed if one does not get attached by intellij ieda
 libraryDependencies += "com.intellij" % "javac2" % "7.0.3"

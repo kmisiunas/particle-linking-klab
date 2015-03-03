@@ -43,6 +43,8 @@ object Colors {
 
   def res = colors("res")
 
+  def debug = colors("debug")
+
   /** Color map for the system */
   lazy val colors:  Map[String,String] =
     if(util.Properties.isWin) neutral else unix
@@ -55,7 +57,8 @@ object Colors {
     "print" -> "\033[33m",
     "help" -> "\033[33m",
     "warning" -> "\033[33m",
-    "res" -> "\033[33m"
+    "res" -> "\033[33m",
+    "debug" -> "\033[32m"
   )
 
   val neutral: Map[String,String] = Map(
@@ -65,7 +68,8 @@ object Colors {
     "print" -> "",
     "help" -> "",
     "warning" -> "",
-    "res" -> ""
+    "res" -> "",
+    "debug" -> ""
   )
 
 }

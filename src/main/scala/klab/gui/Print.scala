@@ -10,10 +10,17 @@ import java.io.PrintStream
  */
 object Print {
 
+  /** shows debug messages */
+  var globalDebug: Boolean = false
+
+  /** suppresses any feedback */
+  var globalSilent: Boolean = false
+
+
   /** Print steam for all output */
   var printMethod: String => Unit = Console.out.println
 
-  private def print = printMethod
+  private def print = if (globalSilent) {(_:String) => Unit} else printMethod
 
   /** consistent with scala notation */
   def println(a: Any) = print(Colors.print + a + Colors.end)
@@ -30,6 +37,10 @@ object Print {
     case _ => println("[" + key + "] " + msg)
   }
 
+  /** debug message */
+  def debug[A](a: => A, label:String = ""): A =
+    if (Print.globalDebug) {print(Colors.debug+ "[debug] " + label + " " + a + Colors.end); a} else a
+
   // todo: auto logging?
   /** System warning for error */
   def error(a: Any) = print(Colors.error + "Error: " + a + Colors.end)
@@ -38,3 +49,4 @@ object Print {
   def help(a: Any) = print(Colors.help + a + Colors.end)
 
 }
+

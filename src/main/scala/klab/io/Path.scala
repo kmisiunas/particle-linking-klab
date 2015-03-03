@@ -136,7 +136,12 @@ object Path {
 
   def apply(path: String): Path = new Path(checkPath(path))
 
+  def apply(path: File): Path = apply( path.toString )
+
   def apply(): Path = Path.work
+
+  /** returns path that KLab was executed at */
+  def current: Path = Path( new java.io.File( "." ).getCanonicalPath )
 
   lazy val root: Path = Path.user.root
 
@@ -157,7 +162,9 @@ object Path {
       case s => s
     }
     val fO = new File(f)
-    fO.getAbsolutePath.replace('\\', separator) + (if(fO.isFile || f == separator) "" else separator)
+    // create a unix like path String with / at the end for directories
+    fO.getAbsolutePath.replace('\\', separator) +
+      (if (!fO.exists() && f.last == '/') separator else if(!fO.isDirectory || f == separator) "" else separator)
   }
 
   /** Find the path using GUI interface */

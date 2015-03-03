@@ -6,6 +6,8 @@ import klab.gui.Print
 import breeze.linalg.DenseMatrix
 import klab.track.analysis.Diffusion
 
+import scala.annotation.tailrec
+
 
 /**
  * == Constructs Particle Tracks from a list of Pos ==
@@ -59,6 +61,7 @@ object BuildTracks {
   }
 
 
+  // todo need simplification and modularisation
   /** finds simple connections and makes tracks out of them */
   def simple(safeDistance: Double): Seq[Pos] => List[Track] =
   pos => {
@@ -68,35 +71,42 @@ object BuildTracks {
     val range1: Double = safeDistance
     val range2: Double = range1 * 2
 
+    @tailrec
     def analyseFrame(t: Int, tm1: Iterable[List[Pos]], acc: List[List[Pos]]): List[List[Pos]] = {
       if (t > tFinal) return tm1.toList ::: acc
-      if (!atT.contains(t)) return analyseFrame(t+1, Nil, tm1.toList ::: acc ) // missing frame - end tracks
-      if (tm1.isEmpty) return analyseFrame(t+1, atT(t).map(p=>List(p)),  acc ) // nothing from the past - next
+      else if (!atT.contains(t)) return analyseFrame(t+1, Nil, tm1.toList ::: acc ) // missing frame - end tracks
+      else if (tm1.isEmpty) return analyseFrame(t+1, atT(t).map(p=>List(p)),  acc ) // nothing from the past - next
+      else {
 
-      val loose = atT(t).toSet
+        val loose = atT(t).toSet
 
-      // if tm1(i) has one track in close proximity and all proximity
-      //    AND corresponding track only has it in all proximity
-      //    => connect
-      def goThroughRows(tm1:Iterable[List[Pos]],
-                        tLeft: Set[Pos],
-                        connect: Set[List[Pos]],
-                        end: Set[List[Pos]]): (Set[List[Pos]] , Set[List[Pos]]) = {
-        if (tm1.isEmpty) return (tLeft.map(List(_)) ++ connect , end)
-        val distances = tLeft.map( p => p -> p.distance(tm1.head.head))
-                             .filter(_._2 <= range2)
-        if (distances.size == 1) { // just one, check if for other places
-          if (tm1.tail.forall( l => l.head.distance( distances.head._1 ) > range2 )) // no alternative connection
-            if ( (loose-distances.head._1).forall( p => p.distance(distances.head._1) > range2) ) // no close points
-              return goThroughRows(tm1.tail,
-                                 tLeft - distances.head._1,
-                                 connect + ( distances.head._1 :: tm1.head ),
-                                 end )
-        } // more than one track in large surroundings
-        goThroughRows(tm1.tail, tLeft, connect, end + tm1.head )
+        // if tm1(i) has one track in close proximity and all proximity
+        //    AND corresponding track only has it in all proximity
+        //    => connect
+        @tailrec
+        def goThroughRows(tm1: Iterable[List[Pos]],
+                          tLeft: Set[Pos],
+                          connect: Set[List[Pos]],
+                          end: Set[List[Pos]]): (Set[List[Pos]], Set[List[Pos]]) = {
+          if (tm1.isEmpty) return (tLeft.map(List(_)) ++ connect, end)
+          val distances = tLeft.map(p => p -> p.distance(tm1.head.head))
+            .filter(_._2 <= range2)
+          if (distances.size == 1 && // just one, check if for other places
+            (tm1.tail.forall(l => l.head.distance(distances.head._1) > range2)) && // no alternative connection
+            (loose - distances.head._1).forall(p => p.distance(distances.head._1) > range2)) // no close points
+          {
+            goThroughRows(tm1.tail,
+              tLeft - distances.head._1,
+              connect + (distances.head._1 :: tm1.head),
+              end)
+          } else {
+            // more than one track in large surroundings
+            goThroughRows(tm1.tail, tLeft, connect, end + tm1.head)
+          }
+        }
+        val (continue, end) = goThroughRows(tm1, loose, Set(), Set())
+        analyseFrame(t + 1, continue, end.toList ::: acc)
       }
-      val (continue, end) = goThroughRows(tm1, loose, Set(), Set())
-      analyseFrame( t+1, continue, end.toList ::: acc)
     }
 
     makeTracks( analyseFrame(t0, Nil, Nil) )
