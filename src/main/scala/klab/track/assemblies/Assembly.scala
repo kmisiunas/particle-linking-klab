@@ -129,7 +129,7 @@ abstract class Assembly (val experiment:String, val comment: String, val time: L
   def apply(f : List[Track] => List[Track] ) : Assembly
 
   /** Method for appending another TrackAssembly with time frames where other have left off */
-  def append(list: Iterable[Track], timeGap: Double = 1.0): Assembly
+  def append(list: Iterable[Track], timeGap: Double = 0.0, follow: Boolean = false): Assembly
 
   // ------------------ Id management ---------------
 

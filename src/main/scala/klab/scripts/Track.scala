@@ -8,6 +8,8 @@ import klab.track.geometry.position.Pos
 import scopt.OptionParser
 
 /**
+ * # Script: automatically initiates tracking routine
+ *
  * Not a functional design - static parameters
  *
  * Created by kmisiunas on 15-03-01.
@@ -96,7 +98,7 @@ class Track extends ScriptTemplate {
 }
 
 
-object Track {
+protected object Track {
 
   object Config {
     // filter tracks smaller than

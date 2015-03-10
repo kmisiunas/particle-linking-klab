@@ -65,8 +65,8 @@ class TrackAssembly private (val listMap : Map[Int, Track],
     TrackAssembly(f( this.toList ), experiment, comment, time)
 
   /** Method for appending another TrackAssembly with time frames where other have left off */
-  def append(list: Iterable[Track], timeGap: Double = 10): TrackAssembly = {
-    val lastT: Double = this.range._2.t
+  def append(list: Iterable[Track], timeGap: Double = 10, follow: Boolean = true): TrackAssembly = {
+    val lastT: Double = if(follow) this.range._2.t else 0.0
     val fdT: Pos => Pos = p => p ++ Pos(timeGap + lastT, 0,0,0)
     var lastId = listMap.keys.max
     def nextId(): Int = {lastId = lastId +1; lastId}

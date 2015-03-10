@@ -24,6 +24,7 @@ abstract class ScriptTemplate {
 object ScriptTemplate {
 
   lazy val list: List[ScriptTemplate] = List(
-    new Track
+    new Track,
+    new Assemble
   )
 }
