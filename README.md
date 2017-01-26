@@ -1,6 +1,10 @@
-KLab
-====
+Particle linker in scala (KLab)
+===============================
 Project aimed at analysing diffusion experiment data using Scala/Java.
+
+**Warning: academic, unmaintained code. Use at your own risk!**
+
+**Warning: superseeded by a new version. Please ask** 
 
 Roadmap
 -------
